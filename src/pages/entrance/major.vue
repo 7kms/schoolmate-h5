@@ -44,7 +44,7 @@
                 position="bottom"
                 popup-transition="popup-fade">
             <mt-picker :slots="majorSlots" :showToolbar="true" :rotateEffect="true" @change="selectMajor">
-                <span></span><span @click="hidePicker">确定</span>
+                <span></span><span @click="setDefaultMajor">确定</span>
             </mt-picker>
         </mt-popup>
         <mt-datetime-picker
@@ -115,11 +115,14 @@
             break;
         }
       },
-      hidePicker(){
-        this.showMajorPicker = false;
-      },
       selectMajor(picker,values){
         this.$store.dispatch('entrance/CHANGE_USERINFO',{major:values[0]})
+      },
+      setDefaultMajor(){
+        this.showMajorPicker = false;
+        if(!this.userInfo.major){
+          this.$store.dispatch('entrance/CHANGE_USERINFO',{major:this.majorSlots[0].values[0]})
+        }
       },
       valid(){
         if(!this.userInfo.class){

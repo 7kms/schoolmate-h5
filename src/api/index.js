@@ -36,8 +36,9 @@ get: (url, dataObj, opt = {}) => {
     post: (url, dataObj, opt = {}) => {
         return new Promise((resolve, reject) => {
             var absoluteUrl = config.serverUrl + url;
-            var options = Object.assign({}, baseConfig, opt)
-            Vue.http.post(absoluteUrl, dataObj, options).then(res => {
+            var options = Object.assign({}, baseConfig, opt);
+            console.log()
+            Vue.http.post(absoluteUrl, {para:JSON.stringify(dataObj)}, options).then(res => {
                 resolve(res.body)
             }, res => {
                 reject(res.body)

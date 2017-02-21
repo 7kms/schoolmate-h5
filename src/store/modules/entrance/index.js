@@ -73,7 +73,7 @@ var state = {
     resource_description:'',
     class:'2167160301',
     nameErrorCount: 0,
-    passedNameCheck: false,
+    passedNameCheck: true,
   }
 };
 

@@ -73,7 +73,7 @@
                 position="bottom"
                 popup-transition="popup-fade">
             <mt-picker :slots="genderSlots" valueKey="name" :showToolbar="true" :rotateEffect="true" @change="selectGender">
-                <span></span><span @click="hidePicker">确定</span>
+                <span></span><span @click="selectGender">确定</span>
             </mt-picker>
         </mt-popup>
         <mt-popup
@@ -81,7 +81,7 @@
                 position="bottom"
                 popup-transition="popup-fade">
             <mt-picker :slots="placeSlots" :showToolbar="true" :rotateEffect="true" @change="selectPlace">
-                <span></span><span @click="hidePicker">确定</span>
+                <span></span><span @click="selectPlace">确定</span>
             </mt-picker>
         </mt-popup>
     </div>
@@ -150,18 +150,42 @@
           }
         },
         selectGender(picker,values){
-          this.$store.dispatch('entrance/CHANGE_USERINFO',{gender:values[0].name});
+          let gender = '';
+          if(values){
+            gender = values[0].name;
+            this.$store.dispatch('entrance/CHANGE_USERINFO',{gender});
+          }else{
+            this.showGenderPicker = false;
+            if(!this.userInfo.gender){
+              gender = this.genderSlots[0].values[0].name;
+              this.$store.dispatch('entrance/CHANGE_USERINFO',{gender});
+            }
+          }
         },
         selectPlace(picker,values){
-          this.$store.dispatch('entrance/CHANGE_USERINFO',{
-            bprovince:values[0],
-            bcity:values[1]
-          });
-          picker.setSlotValues(1, placeObj[values[0]]);
-        },
-        hidePicker(){
-          this.showGenderPicker = false;
-          this.showPlacePicker = false;
+          let bprovince,bcity;
+          if(values){
+            if(!values[0]){
+              values[0] = Object.keys(placeObj)[0];
+            }
+            bprovince = values[0];
+            bcity = values[1];
+            picker.setSlotValues(1, placeObj[values[0]]);
+            this.$store.dispatch('entrance/CHANGE_USERINFO',{
+              bprovince,
+              bcity
+            });
+          }else{
+            this.showPlacePicker = false;
+            if(!this.userInfo.bprovince){
+              bprovince = this.placeSlots[0].values[0];
+              bcity = this.placeSlots[2].values[0];
+              this.$store.dispatch('entrance/CHANGE_USERINFO',{
+                bprovince,
+                bcity
+              });
+            }
+          }
         },
         changeChannel(channel){
           let role = channel == 'graduate' ? 'student' : channel;

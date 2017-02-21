@@ -68,7 +68,7 @@
                 </div>
             </div>
         </div>
-        <div :class="$style.mate">
+        <div :class="$style.mate" v-if="friendsArr.length > 0">
             <div :class="$style.refresh">
                 <span>选择您认识的2位熟人</span>
                 <span @click="getFriends"><i :class="['inline-block',$style.iconRefresh]"></i><span class="inline-block color-theme">刷新</span></span>
@@ -103,23 +103,21 @@
         },
         methods:{
             valid(code){
-                if(code){
-                    if(!/^1[3-8]\d{9}$/.test(this.userInfo.phonenum)){
-                        this.$toast('手机号码不正确');
-                        return false;
-                    }
-                    if(!/^[\w\d\_]{3,20}$/.test(this.userInfo.phonenum)){
-                        this.$toast('微信号不规范');
-                        return false;
-                    }
-                }else {
-                    if(!this.verifyCode){
-                        this.$toast('验证码不能为空');
-                        return false;
-                    }
+              if(!/^1[3-8]\d{9}$/.test(this.userInfo.phonenum)){
+                this.$toast('手机号码不正确');
+                return false;
+              }
+              if(!/^[\w\d\_]{3,20}$/.test(this.userInfo.wechat)){
+                this.$toast('微信号不规范');
+                return false;
+              }
+              if(!code){
+                if(!this.verifyCode){
+                  this.$toast('验证码不能为空');
+                  return false;
                 }
-
-                return true;
+              }
+              return true;
             },
             sendVerifyCode(){
                 if(!this.waiting){
@@ -154,13 +152,24 @@
                     }
                 });
                 return new Promise((resolve,reject)=>{
-                    if(nameArr.length > 2){
+                    if(this.friendsArr.length < 1){
+                      resolve(true);
+                    }else if(nameArr.length < 2){
                         this.$toast('请至少选择2位熟人');
                         reject(false);
                     }else{
-                        $api.get('/index.php/Regverify/verifyRandomName',{role,'class':this.userInfo.class,namestr:nameArr.join(',')})
+                        $api.post('/index.php/Regverify/verifyRandName',{role,'class':this.userInfo.class,namestr:nameArr.join(',')})
                         .then(res=>{
-                            resolve(true);
+                          if(res.code == 200 && res.result){
+                                resolve(true);
+                            }else{
+                                let count = this.userInfo.nameErrorCount+1;
+                                if(count >=3 ){
+                                  this.$store.dispatch('entrance/CHANGE_USERINFO',{passedNameCheck:false});
+                                }
+                                this.$store.dispatch('entrance/CHANGE_USERINFO',{nameErrorCount:count});
+                                reject(false)
+                            }
                         },res=>{
                             this.nameErrorTimes ++;
                             reject(false);
@@ -169,11 +178,15 @@
                 });
             },
             verifySMS(){
-                return $api.get('/index.php/Regverify/verifyRandomName',{phone:this.userInfo.phonenum,code:this.verifyCode})
+                return $api.post('/index.php/Regverify/verify',{phone:this.userInfo.phonenum,code:this.verifyCode})
                         .then(res=>{
-                            return true;
-                        },res=>{
+                            if(res.code == 200 && res.result){
+                              return true;
+                            }
                             this.$toast('验证码不正确');
+                            return false;
+                        },res=>{
+                            this.$toast('服务器异常');
                             return false;
                         });
             },
@@ -181,8 +194,8 @@
                 friend.active = !friend.active;
             },
             getFriends(){
-                var {role,department} = this.userInfo;
-                $api.post('/index.php/Regverify/getRandomName',{role,department})
+                var {role} = this.userInfo;
+                $api.post('/index.php/Regverify/getRandomName',{role,'class':this.userInfo.class,department:this.userInfo.department})
                 .then((res)=>{
                     if(res.code == 200){
                         this.friendsArr = res.data.map(name=>{
@@ -200,23 +213,22 @@
             },
             register(){
                 $api.post('/index.php/Profile/upProfile',this.userInfo)
-                .then((res)=>{
+                .then(res => {
                     this.$toast(res.msg);
                     if(res.result){
                         this.$router.replace('/');
                     }
-                },res=>{
+                },res => {
                     this.$toast(res.msg);
                 });
             },
             submit(){
-                debugger
                 if(!this.valid()) return false;
                 this.verifyFriend()
                 .then(data =>{
                     return this.verifySMS();
                 }, data=>{
-                    console.log(data)
+                    this.$toast('朋友验证未通过');
                 }).then(data=>{
                     if(data){
                         this.register();

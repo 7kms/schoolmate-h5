@@ -24,7 +24,7 @@
             <div class="item">
                 <div class="dfn"><span class="label inline-block">细分行业</span><span class="color-hint inline-block">*</span></div>
                 <div class="textInput color-topic" @click="showPicker('industry_detail')">
-                    <span class="select" v-if="userInfo.job">{{userInfo.job}}</span>
+                    <span class="select" v-if="userInfo.industry_detail">{{userInfo.industry_detail}}</span>
                     <span class="select color-weak" v-else>请选择</span>
                 </div>
             </div>
@@ -88,8 +88,8 @@
                 v-model="showIndustryPicker"
                 position="bottom"
                 popup-transition="popup-fade">
-            <mt-picker :slots="placeSlots" :showToolbar="true" :rotateEffect="true" @change="selectIndustry">
-                <span></span><span @click="hidePicker">确定</span>
+            <mt-picker :slots="industrySlots" :showToolbar="true" :rotateEffect="true" @change="selectIndustry">
+                <span></span><span @click="selectDefaultIndustry">确定</span>
             </mt-picker>
         </mt-popup>
         <mt-popup
@@ -97,7 +97,7 @@
                 position="bottom"
                 popup-transition="popup-fade">
             <mt-picker :slots="industryDetailSlots" :showToolbar="true" :rotateEffect="true" @change="selectIndustryDetail">
-                <span></span><span @click="hidePicker">确定</span>
+                <span></span><span @click="selectDefaultIndustryDetail">确定</span>
             </mt-picker>
         </mt-popup>
         <mt-popup
@@ -105,7 +105,7 @@
                 position="bottom"
                 popup-transition="popup-fade">
             <mt-picker :slots="placeSlots" :showToolbar="true" :rotateEffect="true" @change="selectPlace">
-                <span></span><span @click="hidePicker">确定</span>
+                <span></span><span @click="selectDefaultPlace">确定</span>
             </mt-picker>
         </mt-popup>
         <mt-popup
@@ -113,13 +113,13 @@
                 position="bottom"
                 popup-transition="popup-fade">
             <mt-picker :slots="departmentSlots" :showToolbar="true" :rotateEffect="true" @change="selectDepartment">
-                <span></span><span @click="hidePicker">确定</span>
+                <span></span><span @click="selectDefaultDepartment">确定</span>
             </mt-picker>
         </mt-popup>
     </div>
 </template>
 <script>
-  import { placeObj,departmentArr,majorArr,industryArr } from '../../data';
+  import { placeObj,departmentArr,majorArr,industryObj } from '../../data';
   import { mapState } from  'vuex'
   export default {
     data(){
@@ -149,14 +149,14 @@
           industrySlots: [
               {
                   flex: 1,
-                  values: industryArr,
+                  values: Object.keys(industryObj),
                   textAlign: 'center'
               }
           ],
           industryDetailSlots: [
               {
                   flex: 1,
-                  values: industryArr,
+                  values: Object.keys(industryObj),
                   textAlign: 'center'
               }
           ],
@@ -178,71 +178,125 @@
     methods: {
         showPicker(pickerName){
             switch (pickerName) {
-                case 'place':
-                    this.showMajorPicker = true;
-                    break;
+              case 'place':
+                this.showPlacePicker = true;
+                break;
+              case 'department':
+                this.showDepartmentPicker = true;
+                break;
+              case 'industry':
+                this.showIndustryPicker = true;
+                break;
+              case 'industry_detail':
+                this.showIndustryDetailPicker = true;
+                break;
             }
         },
-        selectPlace(picker, values){
-            this.$store.dispatch('entrance/CHANGE_USERINFO', {
-                province: values[0],
-                city: values[1]
-            });
-            picker.setSlotValues(1, placeObj[values[0]]);
+        hidePicker(){
+            this.showIndustryPicker = false;
+            this.showIndustryDetailPicker = false;
+            this.showPlacePicker =  false;
+            this.showDepartmentPicker =  false;
         },
+        selectPlace(picker, values){
+          if(!values[0]){
+            values[0] = Object.keys(placeObj)[0];
+          }
+          this.$store.dispatch('entrance/CHANGE_USERINFO', {
+            province: values[0],
+            city: values[1]
+          });
+          picker.setSlotValues(1, placeObj[values[0]]);
+        },
+      selectDefaultPlace(){
+          this.hidePicker();
+        if(!this.userInfo.province){
+          this.$store.dispatch('entrance/CHANGE_USERINFO', {
+            province: this.placeSlots[0].values[0],
+            city:  this.placeSlots[2].values[0]
+          });
+        }
+      },
         selectDepartment(picker, values){
             this.$store.dispatch('entrance/CHANGE_USERINFO', {
                 department: values[0]
             });
         },
+      selectDefaultDepartment(){
+        this.hidePicker();
+        if(!this.userInfo.department){
+          this.$store.dispatch('entrance/CHANGE_USERINFO', {
+            department: this.departmentSlots[0].values[0]
+          });
+        }
+      },
         selectIndustryDetail(picker, values){
             this.$store.dispatch('entrance/CHANGE_USERINFO', {
                 industry_detail: values[0]
             });
         },
+        selectDefaultIndustryDetail(){
+          this.hidePicker();
+          if(!this.userInfo.industry_detail){
+            this.$store.dispatch('entrance/CHANGE_USERINFO', {
+              industry_detail: this.industryDetailSlots[0].values[0]
+            });
+          }
+        },
         selectIndustry(picker, values){
             this.$store.dispatch('entrance/CHANGE_USERINFO', {
                 industry: values[0]
             });
-        }
-      },
-      valid(){
-         if(this.channel == 'teacher'){
-             if(!this.userInfo.company){
-                 this.$toast('工作单位不能为空');
-                 return false;
-             }
-             if(!this.userInfo.department){
-                 this.$toast('所在部门不能为空');
-                 return false;
-             }
-             if(!this.userInfo.detail_job){
-                 this.$toast('担任职务不能为空');
-                 return false;
-             }
-             if(!this.userInfo.resource_description){
-                 this.$toast('岗位描述不能为空');
-                 return false;
-             }
-         }
+            this.industryDetailSlots[0].values = industryObj[values[0]]
+        },
+        selectDefaultIndustry(){
+          this.hidePicker();
           if(!this.userInfo.industry){
-              this.$toast('所属行业不能为空');
-              return false;
+            this.$store.dispatch('entrance/CHANGE_USERINFO', {
+              industry: this.industrySlots[0].values[0]
+            });
+          }
+        },
+        valid(){
+          if(!this.userInfo.company){
+            this.$toast('工作单位不能为空');
+            return false;
+          }
+          if(!this.userInfo.department){
+            this.$toast('所在部门不能为空');
+            return false;
+          }
+          if(!this.userInfo.detail_job){
+            this.$toast('担任职务不能为空');
+            return false;
+          }
+          if(!this.userInfo.resource_description){
+            this.$toast('岗位描述不能为空');
+            return false;
+          }
+        if(this.channel == 'teacher'){
+          return true;
+        }else{
+          if(!this.userInfo.industry){
+            this.$toast('所属行业不能为空');
+            return false;
           }
           if(!this.userInfo.industry_detail){
-              this.$toast('细分行业不能为空');
-              return false;
+            this.$toast('细分行业不能为空');
+            return false;
           }
           if(!this.userInfo.province || !this.userInfo.city){
-              this.$toast('所在省市不能为空');
-              return false;
+            this.$toast('所在省市不能为空');
+            return false;
           }
-         return true;
+        }
+        return true;
       },
-      stepNext(){
-          if(this.valid()){
-              this.$store.dispatch('entrance/STEP_NEXT');
-          }
+        stepNext(){
+        if(this.valid()){
+          this.$store.dispatch('entrance/STEP_NEXT');
+        }
+      }
       }
     }
 </script>
