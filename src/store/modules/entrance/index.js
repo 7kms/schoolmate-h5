@@ -57,7 +57,7 @@ var state = {
     birthday:'',
     bprovince:'',
     bcity:'',
-    role:'',
+    role:'student',
     company:'',
     industry:'',
     job:'',
@@ -68,10 +68,12 @@ var state = {
     major:'',
     province:'',
     city:'',
-    wechat:'',
-    phonenum:'',
+    wechat:'daadadad',
+    phonenum:'15901126559',
     resource_description:'',
-    class:''
+    class:'2167160301',
+    nameErrorCount: 0,
+    passedNameCheck: false,
   }
 };
 

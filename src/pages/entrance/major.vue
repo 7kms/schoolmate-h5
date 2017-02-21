@@ -122,20 +122,20 @@
         this.$store.dispatch('entrance/CHANGE_USERINFO',{major:values[0]})
       },
       valid(){
-        if(!this.userInfo.name){
-          this.$toast('姓名不能为空');
+        if(!this.userInfo.class){
+          this.$toast('班级代码不能为空');
           return false;
         }
-        if(!this.userInfo.gender){
-          this.$toast('姓别不能为空');
+        if(!this.userInfo.major){
+          this.$toast('专业名称不能为空');
           return false;
         }
-        if(!this.userInfo.birthday){
-          this.$toast('出生日期不能为空');
+        if(!this.userInfo.enrol_time){
+          this.$toast('入学时间不能为空');
           return false;
         }
-        if(!this.userInfo.province || !this.userInfo.city){
-          this.$toast('籍贯不能为空');
+        if(!this.userInfo.graduate_time){
+          this.$toast('毕业时间不能为空');
           return false;
         }
         return true;

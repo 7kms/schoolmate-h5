@@ -14,7 +14,7 @@
             <div class="item">
                 <div class="dfn"><span class="label inline-block">姓 名</span><span class="color-hint inline-block">*</span></div>
                 <div class="textInput color-topic">
-                    <input type="text" class="input" :value="userInfo.name" @input="changeName" maxlength="15">
+                    <input type="text" class="input" :value="userInfo.name" @input="changeName" maxlength="15" placeholder="请填写">
                 </div>
             </div>
             <div class="item">
@@ -34,7 +34,7 @@
             <div class="item">
                 <div class="dfn"><span class="label inline-block">籍 贯</span><span class="color-hint inline-block">*</span></div>
                 <div class="textInput color-topic" @click="showPicker('place')">
-                    <span class="select" v-if="userInfo.province && userInfo.city">{{userInfo.province + '-' + userInfo.city}}</span>
+                    <span class="select" v-if="userInfo.bprovince && userInfo.bcity">{{userInfo.bprovince + '-' + userInfo.bcity}}</span>
                     <span class="select color-weak" v-else>请选择</span>
                 </div>
             </div>
@@ -154,8 +154,8 @@
         },
         selectPlace(picker,values){
           this.$store.dispatch('entrance/CHANGE_USERINFO',{
-            province:values[0],
-            city:values[1]
+            bprovince:values[0],
+            bcity:values[1]
           });
           picker.setSlotValues(1, placeObj[values[0]]);
         },
@@ -188,7 +188,7 @@
              this.$toast('出生日期不能为空');
              return false;
            }
-           if(!this.userInfo.province || !this.userInfo.city){
+           if(!this.userInfo.bprovince || !this.userInfo.bcity){
              this.$toast('籍贯不能为空');
              return false;
            }
