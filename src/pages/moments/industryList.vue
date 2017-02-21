@@ -1,0 +1,127 @@
+<style lang="less" module>
+    @import '../../assets/less/const.less';
+    .item{
+        margin-bottom: 6px;
+    }
+    .content{
+        padding-top: @header-height + @item-header-height;
+    }
+    .search{
+        position: fixed;
+        top:  @header-height;
+        left: 0;
+        z-index: 10;
+        width: 100%;
+        height: 35px;
+        display: flex;
+        padding: 5px 12px;
+        background-color:@body-color;
+        .input{
+            margin-left: 5px;
+            flex: 1;
+            input{
+                width: 100%;
+                padding: 0 10px;
+                height: 25px;
+                border-radius: 13px;
+                border: none;
+                outline: none;
+                color: @font-color-base;
+            }
+        }
+        .btn{
+            padding-left: 5px;
+            line-height: 25px;
+        }
+    }
+    .bar{
+        position: relative;
+        height: 30px;
+        line-height: 30px;
+        padding-left: 23.5px;
+        background-color: @body-color;
+        &::before{
+            content: '';
+            position: absolute;
+            width: 2.5px;
+            height: 16px;
+            left: 16px;
+             top: 50%;
+            margin-top: -8px;
+            background-color:  @theme-color;
+        }
+    }
+
+</style>
+<template>
+    <div :class="[$style.content,'page-content']">
+        <div :class="$style.search">
+            <div :class="$style.input">
+                <input type="text">
+            </div>
+            <span :class="[$style.btn,'size-topic','color-theme']">搜索</span>
+        </div>
+        <div :class="[$style.bar,'size-topic','color-theme']">
+            <span>我在的行业圈</span>
+        </div>
+        <ul>
+            <Item :class="$style.item" :dataInfo="{}"></Item>
+        </ul>
+        <div :class="[$style.bar,'size-topic','color-theme']">
+            <span>其他行业圈子</span>
+        </div>
+        <ul
+            v-infinite-scroll="loadMore"
+            infinite-scroll-immediate-check="false"
+            infinite-scroll-disabled="noScroll"
+            infinite-scroll-distance="80">
+            <Item v-for="(item,index) in industry.list" :class="$style.item" :key="index" :dataInfo="item"></Item>
+        </ul>
+        <Loading v-if="loading"></Loading>
+    </div>
+</template>
+<script>
+  import { mapState } from 'vuex';
+  import Item from '../public/industry.vue';
+  import $api from 'api';
+  import publishBtn from '../../components/publish';
+  export default {
+    data(){
+      return {
+        loading: false
+      }
+    },
+    components:{
+      Item,
+      publishBtn
+    },
+    computed:{
+      noScroll () {
+        return this.loading || this.industry.noMore;
+      },
+      ...mapState({
+        industry: state => state.moments.industry
+      })
+    },
+    beforeRouteLeave (to, from, next) {
+      this.$store.dispatch('moments/RESET_INDUSTRY_LIST');
+      next();
+    },
+    methods:{
+      loadMore() {
+        this.loading = true;
+        this.$store.dispatch('moments/LOAD_INDUSTRY_LIST').then(()=>{
+          this.loading = false;
+        },(err)=>{
+          this.loading = false;
+          this.$toast({message: err});
+        });
+      }
+    },
+    created(){
+      if(!this.industry.list.length){
+        this.loadMore();
+      }
+    }
+  }
+</script>

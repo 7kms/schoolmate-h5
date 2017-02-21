@@ -1,0 +1,6 @@
+{
+  "presets": ["latest", "stage-2","flow-vue"],
+  "plugins": ["transform-runtime", ["component", [
+    { "libraryName": "mint-ui", "style": true }
+  ]]]
+}
