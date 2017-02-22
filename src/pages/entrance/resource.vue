@@ -24,7 +24,7 @@
             <div class="item">
                 <div class="dfn"><span class="label inline-block">细分行业</span><span class="color-hint inline-block">*</span></div>
                 <div class="textInput color-topic" @click="showPicker('industry_detail')">
-                    <span class="select" v-if="userInfo.industry_detail">{{userInfo.industry_detail}}</span>
+                    <span class="select" v-if="userInfo.job">{{userInfo.job}}</span>
                     <span class="select color-weak" v-else>请选择</span>
                 </div>
             </div>
@@ -232,14 +232,14 @@
       },
         selectIndustryDetail(picker, values){
             this.$store.dispatch('entrance/CHANGE_USERINFO', {
-                industry_detail: values[0]
+                job: values[0]
             });
         },
         selectDefaultIndustryDetail(){
           this.hidePicker();
-          if(!this.userInfo.industry_detail){
+          if(!this.userInfo.job){
             this.$store.dispatch('entrance/CHANGE_USERINFO', {
-              industry_detail: this.industryDetailSlots[0].values[0]
+              job: this.industryDetailSlots[0].values[0]
             });
           }
         },
@@ -281,7 +281,7 @@
             this.$toast('所属行业不能为空');
             return false;
           }
-          if(!this.userInfo.industry_detail){
+          if(!this.userInfo.job){
             this.$toast('细分行业不能为空');
             return false;
           }

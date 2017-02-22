@@ -34,8 +34,8 @@
                 <div :class="[$style.imgAdd,'text-center']">
                     <file-upload class="file-upload"
                          :drop="false"
-                         :multiple="false"
-                         post-action="http://10.0.6.213:9000/upload"
+                         :multiple="true"
+                         post-action="http://114.215.45.243:9000/index.php/Picture/multiPicUpload"
                          accept="image/*"
                          :events="events"
                     ></file-upload>
@@ -48,7 +48,7 @@
                 <div class="pub-item">
                     <h3 class="pub-title">活动主题</h3>
                     <div class="pub-text">
-                        <input type="text" class="pub-input" placeholder="填写28字以内活动主题" maxlength="28" v-model="pubInfo.topic">
+                        <input type="text" class="pub-input" placeholder="填写28字以内活动主题" maxlength="28" v-model="pubInfo.theme">
                     </div>
                 </div>
                 <div class="pub-item">
@@ -89,13 +89,13 @@
                 <div class="pub-item">
                     <h3 class="pub-title">活动地址</h3>
                     <div class="pub-text">
-                        <input type="text" class="pub-input" placeholder="填写您的具体活动地址">
+                        <input type="text" class="pub-input" placeholder="填写您的具体活动地址" v-model="pubInfo.place">
                     </div>
                 </div>
                 <div class="pub-item">
                     <h3 class="pub-title">手机号码</h3>
                     <div class="pub-text">
-                        <input type="tel" class="pub-input" placeholder="填写联系人号码">
+                        <input type="tel" class="pub-input" placeholder="填写联系人号码" v-model="pubInfo.contact">
                     </div>
                 </div>
                 <div class="pub-item">
@@ -103,7 +103,7 @@
                     <div class="pub-time-content">
                         <div class="pub-dfn-item" v-show="!free">
                             <div class="dfn-label">
-                                <span class="inline-block dfn-span"><span>单人收费：</span></span><input type="text" class="dfn-input l-input">
+                                <span class="inline-block dfn-span"><span>单人收费：</span></span><input type="text" class="dfn-input l-input" v-model="pubInfo.fee">
                             </div>
                         </div>
                         <div class="pub-dfn-item">
@@ -116,17 +116,17 @@
                 <div class="pub-item">
                     <h3 class="pub-title">限定人数</h3>
                     <div class="pub-text">
-                        <input type="text" class="pub-input" placeholder="填写参加的人数限制">
+                        <input type="text" class="pub-input" placeholder="填写参加的人数限制" v-model="pubInfo.amount">
                     </div>
                 </div>
                 <div class="pub-item">
                     <h3 class="pub-title">活动描述</h3>
                     <div class="pub-text">
-                        <textarea class="pub-area" placeholder="填写活动的具体注意事项、详细信息等"></textarea>
+                        <textarea class="pub-area" placeholder="填写活动的具体注意事项、详细信息等" v-model="pubInfo.description"></textarea>
                     </div>
                 </div>
             </div>
-            <div class="pubBar">发布</div>
+            <div class="pubBar" @click="publish">发布</div>
         </div>
         <mt-datetime-picker
             ref="startDatePicker"
@@ -165,7 +165,8 @@
 </template>
 <script>
   import FileUpload from 'vue-upload-component';
-  import util from  '../../util'
+  import util from  '../../util';
+  import $api from 'api';
   export default {
     components:{
       FileUpload
@@ -173,8 +174,15 @@
     data(){
       return {
         pubInfo:{
-            imgArr:[],
-            topic:'',
+            theme:'聚会',
+            time:'',
+            end_time: '',
+            description:'我们公司很牛b',
+            place:'天安门广场',
+            cover_file:'image/default-activity-cover.jpg',
+            amount:'18',
+            fee:'600',
+            contact: '13555555555'
         },
         dateNow: new Date(),
         startDate: '',
@@ -202,6 +210,15 @@
         }
       }
     },
+    computed:{
+      activityStartTime(){
+//        console.log(new Date(util.dateFormat(this.startDate,'yyyy/MM/dd') + this.startTime).getTime();)
+
+      },
+      activityEndTime(){
+
+      }
+    },
     watch:{
         startDate(newValue,oldValue){
             if(!oldValue) return;
@@ -224,14 +241,38 @@
       },
       openTime(ref){
         this.$refs[ref].open()
-      }
-    },
-    created(){
-      for(let i=0;i<9;i++){
-        this.imgArr.push({
-          url:i<=4 ? require('../../assets/moke/0.3.2.png') : ''
-        })
+      },
+      valid(){
+
+      },
+      getParams(){
+        let obj = Object.assign({},this.pubInfo);
+        if(this.free){
+          obj.fee = 0;
+        }
+        if(!this.timeLimit){
+          obj.time = 0;
+          obj.end_time = 0;
+        }else{
+          obj.time = String(new Date(util.dateFormat(this.startDate,'yyyy/MM/dd') + ' ' + this.startTime).getTime());
+          obj.end_time = String(new Date(util.dateFormat(this.endDate,'yyyy/MM/dd') + ' ' + this.endTime).getTime());
+        }
+        return obj;
+      },
+      publish(){
+        $api.post('/index.php/Activity/publish',this.getParams())
+          .then(res=>{
+            if(res.code == 200){
+              this.$toast('发布成功');
+              this.$router.push('/')
+            }else{
+              this.$toast('发布失败');
+            }
+          },res=>{
+            this.$toast('服务器异常');
+          })
       }
     }
+
   }
 </script>

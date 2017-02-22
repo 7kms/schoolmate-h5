@@ -212,10 +212,11 @@
                 });
             },
             register(){
+              debugger
                 $api.post('/index.php/Profile/upProfile',this.userInfo)
                 .then(res => {
-                    this.$toast(res.msg);
-                    if(res.result){
+                    this.$toast(res.data.msg);
+                    if(res.data.result){
                         this.$router.replace('/');
                     }
                 },res => {
