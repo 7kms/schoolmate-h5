@@ -33,11 +33,11 @@
             <div :class="$style.picWrap">
                 <div :class="[$style.imgAdd,'text-center']">
                     <file-upload class="file-upload"
-                                 :drop="false"
-                                 :multiple="false"
-                                 post-action="http://10.0.6.213:9000/upload"
-                                 accept="image/*"
-                                 :events="events"
+                         :drop="false"
+                         :multiple="false"
+                         post-action="http://10.0.6.213:9000/upload"
+                         accept="image/*"
+                         :events="events"
                     ></file-upload>
                     <i :class="$style.btnAdd"></i>
                     <span>添加封面</span>
@@ -48,7 +48,7 @@
                 <div class="pub-item">
                     <h3 class="pub-title">活动主题</h3>
                     <div class="pub-text">
-                        <input type="text" class="pub-input" placeholder="填写28字以内活动主题" maxlength="28">
+                        <input type="text" class="pub-input" placeholder="填写28字以内活动主题" maxlength="28" v-model="pubInfo.topic">
                     </div>
                 </div>
                 <div class="pub-item">
@@ -164,13 +164,18 @@
 
 </template>
 <script>
-  import FileUpload from 'vue-upload-component'
+  import FileUpload from 'vue-upload-component';
+  import util from  '../../util'
   export default {
     components:{
       FileUpload
     },
     data(){
       return {
+        pubInfo:{
+            imgArr:[],
+            topic:'',
+        },
         dateNow: new Date(),
         startDate: '',
         startTime: '',
@@ -183,9 +188,6 @@
         events: {
           add(file, component) {
             component.active = true;
-//            file.headers['X-Filename'] = encodeURIComponent(file.name);
-//            file.data.finename = file.name;
-
           },
           progress(file, component) {
             console.log('progress ' + file.progress);
@@ -199,6 +201,11 @@
           }
         }
       }
+    },
+    watch:{
+        startDate(newValue,oldValue){
+            if(!oldValue) return;
+        }
     },
     methods:{
       deleteImage(img){

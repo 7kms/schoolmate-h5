@@ -48,23 +48,27 @@
             </mt-picker>
         </mt-popup>
         <mt-datetime-picker
-                ref="startDatePicker"
-                type="date"
-                cancelText="关闭"
-                year-format="{value} 年"
-                month-format="{value} 月"
-                date-format="{value} 日"
-                v-model="roleStartDate"
+            ref="startDatePicker"
+            type="date"
+            cancelText="关闭"
+            year-format="{value} 年"
+            month-format="{value} 月"
+            date-format="{value} 日"
+            :startDate="minDate"
+            :endDate="maxLimitDate"
+            v-model="roleStartDate"
         >
         </mt-datetime-picker>
         <mt-datetime-picker
-                ref="endDatePicker"
-                type="date"
-                cancelText="关闭"
-                year-format="{value} 年"
-                month-format="{value} 月"
-                date-format="{value} 日"
-                v-model="roleEndDate"
+            ref="endDatePicker"
+            type="date"
+            cancelText="关闭"
+            year-format="{value} 年"
+            month-format="{value} 月"
+            date-format="{value} 日"
+            :startDate="minLimitDate"
+            :endDate="maxDate"
+            v-model="roleEndDate"
         >
         </mt-datetime-picker>
     </div>
@@ -76,6 +80,10 @@
   export default {
     data(){
       return {
+        minDate:new Date('1950/09/01'),
+        maxDate:new Date('2050/07/01'),
+        minLimitDate: new Date('2050/07/01'),
+        maxLimitDate: new Date('1950/09/01'),
         roleStartDate:'',
         roleEndDate:'',
         showMajorPicker:false,
@@ -88,10 +96,12 @@
     watch:{
       roleStartDate(newValue,oldValue){
         if(!oldValue) return;
+        this.minLimitDate = newValue;
         this.$store.dispatch('entrance/CHANGE_USERINFO',{enrol_time:util.dateFormat(newValue,'yyyy/MM/dd')})
       },
       roleEndDate(newValue,oldValue){
         if(!oldValue) return;
+        this.maxLimitDate = newValue;
         this.$store.dispatch('entrance/CHANGE_USERINFO',{graduate_time:util.dateFormat(newValue,'yyyy/MM/dd')})
       }
     },

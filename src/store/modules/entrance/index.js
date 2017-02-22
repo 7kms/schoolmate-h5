@@ -52,11 +52,11 @@ var state = {
   },
   userInfo:{
     password:'',
-    name:'',
+    name:'张元勋',
     gender:'男',
-    birthday:'',
-    bprovince:'',
-    bcity:'',
+    birthday:'1992/02/02',
+    bprovince:'天津',
+    bcity:'河西',
     role:'student',
     company:'',
     industry:'',
@@ -73,7 +73,7 @@ var state = {
     resource_description:'',
     class:'2167160301',
     nameErrorCount: 0,
-    passedNameCheck: true,
+    passedNameCheck: true
   }
 };
 

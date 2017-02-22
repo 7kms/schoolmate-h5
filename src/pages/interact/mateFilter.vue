@@ -193,11 +193,42 @@
     </div>
 </template>
 <script>
-    import { mapState } from 'vuex'
+    import { placeObj,departmentArr,majorArr,industryObj } from '../../data';
+    import { mapState } from 'vuex';
     export default {
        data(){
           return {
-            showMore: false
+            showMore: false,
+              placeSlots: [
+                  {
+                      flex: 1,
+                      values: Object.keys(placeObj),
+                      textAlign: 'center'
+                  },
+                  {
+                      divider: true,
+                      content: '-'
+                  },
+                  {
+                      flex: 1,
+                      values: placeObj[Object.keys(placeObj)[0]],
+                      textAlign: 'center'
+                  }
+              ],
+              industrySlots: [
+                  {
+                      flex: 1,
+                      values: Object.keys(industryObj),
+                      textAlign: 'center'
+                  }
+              ],
+              industryDetailSlots: [
+                  {
+                      flex: 1,
+                      values: Object.keys(industryObj),
+                      textAlign: 'center'
+                  }
+              ]
           }
        },
       computed:{
