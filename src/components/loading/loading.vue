@@ -10,6 +10,16 @@
 <template>
     <div :class="$style.loadingBar">
         <mt-spinner type="snake"></mt-spinner>
-        <span>加载中...</span>
+        <span>{{text}}</span>
     </div>
 </template>
+<script>
+    export default {
+        props:{
+            text:{
+                type: String,
+                default: '加载中...'
+            }
+        }
+    }
+</script>

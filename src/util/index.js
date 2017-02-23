@@ -99,5 +99,35 @@ export default {
               return $0.substr(1, $0.length - 2);
           }
         });
+    },
+    parseJSON(str){
+      function parse(dataObj) {
+        try{
+          JSON.parse(dataObj)
+        }catch(e){
+          return dataObj
+        }
+        if(Array.isArray(dataObj)){
+          dataObj.map(item =>{
+            return parse(item);
+          });
+        }else{
+          var keyArr = Object.keys(dataObj);
+          keyArr.forEach(item=>{
+            dataObj[item] = parse(dataObj[item]);
+          })
+        }
+        return dataObj;
+      }
+      if(typeof str != 'string'){
+        return str;
+      }
+      try{
+        var obj = JSON.parse(str);
+        return parse(obj);
+      }catch(e){
+        return str;
+      }
+      
     }
 }

@@ -9,6 +9,14 @@
         height: 225px;
         color: #fff;
         background-image: linear-gradient(-180deg, #56AEEA 0%, #81D2F8 98%);
+        .cover{
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+        }
     }
     .imgAdd{
         position: relative;
@@ -31,18 +39,20 @@
     <div>
         <div class="content">
             <div :class="$style.picWrap">
-                <div :class="[$style.imgAdd,'text-center']">
+                <div :class="$style.cover" v-if="showBgImage" :style="{backgroundImage:'url('+ imageUrl(pubInfo.cover_file) +')'}"></div>
+                <Loading text="上传中..." :class="$style.loading" v-show="loading"></Loading>
+                <div :class="[$style.imgAdd,'text-center']" v-show="!loading">
                     <file-upload class="file-upload"
                          :drop="false"
-                         :multiple="true"
-                         post-action="http://114.215.45.243:9000/index.php/Picture/multiPicUpload"
+                         :post-action="action"
                          accept="image/*"
                          :events="events"
+                          name="file0"
                     ></file-upload>
                     <i :class="$style.btnAdd"></i>
                     <span>添加封面</span>
                 </div>
-                <span :class="$style.defaultImg">选用默认</span>
+                <span :class="$style.defaultImg" @click="selectDefaultImage">选用默认</span>
             </div>
             <div class="pub-info-content">
                 <div class="pub-item">
@@ -165,6 +175,7 @@
 </template>
 <script>
   import FileUpload from 'vue-upload-component';
+  import {serverUrl} from '../../config'
   import util from  '../../util';
   import $api from 'api';
   export default {
@@ -184,6 +195,8 @@
             fee:'600',
             contact: '13555555555'
         },
+          loading: false,
+        showBgImage: false,
         dateNow: new Date(),
         startDate: '',
         startTime: '',
@@ -191,26 +204,40 @@
         endTime: '',
         free: false,
         timeLimit: true,
-        popupVisible: false,
-        imgArr:[],
-        events: {
-          add(file, component) {
-            component.active = true;
-          },
-          progress(file, component) {
-            console.log('progress ' + file.progress);
-          },
-          after(file, component) {
-            console.log('after');
-            console.log(file,component);
-          },
-          before(file, component) {
-            console.log('before');
-          }
-        }
+        popupVisible: false
       }
     },
+
     computed:{
+        action(){
+            return serverUrl + '/index.php/Picture/multiPicUpload';
+        },
+        events(){
+            var _this = this;
+          return {
+              add(file, component) {
+                  file.data.count = 1;
+                  component.active = true;
+                  _this.loading = true;
+              },
+              progress(file, component) {
+                  console.log('progress ' + file.progress);
+              },
+              after(file, component) {
+                  var res = util.parseJSON(file.response);
+                  if(res.code == 200){
+                      _this.pubInfo.cover_file = res.data[0];
+                      _this.showBgImage = true;
+                  }else{
+                      this.$toast(res.msg);
+                  }
+                  _this.loading = false;
+              },
+              before(file, component) {
+                  console.log('before');
+              }
+          }
+        },
       activityStartTime(){
 //        console.log(new Date(util.dateFormat(this.startDate,'yyyy/MM/dd') + this.startTime).getTime();)
 
@@ -225,6 +252,10 @@
         }
     },
     methods:{
+      selectDefaultImage(){
+            this.pubInfo.cover_file = 'image/default-activity-cover.jpg';
+            this.showBgImage = true;
+      },
       deleteImage(img){
         console.log(img);
       },
@@ -243,7 +274,31 @@
         this.$refs[ref].open()
       },
       valid(){
-
+         if(!this.pubInfo.theme){
+            this.$toast('活动主题不能为空');
+            return false;
+         }
+          if(!this.pubInfo.place){
+              this.$toast('活动地址不能为空');
+              return false;
+          }
+          if(!/^1[3-8]\d{9}$/.test(this.pubInfo.contact)){
+              this.$toast('手机号码不正确');
+              return false;
+          }
+          if(this.pubInfo.free == ''){
+              this.$toast('活动费用未填写');
+              return false;
+          }
+          if(!this.pubInfo.amount){
+              this.$toast('限定人数未填写');
+              return false;
+          }
+          if(this.pubInfo.description == ''){
+              this.$toast('活动描述未填写');
+              return false;
+          }
+          return true;
       },
       getParams(){
         let obj = Object.assign({},this.pubInfo);
@@ -260,7 +315,13 @@
         return obj;
       },
       publish(){
-        $api.post('/index.php/Activity/publish',this.getParams())
+        if(!this.valid())return false;
+        var paramObj = this.getParams();
+          if(paramObj.time * 1 > paramObj.end_time *1){
+              this.$toast('开始时间不能大于结束时间');
+              return false;
+          }
+        $api.post('/index.php/Activity/publish',paramObj)
           .then(res=>{
             if(res.code == 200){
               this.$toast('发布成功');
@@ -271,7 +332,10 @@
           },res=>{
             this.$toast('服务器异常');
           })
-      }
+      },
+        imageUrl(str){
+            return `${serverUrl}/${str}`;
+        }
     }
 
   }
