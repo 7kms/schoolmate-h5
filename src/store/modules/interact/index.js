@@ -39,7 +39,7 @@ const actions = {
   [types.LOAD_INTERACT_LIST] ({ commit, dispatch }) {
     let params = getParams('interact');
     return new Promise((resolve,reject) => {
-      $api.get('/index.php/Activity/getList',params)
+      $api.get('/index.php/Help/getResList',params)
         .then(data =>{
           dispatch(types.APPEND_INTERACT_LIST, data.result);
           var noMore = (state.interact.list.length >= data.total);
@@ -88,6 +88,12 @@ const actions = {
 
 const mutations = {
   [types.APPEND_INTERACT_LIST] (state, dataList) {
+    dataList.map(item=>{
+      if(item.pictures.length == 0){
+        item.noPicture = true;
+      }
+      item.pictures.length = 4;
+    });
     state.interact.list = [...state.interact.list, ...dataList];
   },
   [types.RESET_INTERACT_LIST] (state) {

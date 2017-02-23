@@ -25,7 +25,6 @@
         border-top: 1px solid @line-color-split;
         .name{
             margin-top: 6px;
-            width: 40px;
         }
         .info{
             position: relative;
@@ -67,38 +66,42 @@
         <div :class="$style.desc">
             <span v-if="true" class="color-theme size-topic">拥有资源：</span>
             <span v-else　class="color-hint size-topic">寻求合作：</span>
-            {{ dataInfo.resource_description }}
+            测试中心范围包含，岩矿鉴定与分析、（水质、土壤）
+            无机化分析、有机分析、土木测试等。竭诚为广大校友服务。
         </div>
         <div class="text-right">
-            <time class="weak">{{dataInfo.create_time | dateFormat('yyyy/MM/dd') }}</time>
+            <time class="weak">2017/02/06</time>
         </div>
-        <div :class="$style.imgContent" v-if="!dataInfo.noPicture">
-            <ImgContain :imgUrl="url" :class="$style.imgItem" v-if="index < 4" v-for="(url,index) in dataInfo.pictures"></ImgContain>
+        <div :class="$style.imgContent">
+            <ImgContain :imgUrl="testUrl" :class="$style.imgItem"></ImgContain>
+            <ImgContain :imgUrl="testUrl" :class="$style.imgItem"></ImgContain>
+            <ImgContain :imgUrl="testUrl" :class="$style.imgItem"></ImgContain>
+            <ImgContain imgUrl="" :class="$style.imgItem"></ImgContain>
         </div>
         <div :class="$style.user">
-            <div>
-                <img :src="dataInfo.photo" width="40" height="40">
-                <div :class="[$style.name,'color-topic','one-line']">
-                    {{dataInfo.creater.name}}
+            <div class="text-center">
+                <img :src="testUrl" width="40" height="40">
+                <div :class="[$style.name,'color-topic']">
+                    王阳明
                 </div>
             </div>
             <div :class="$style.info">
                 <div :class="$style.label">
                     <div>
-                        <span>{{dataInfo.enrol_time}}级</span>
+                        <span>2006级</span>
                         <span> | </span>
-                        <span>{{dataInfo.creater.major}}</span>
+                        <span>翻译英语</span>
                     </div>
                     <div>
                         <i :class="['inline-block',$style.icon,$style.iconLocation]"></i>
-                        <span class="inline-block">{{ dataInfo.province + '-' + dataInfo.city}}</span>
+                        <span class="inline-block">北京</span>
                     </div>
                 </div>
                 <div>
-                    <span>{{dataInfo.creater.company}}</span>
+                    <span>多米亚文化有限公司</span>
                 </div>
                 <div>
-                    <span>{{dataInfo.creater.detail_job}}</span>
+                    <span>资深编导</span>
                 </div>
                 <span :class="$style.infoBtn">申请合作</span>
             </div>

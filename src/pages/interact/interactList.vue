@@ -50,6 +50,7 @@
       loadMore() {
         this.loading = true;
         this.$store.dispatch('interact/LOAD_INTERACT_LIST').then(()=>{
+
           this.loading = false;
         },(err)=>{
           this.loading = false;
