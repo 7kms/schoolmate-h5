@@ -60,7 +60,7 @@ const actions = {
   [types.LOAD_MATES_LIST] ({ commit, dispatch }) {
     let params = getParams('mates');
     return new Promise((resolve,reject) => {
-      $api.get('/index.php/Picture/getList',params)
+      $api.get('/index.php/Help/getMateList',params)
         .then(data =>{
           dispatch(types.APPEND_MATES_LIST, data.result);
           var noMore = (state.mates.list.length >= data.total);
@@ -107,10 +107,7 @@ const mutations = {
 
 
   [types.APPEND_MATES_LIST] (state, dataList) {
-    dataList.forEach(item=>{
-      item.pictures.length = 3;
-      state.mates.list.push(item);
-    });
+    state.mates.list = [...state.mates.list, ...dataList];
   },
   [types.RESET_MATES_LIST] (state) {
     state.mates.list = [];

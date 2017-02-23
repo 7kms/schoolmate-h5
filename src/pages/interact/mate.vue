@@ -67,34 +67,33 @@
             <span :class="[$style.infoBtn,{[$style.exchanged]:true}]">撤销</span>
             <div :class="$style.info">
                 <div :class="$style.portrait">
-                    <img :src="testUrl" width="40" height="40">
+                    <img :src="dataInfo.photo" width="40" height="40">
                 </div>
                 <div :class="[$style.text,$style.text1]">
                     <div>
-                        <span>2008级</span><span> | </span><span>土木工程</span>
+                        <span>{{dataInfo.enrol_time.slice(0,4)}}级</span><span> | </span><span>{{dataInfo.major}}</span>
                     </div>
                     <div>
-                        <span>小桔科技有限公司</span>
+                        <span>{{dataInfo.company}}</span>
                     </div>
                 </div>
             </div>
             <div :class="[$style.info,$style.info2]">
                 <div :class="$style.portrait">
-                    <span class="color-topic">王阳明</span>
+                    <span class="color-topic">{{dataInfo.name}}</span>
                 </div>
                 <div :class="$style.text">
-                    <div>开发总监</div>
+                    <div>{{dataInfo.detail_job}}</div>
                     <div>
                         <i :class="['inline-block',$style.icon,$style.iconLocation]"></i>
-                        <span class="inline-block">北京</span>
+                        <span class="inline-block">{{dataInfo.province + '-' + dataInfo.city}}</span>
                     </div>
                 </div>
             </div>
         </div>
         <div :class="$style.desc">
             <span class="color-topic">岗位描述:</span>
-            测试中心范围包含，岩矿鉴定与分析、（水质、土壤）
-            无机化分析、有机分析、土木测试等。竭诚为广大校友服务。
+            {{dataInfo.resource_description}}
         </div>
     </div>
 </template>
