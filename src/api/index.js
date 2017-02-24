@@ -24,7 +24,7 @@ get: (url, dataObj, opt = {}) => {
             options.params = {para:JSON.stringify(dataObj)};
             Vue.http.get(absoluteUrl, options).then(res => {
                 if (res.body.code == 200) {
-                    resolve(res.body.data)
+	                res.body.data = res.body.data ?  resolve(res.body.data) :  resolve(res.body);
                 } else {
                     reject(res.body.data)
                 }
