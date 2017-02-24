@@ -21,6 +21,7 @@
     import Item from '../public/column.vue';
     import $api from 'api';
     import publishBtn from '../../components/publish';
+    import Swiper from '../../components/swiper';
     export default {
         data(){
             return {
@@ -66,6 +67,7 @@
           if(!this.column.list.length){
             this.loadMore();
           }
+//            Swiper()
         }
     }
 </script>

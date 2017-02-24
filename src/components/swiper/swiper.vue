@@ -1,20 +1,21 @@
+<style lang="less" module>
+    .swiperContent{
+        position: fixed !important;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #000;
+        z-index: 1000 !important;
+    }
+</style>
 <template>
     <!-- Swiper -->
-    <div class="swiper-container">
+    <div :class="['swiper-container',$style.swiperContent]">
         <div class="swiper-wrapper">
-            <div class="swiper-slide">
+            <div class="swiper-slide" v-for="img in imageArr">
                 <div class="swiper-zoom-container">
-                    <img src="http://lorempixel.com/800/800/sports/1">
-                </div>
-            </div>
-            <div class="swiper-slide">
-                <div class="swiper-zoom-container">
-                    <img src="http://lorempixel.com/800/400/sports/2">
-                </div>
-            </div>
-            <div class="swiper-slide">
-                <div class="swiper-zoom-container">
-                    <img src="http://lorempixel.com/400/800/sports/3">
+                    <img :src="img">
                 </div>
             </div>
         </div>
@@ -26,24 +27,31 @@
     </div>
 </template>
 <script>
-  import Swiper from  './swiper.min'
-  import
   var browser = typeof window !== 'undefined';
   if (browser) {
-    window.Swiper = require('swiper')
+    window.Swiper = require('swiper');
     require('swiper/dist/css/swiper.css')
   }
     export default {
       props:{
-        options:{
-          type: Object,
-          default() {
-            return {}
+        imageArr:{
+          type: Array,
+          default(){
+              return []
           }
         }
       },
+      data() {
+        return {
+            visible: false
+        };
+      },
       mounted(){
-
+          var self = this;
+          var mount = function () {
+              self.swiper = new Swiper(self.$el, {zoom:true,pagination: '.swiper-pagination'})
+          };
+          this.$nextTick(mount);
       }
     }
 </script>
