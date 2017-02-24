@@ -65,7 +65,10 @@
         .dSelect{
             line-height: 28px;
             text-align: center;
-            border: 1px solid @theme-color;
+            &.empty{
+                 border: 1px solid @theme-color;
+             }
+
         }
         .special{
             width: 148px;
@@ -103,8 +106,9 @@
                     <div :class="$style.label">
                         <span class="color-topic">籍贯</span>
                     </div>
-                    <div :class="[$style.dInput,$style.dSelect,$style.special]">
-                        <span class="color-theme">点击选择</span>
+                    <div :class="[$style.dInput,$style.dSelect,$style.special,{[$style.empty]:!condition.bprovince}]" @click="showPicker('place')">
+                        <span  v-if="condition.bprovince && condition.bcity">{{condition.bprovince + '-' + condition.bcity}}</span>
+                        <span class="color-theme" v-else>点击选择</span>
                     </div>
                 </li>
                 <li :class="$style.dfn">
@@ -119,16 +123,18 @@
                     <div :class="$style.label">
                         <span class="color-topic">公司行业</span>
                     </div>
-                    <div :class="[$style.dInput,$style.dSelect]">
-                        <span class="color-theme">点击选择</span>
+                    <div :class="[$style.dInput,$style.dSelect,{[$style.empty]:!condition.industry}]" @click="showPicker('industry')">
+                        <span v-if="condition.industry">{{condition.industry}}</span>
+                        <span class="color-theme" v-else>点击选择</span>
                     </div>
                 </li>
                 <li :class="$style.dfn">
                     <div :class="$style.label">
                         <span class="color-topic">细分行业</span>
                     </div>
-                    <div :class="[$style.dInput,$style.dSelect]">
-                        <span class="color-theme">点击选择</span>
+                    <div :class="[$style.dInput,$style.dSelect,{[$style.empty]:!condition.job}]" @click="showPicker('industry_detail')">
+                        <span v-if="condition.job">{{condition.job}}</span>
+                        <span class="color-theme" v-else>点击选择</span>
                     </div>
                 </li>
                 <li :class="$style.dfn">
@@ -151,24 +157,26 @@
                     <div :class="$style.label">
                         <span class="color-topic">入学时间</span>
                     </div>
-                    <div :class="[$style.dInput,$style.dSelect]">
-                        <span class="color-theme">点击选择</span>
+                    <div :class="[$style.dInput,$style.dSelect]" @click="showPicker('roleStart')">
+                        <span v-if="condition.enrol_time">{{condition.enrol_time}}</span>
+                        <span class="color-theme" v-else>点击选择</span>
                     </div>
                 </li>
                 <li :class="$style.dfn">
                     <div :class="$style.label">
                         <span class="color-topic">毕业时间</span>
                     </div>
-                    <div :class="[$style.dInput,$style.dSelect]">
-                        <span class="color-theme">点击选择</span>
+                    <div :class="[$style.dInput,$style.dSelect]" @click="showPicker('graduate')">
+                        <span v-if="condition.graduate_time">{{condition.graduate_time}}</span>
+                        <span class="color-theme" v-else>点击选择</span>
                     </div>
                 </li>
                 <li :class="$style.dfn">
                     <div :class="$style.label">
                         <span class="color-topic">大学专业</span>
                     </div>
-                    <div :class="[$style.dInput,$style.dSelect]" @click="showPicker('major')">
-                        <span v-if="mates.condition.major">{{mates.condition.major}}</span>
+                    <div :class="[$style.dInput,$style.dSelect,{[$style.empty]:!condition.major}]" @click="showPicker('major')">
+                        <span v-if="condition.major">{{condition.major}}</span>
                         <span v-else class="color-theme">点击选择</span>
                     </div>
                 </li>
@@ -199,16 +207,74 @@
                 <span></span><span @click="setDefaultMajor">确定</span>
             </mt-picker>
         </mt-popup>
+        <mt-popup
+                v-model="showPlacePicker"
+                position="bottom"
+                popup-transition="popup-fade">
+            <mt-picker :slots="placeSlots" :showToolbar="true" :rotateEffect="true" @change="selectPlace">
+                <span></span><span @click="setDefaultPlace">确定</span>
+            </mt-picker>
+        </mt-popup>
+        <mt-datetime-picker
+            ref="startDatePicker"
+            type="date"
+            cancelText="关闭"
+            year-format="{value} 年"
+            month-format="{value} 月"
+            date-format="{value} 日"
+            :startDate="minDate"
+            :endDate="maxLimitDate"
+            v-model="roleStartDate"
+        >
+        </mt-datetime-picker>
+        <mt-datetime-picker
+            ref="endDatePicker"
+            type="date"
+            cancelText="关闭"
+            year-format="{value} 年"
+            month-format="{value} 月"
+            date-format="{value} 日"
+            :startDate="minLimitDate"
+            :endDate="maxDate"
+            v-model="roleEndDate"
+        >
+        </mt-datetime-picker>
+        <mt-popup
+                v-model="showIndustryPicker"
+                position="bottom"
+                popup-transition="popup-fade">
+            <mt-picker :slots="industrySlots" :showToolbar="true" :rotateEffect="true" @change="selectIndustry">
+                <span></span><span @click="selectDefaultIndustry">确定</span>
+            </mt-picker>
+        </mt-popup>
+        <mt-popup
+                v-model="showIndustryDetailPicker"
+                position="bottom"
+                popup-transition="popup-fade">
+            <mt-picker :slots="industryDetailSlots" :showToolbar="true" :rotateEffect="true" @change="selectIndustryDetail">
+                <span></span><span @click="selectDefaultIndustryDetail">确定</span>
+            </mt-picker>
+        </mt-popup>
     </div>
 </template>
 <script>
     import { placeObj,departmentArr,majorArr,industryObj } from '../../data';
     import { mapState } from 'vuex';
+    import util from  '../../util'
     export default {
        data(){
           return {
-            showMore: false,
-            showMajorPicker: false,
+              showMore: false,
+              showMajorPicker: false,
+              showPlacePicker: false,
+              showIndustryPicker: false,
+              showIndustryDetailPicker: false,
+              minDate:new Date('1950/09/01'),
+              maxDate:new Date('2050/07/01'),
+              minLimitDate: new Date('2050/07/01'),
+              maxLimitDate: new Date('1950/09/01'),
+              roleStartDate:'',
+              roleEndDate:'',
 	          majorSlots:[{
 		          flex: 1,
 		          values: majorArr
@@ -247,7 +313,8 @@
        },
       computed:{
         ...mapState({
-          mates: state => state.interact.mates
+          condition: state => state.interact.mates.condition,
+            mates: state => state.interact.mates
         })
       },
       watch:{
@@ -257,7 +324,18 @@
           }else{
             document.querySelector('body').style.overflow = 'auto';
           }
-        }
+        },
+          roleStartDate(newValue,oldValue){
+              if(!newValue || !oldValue || newValue == oldValue) return;
+              this.minLimitDate = newValue;
+              this.$store.dispatch('interact/CHANGE_MATES_CONDITION',{enrol_time:util.dateFormat(newValue,'yyyy/MM/dd')})
+          },
+          roleEndDate(newValue,oldValue){
+              if(!oldValue) return;
+              if(newValue == this.maxDate) return;
+              this.maxLimitDate = newValue;
+              this.$store.dispatch('interact/CHANGE_MATES_CONDITION',{graduate_time:util.dateFormat(newValue,'yyyy/MM/dd')})
+          }
       },
       methods:{
        	showPicker(pickerName){
@@ -265,18 +343,103 @@
                 case 'major':
 	                this.showMajorPicker = true;
 	                break;
-
+                case 'place':
+                    this.showPlacePicker = true;
+                    break;
+                case 'roleStart':
+                    this.$refs['startDatePicker'].open();
+                    break;
+                case 'graduate':
+                    this.$refs['endDatePicker'].open();
+                    break;
+                case 'industry':
+                    this.showIndustryPicker = true;
+                    break;
+                case 'industry_detail':
+                    this.showIndustryDetailPicker = true;
+                    break;
             }
+        },
+          hidePicker(){
+              this.showMajorPicker = false;
+              this.showIndustryPicker = false;
+              this.showIndustryDetailPicker = false;
+              this.showPlacePicker =  false;
+              this.showDepartmentPicker =  false;
+          },
+        selectPlace(picker,values){
+          let bprovince,bcity;
+          if(values){
+              if(!values[0]){
+                  values[0] = Object.keys(placeObj)[0];
+              }
+              bprovince = values[0];
+              bcity = values[1];
+              picker.setSlotValues(1, placeObj[values[0]]);
+              this.$store.dispatch('interact/CHANGE_MATES_CONDITION',{
+                  bprovince,
+                  bcity
+              });
+          }else{
+              this.showPlacePicker = false;
+              if(!this.condition.bprovince){
+                  bprovince = this.placeSlots[0].values[0];
+                  bcity = this.placeSlots[2].values[0];
+                  this.$store.dispatch('entrance/CHANGE_USERINFO',{
+                      bprovince,
+                      bcity
+                  });
+              }
+          }
         },
         selectMajor(picker, values) {
        		this.$store.dispatch('interact/CHANGE_MATES_CONDITION', {major:values[0]})
         },
         setDefaultMajor(){
-		      this.showMajorPicker = false;
-		      if(!this.mates.condition.major){
-			      this.$store.dispatch('interact/CHANGE_MATES_CONDITION',{major:this.majorSlots[0].values[0]})
-		      }
-	      },
+            this.showMajorPicker = false;
+            if(!this.condition.major){
+               this.$store.dispatch('interact/CHANGE_MATES_CONDITION',{major:this.majorSlots[0].values[0]})
+            }
+	    },
+         setDefaultPlace(){
+             let bprovince,bcity;
+             this.showPlacePicker = false;
+             if(!this.condition.bprovince){
+                 bprovince = this.placeSlots[0].values[0];
+                 bcity = this.placeSlots[2].values[0];
+                 this.$store.dispatch('interact/CHANGE_MATES_CONDITION',{
+                     bprovince,
+                     bcity
+                 });
+             }
+         },
+          selectIndustryDetail(picker, values){
+              this.$store.dispatch('interact/CHANGE_MATES_CONDITION', {
+                  job: values[0]
+              });
+          },
+          selectDefaultIndustryDetail(){
+              this.hidePicker();
+              if(!this.condition.job){
+                  this.$store.dispatch('interact/CHANGE_MATES_CONDITION', {
+                      job: this.industryDetailSlots[0].values[0]
+                  });
+              }
+          },
+          selectIndustry(picker, values){
+              this.$store.dispatch('interact/CHANGE_MATES_CONDITION', {
+                  industry: values[0]
+              });
+              this.industryDetailSlots[0].values = industryObj[values[0]]
+          },
+          selectDefaultIndustry(){
+              this.hidePicker();
+              if(!this.condition.industry){
+                  this.$store.dispatch('interact/CHANGE_MATES_CONDITION', {
+                      industry: this.industrySlots[0].values[0]
+                  });
+              }
+          },
         switchNav(nav){
           this.$store.dispatch('interact/SWITCH_MATES_NAV',nav);
           if(nav.more){
