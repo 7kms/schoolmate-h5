@@ -10,7 +10,7 @@
             infinite-scroll-immediate-check="false"
             infinite-scroll-disabled="noScroll"
             infinite-scroll-distance="80">
-            <Item v-for="(item,index) in interact.list" :class="$style.item" :key="index" :dataInfo="item"></Item>
+            <Item v-for="(item,index) in interact.list" :class="$style.item" :key="index" :dataInfo="item" @collaborate="collaborate"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
         <publishBtn text="发需求" @click="onPublish"></publishBtn>
@@ -47,6 +47,17 @@
       onPublish() {
         this.$router.push(`/publish/interact`);
       },
+        collaborate(item){
+            $api.post('/index.php/Help/apply',{rid:item.rid})
+                    .then(res => {
+                        if(res.result){
+                this.$toast(res.msg);
+                item.applied = true;
+            }
+                    },res=>{
+                    this.$toast('服务器异常')
+            });
+        },
       loadMore() {
         this.loading = true;
         this.$store.dispatch('interact/LOAD_INTERACT_LIST').then(()=>{

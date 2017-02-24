@@ -14,7 +14,7 @@
             infinite-scroll-immediate-check="false"
             infinite-scroll-disabled="noScroll"
             infinite-scroll-distance="80">
-            <Item v-for="(item,index) in mates.list" :class="$style.item" :key="index" :dataInfo="item"></Item>
+            <Item v-for="(item,index) in mates.list" :class="$style.item" :key="index" :dataInfo="item" @cancelExchange="cancelExchange" @exchange="exchange"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
     </div>
@@ -60,7 +60,29 @@
           this.loading = false;
           this.$toast({message: err});
         });
-      }
+      },
+        exchange(item){
+            var {uid} = item;
+            $api.post('/index.php/Profile/requestExchange',{uid})
+                    .then(res => {
+                if(res.result){
+                    this.$toast(res.msg)
+                }
+            },res=>{
+                this.$toast('服务器异常')
+            })
+        },
+        cancelExchange(item){
+          var {uid} = item;
+            $api.post('/index.php/Profile/cancelExchange',{uid})
+                    .then(res => {
+                        if(res.result){
+                this.$toast(res.msg)
+            }
+            },res=>{
+                this.$toast('服务器异常')
+            })
+        }
     },
     created(){
       if(!this.mates.list.length){

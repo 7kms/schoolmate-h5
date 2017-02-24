@@ -100,7 +100,8 @@
                 <div>
                     <span>{{dataInfo.creater.detail_job}}</span>
                 </div>
-                <span :class="$style.infoBtn">申请合作</span>
+                <span :class="$style.infoBtn" @click.prevent="collaborate" v-if="!dataInfo.applied">申请合作</span>
+                <span :class="$style.infoBtn" v-if="dataInfo.applied">合作名单</span>
             </div>
         </div>
     </div>
@@ -122,6 +123,9 @@
     methods:{
       click(){
         this.$emit('click',this.dataInfo);
+      },
+      collaborate(){
+          this.$emit('collaborate',this.dataInfo);
       }
     }
   }

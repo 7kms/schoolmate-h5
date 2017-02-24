@@ -92,7 +92,7 @@
                 <span>{{nav.name}}</span><i v-if="nav.more" :class="['inline-block',$style.iconMore]"></i>
             </div>
         </div>
-        <div :class="$style.condition" v-if="showMore">
+        <div :class="$style.condition" v-show="showMore">
             <ul>
                 <li :class="$style.dfn">
                     <div :class="$style.label">
@@ -157,7 +157,7 @@
                     <div :class="$style.label">
                         <span class="color-topic">入学时间</span>
                     </div>
-                    <div :class="[$style.dInput,$style.dSelect]" @click="showPicker('roleStart')">
+                    <div :class="[$style.dInput,$style.dSelect,{[$style.empty]:!condition.enrol_time}]" @click="showPicker('roleStart')">
                         <span v-if="condition.enrol_time">{{condition.enrol_time}}</span>
                         <span class="color-theme" v-else>点击选择</span>
                     </div>
@@ -166,7 +166,7 @@
                     <div :class="$style.label">
                         <span class="color-topic">毕业时间</span>
                     </div>
-                    <div :class="[$style.dInput,$style.dSelect]" @click="showPicker('graduate')">
+                    <div :class="[$style.dInput,$style.dSelect,{[$style.empty]:!condition.graduate_time}]" @click="showPicker('graduate')">
                         <span v-if="condition.graduate_time">{{condition.graduate_time}}</span>
                         <span class="color-theme" v-else>点击选择</span>
                     </div>
@@ -314,24 +314,18 @@
       computed:{
         ...mapState({
           condition: state => state.interact.mates.condition,
-            mates: state => state.interact.mates
+            mates: state => state.interact.mates,
+            profile: state => state.user.profile
         })
       },
       watch:{
-        showMore(newValue){
-          if(newValue){
-            document.querySelector('body').style.overflow = 'hidden';
-          }else{
-            document.querySelector('body').style.overflow = 'auto';
-          }
-        },
           roleStartDate(newValue,oldValue){
               if(!newValue || !oldValue || newValue == oldValue) return;
               this.minLimitDate = newValue;
               this.$store.dispatch('interact/CHANGE_MATES_CONDITION',{enrol_time:util.dateFormat(newValue,'yyyy/MM/dd')})
           },
           roleEndDate(newValue,oldValue){
-              if(!oldValue) return;
+              if(!newValue || !oldValue || newValue == oldValue) return;
               if(newValue == this.maxDate) return;
               this.maxLimitDate = newValue;
               this.$store.dispatch('interact/CHANGE_MATES_CONDITION',{graduate_time:util.dateFormat(newValue,'yyyy/MM/dd')})
@@ -448,14 +442,36 @@
           }else{
             this.showMore = false;
             this.$store.dispatch('interact/RESET_MATES_CONDITION');
+              switch (nav.name){
+                  case '同城':
+                      this.$store.dispatch('interact/CHANGE_MATES_CONDITION', {
+                          city: this.profile.city
+                      });
+                      break;
+                  case '同行':
+                      this.$store.dispatch('interact/CHANGE_MATES_CONDITION', {
+                          industry: this.profile.industry
+                      });
+                      break;
+                  case '同学':
+                      this.$store.dispatch('interact/CHANGE_MATES_CONDITION', {
+                          'class': this.profile.class
+                      });
+                      break;
+              }
             this.$parent.loadMore();
           }
         },
         searchMore(){
           this.showMore = false;
-          this.$store.dispatch('interact/RESET_INTERACT_LIST');
+//          this.$store.dispatch('interact/RESET_MATES_CONDITION');
           this.$parent.loadMore();
         }
-      }
+      },
+        mounted(){
+          this.$nextTick(()=>{
+              this.$store.dispatch('interact/RESET_MATES_CONDITION');
+          })
+        }
     }
 </script>

@@ -64,7 +64,7 @@
 <template>
     <div :class="$style.content" @click="click">
         <div :class="$style.user">
-            <span :class="[$style.infoBtn,{[$style.exchanged]:true}]">撤销</span>
+            <span :class="[$style.infoBtn,{[$style.exchanged]:true}]" @click.prevent="cancelExchange(dataInfo)">撤销</span>
             <div :class="$style.info">
                 <div :class="$style.portrait">
                     <img :src="dataInfo.photo" width="40" height="40">
@@ -114,7 +114,13 @@
     methods:{
       click(){
         this.$emit('click',this.dataInfo);
-      }
+      },
+        cancelExchange(){
+            this.$emit('cancelExchange',this.dataInfo);
+        },
+        exchange(){
+            this.$emit('exchange',this.dataInfo);
+        }
     }
   }
 </script>

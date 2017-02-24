@@ -14,13 +14,11 @@ var state = {
     start: 0,
     nav:[
       {name:'同城', active: false},
-      {name:'同乡', active: false},
+      {name:'同行', active: false},
       {name:'同学', active: false},
       {name:'更多', active: false, more: true},
     ],
-    condition:{
-		major: ''
-    }
+    condition:{}
   }
 };
 
@@ -30,7 +28,7 @@ function getParams (item) {
     pageSize: state[item].pageSize
   };
   if(item == 'mates'){
-
+    Object.assign(obj,state.mates.condition);
   }
   return obj;
 }
@@ -100,6 +98,7 @@ const mutations = {
   },
   [types.RESET_INTERACT_LIST] (state) {
     state.interact.list = [];
+    state.interact.condition = {};
     state.interact.start = 0;
     state.interact.noMore = false;
   },
@@ -123,9 +122,7 @@ const mutations = {
   	state.mates.condition = Object.assign(state.mates.condition, status);
   },
   [types.RESET_MATES_CONDITION] (state) {
-    Object.keys(state.mates.condition).forEach(key => {
-      state.mates.condition[key] = '';
-    });
+    state.mates.condition = {};
   },
   [types.SWITCH_MATES_NAV] (state, activeNav) {
     state.mates.nav.forEach(nav => {
