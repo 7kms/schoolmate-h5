@@ -19,7 +19,7 @@ var state = {
       {name:'更多', active: false, more: true},
     ],
     condition:{
-
+		major: ''
     }
   }
 };
@@ -56,7 +56,9 @@ const actions = {
   [types.RESET_INTERACT_LIST] ({ commit }) {
     commit(types.RESET_INTERACT_LIST);
   },
-
+  [types.CHANGE_MATES_CONDITION] ({ commit }, status) {
+  	commit(types.CHANGE_MATES_CONDITION, status);
+  },
   [types.LOAD_MATES_LIST] ({ commit, dispatch }) {
     let params = getParams('mates');
     return new Promise((resolve,reject) => {
@@ -116,6 +118,9 @@ const mutations = {
   },
   [types.CHANGE_MATES_STATUS] (state, status) {
     state.mates = Object.assign(state.mates, status);
+  },
+  [types.CHANGE_MATES_CONDITION] (state, status) {
+  	state.mates.condition = Object.assign(state.mates.condition, status);
   },
   [types.RESET_MATES_CONDITION] (state) {
     Object.keys(state.mates.condition).forEach(key => {

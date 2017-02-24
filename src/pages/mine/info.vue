@@ -24,6 +24,9 @@
         margin-left: 24px;
         border-bottom: 1px solid @line-color-split;
     }
+    .itemText {
+        padding-top: 10px;
+    }
     .item{
         height: 38px;
         align-items: center;
@@ -65,6 +68,7 @@
         height: 40px;
         resize: none;
         outline: none;
+        border: none;
     }
 </style>
 <template>
@@ -76,13 +80,13 @@
             <div :class="$style.item">
                 <div :class="$style.dfn">班级代码：</div>
                 <div :class="[$style.textInput,'color-topic']">
-                    <input type="text" :class="$style.input" value="B08056038">
+                    <input type="text" :class="$style.input" v-model="profile.class">
                 </div>
             </div>
             <div :class="$style.item">
                 <div :class="$style.dfn">姓      名：</div>
                 <div :class="[$style.textInput,'color-topic']">
-                    <input type="text" :class="$style.input" value="陈博">
+                    <input type="text" :class="$style.input" v-model="profile.name">
                 </div>
             </div>
             <div :class="$style.item">
@@ -94,13 +98,13 @@
             <div :class="$style.item">
                 <div :class="$style.dfn">微 信 号 ：</div>
                 <div :class="[$style.textInput,'color-topic']">
-                    <input type="text" :class="$style.input" value="wind_road">
+                    <input type="text" :class="$style.input" v-model="profile.wechat">
                 </div>
             </div>
             <div :class="$style.item">
                 <div :class="$style.dfn">手机号码：</div>
                 <div :class="[$style.textInput,'color-topic']">
-                    <input type="text" :class="$style.input" value="13301523576">
+                    <input type="text" :class="$style.input" v-model="profile.phonenum">
                 </div>
             </div>
             <div :class="$style.item">
@@ -146,31 +150,31 @@
             <div :class="$style.item">
                 <div :class="$style.dfn">工作单位：</div>
                 <div :class="[$style.textInput,'color-topic']">
-                    <input type="text" :class="$style.input" value="星河互联">
+                    <input type="text" :class="$style.input" v-model="profile.company">
                 </div>
             </div>
             <div :class="$style.item">
                 <div :class="$style.dfn">所属行业：</div>
                 <div :class="[$style.textInput,'color-topic']">
-                    <input type="text" :class="$style.input" value="计算机／互联网">
+                    <input type="text" :class="$style.input" v-model="profile.industry">
                 </div>
             </div>
             <div :class="$style.item">
                 <div :class="$style.dfn">细分行业：</div>
                 <div :class="[$style.textInput,'color-topic']">
-                    <input type="text" :class="$style.input" value="计算机软件">
+                    <input type="text" :class="$style.input" v-model="profile.job">
                 </div>
             </div>
             <div :class="$style.item">
                 <div :class="$style.dfn">所在部门：</div>
                 <div :class="[$style.textInput,'color-topic']">
-                    <input type="text" :class="$style.input" value="产品部">
+                    <input type="text" :class="$style.input" v-model="profile.department">
                 </div>
             </div>
             <div :class="$style.item">
                 <div :class="$style.dfn">担任职务：</div>
                 <div :class="[$style.textInput,'color-topic']">
-                    <input type="text" :class="$style.input" value="设计师">
+                    <input type="text" :class="$style.input" v-model="profile.detail_job">
                 </div>
             </div>
             <div :class="$style.item">
@@ -182,12 +186,36 @@
             <div :class="$style.itemText">
                 <div :class="$style.dfn">岗位描述：</div>
                 <div :class="[$style.textInput,$style.textArea,'color-topic']">
-                    <textarea class="color-topic">内容描述内容描述内容描述内容内容描述内容描述内容描述内容</textarea>
+                    <textarea class="color-topic" v-model="profile.resource_description"></textarea>
                 </div>
             </div>
         </div>
-        <div :class="$style.save">
+        <div :class="$style.save" @click="saveInfo">
             <span>保存</span>
         </div>
     </div>
 </template>
+<script>
+    import $api from  'api';
+	import { mapState } from 'vuex';
+	export default {
+		data() {
+            return {
+            	profile: {}
+            }
+        },
+		created: function() {
+			this.$store.dispatch('user/GET_ACCOUNT')
+				.then( (dataInfo) => {
+					console.log(dataInfo);
+					this.profile = {...dataInfo}
+				} )
+		},
+        methods: {
+			saveInfo() {
+				this.$toast('保存成功');
+				this.$router.go(-1);
+            }
+        }
+    }
+</script>

@@ -167,8 +167,9 @@
                     <div :class="$style.label">
                         <span class="color-topic">大学专业</span>
                     </div>
-                    <div :class="[$style.dInput,$style.dSelect]">
-                        <span class="color-theme">点击选择</span>
+                    <div :class="[$style.dInput,$style.dSelect]" @click="showPicker('major')">
+                        <span v-if="mates.condition.major">{{mates.condition.major}}</span>
+                        <span v-else class="color-theme">点击选择</span>
                     </div>
                 </li>
                 <li :class="$style.dfn">
@@ -190,6 +191,14 @@
             </ul>
             <div :class="[$style.submit,'text-center']" @click="searchMore">搜索</div>
         </div>
+        <mt-popup
+                v-model="showMajorPicker"
+                position="bottom"
+                popup-transition="popup-fade">
+            <mt-picker :slots="majorSlots" :showToolbar="true" :rotateEffect="true" @change="selectMajor">
+                <span></span><span @click="setDefaultMajor">确定</span>
+            </mt-picker>
+        </mt-popup>
     </div>
 </template>
 <script>
@@ -199,6 +208,11 @@
        data(){
           return {
             showMore: false,
+            showMajorPicker: false,
+	          majorSlots:[{
+		          flex: 1,
+		          values: majorArr
+	          }],
               placeSlots: [
                   {
                       flex: 1,
@@ -246,6 +260,23 @@
         }
       },
       methods:{
+       	showPicker(pickerName){
+       	    switch (pickerName) {
+                case 'major':
+	                this.showMajorPicker = true;
+	                break;
+
+            }
+        },
+        selectMajor(picker, values) {
+       		this.$store.dispatch('interact/CHANGE_MATES_CONDITION', {major:values[0]})
+        },
+        setDefaultMajor(){
+		      this.showMajorPicker = false;
+		      if(!this.mates.condition.major){
+			      this.$store.dispatch('interact/CHANGE_MATES_CONDITION',{major:this.majorSlots[0].values[0]})
+		      }
+	      },
         switchNav(nav){
           this.$store.dispatch('interact/SWITCH_MATES_NAV',nav);
           if(nav.more){

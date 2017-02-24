@@ -69,9 +69,9 @@
     <div class="content">
         <div :class="$style.header">
             <div :class="$style.pic">
-                <img :src="testUrl" alt="" width="60" height="60">
+                <img :src="profile.photo" alt="" width="60" height="60">
             </div>
-            <div class="size-topic text-center">野兽骑行</div>
+            <div class="size-topic text-center">{{profile.name}}</div>
         </div>
         <ul :class="$style.list">
             <router-link :to="{path:'/mine/info'}" tag="li" :class="$style.item">
@@ -106,6 +106,7 @@
     </div>
 </template>
 <script>
+	import  { mapState } from  'vuex'
   import {serverUrl} from '../../config'
   export default {
     components:{
@@ -116,6 +117,12 @@
         item: '',
         testUrl:require('../../assets/moke/0.3.1.png')
       }
+    },
+    computed: {
+        ...mapState({
+        	profile: (state) => state.user.profile
+        })
     }
+
   }
 </script>
