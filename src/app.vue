@@ -22,6 +22,15 @@
                 showNav: true
             }
         },
+        created: function() {
+            this.$store.dispatch('user/GET_ACCOUNT')
+                .then( (profile) => {
+                	console.log(profile);
+                	if(!profile.phonenum) {
+		                this.$router.replace('/entrance');
+                    }
+                } )
+        },
         components:{
            AppNav 
         },
