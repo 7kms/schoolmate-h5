@@ -26,7 +26,7 @@ get: (url, dataObj, opt = {}) => {
                 if (res.body.code == 200) {
 	                res.body.data ? resolve(res.body.data) : resolve(res.body);
                 } else {
-                    reject(res.body.data)
+                    reject(res.body)
                 }
             }, res => {
                 reject(res.body)

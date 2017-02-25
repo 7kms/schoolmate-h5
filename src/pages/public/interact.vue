@@ -49,6 +49,10 @@
                 text-align: center;
                 color: @theme-color;
                 border: 1px solid @theme-color;
+                &.hint{
+                    color: @hint-color;
+                     border-color: @hint-color;
+                 }
             }
         }
     }
@@ -101,7 +105,7 @@
                     <span>{{dataInfo.creater.detail_job}}</span>
                 </div>
                 <span :class="$style.infoBtn" @click.prevent="collaborate" v-if="!dataInfo.applied">申请合作</span>
-                <span :class="$style.infoBtn" v-if="dataInfo.applied">合作名单</span>
+                <span :class="[$style.infoBtn,$style.hint]" @click.prevent="revocation" v-else>撤销</span>
             </div>
         </div>
     </div>
@@ -109,11 +113,6 @@
 <script>
   import {serverUrl} from '../../config'
   export default {
-    data(){
-      return {
-        testUrl:require('../../assets/moke/0.3.1.png')
-      }
-    },
     props: {
       dataInfo: {
         type: Object,
@@ -126,6 +125,9 @@
       },
       collaborate(){
           this.$emit('collaborate',this.dataInfo);
+      },
+      revocation(){
+        this.$emit('revocation',this.dataInfo);
       }
     }
   }

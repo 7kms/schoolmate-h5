@@ -64,7 +64,10 @@
 <template>
     <div :class="$style.content" @click="click">
         <div :class="$style.user">
-            <span :class="[$style.infoBtn,{[$style.exchanged]:true}]" @click.prevent="cancelExchange(dataInfo)">撤销</span>
+            <template v-if="!isSelf">
+                <span :class="[$style.infoBtn,{[$style.exchanged]:true}]" v-if="false" @click.prevent="cancelExchange(dataInfo)">撤销</span>
+                <span :class="[$style.infoBtn]" @click.prevent="exchange(dataInfo)">交换联系方式</span>
+            </template>
             <div :class="$style.info">
                 <div :class="$style.portrait">
                     <img :src="dataInfo.photo" width="40" height="40">
@@ -99,6 +102,7 @@
 </template>
 <script>
   import {serverUrl} from '../../config'
+  import {mapState} from 'vuex'
   export default {
     data(){
       return {
@@ -109,6 +113,15 @@
       dataInfo: {
         type: Object,
         required: true
+      }
+    },
+    computed:{
+      ...mapState({
+        profile:(state)=>state.user.profile
+      }),
+
+      isSelf(){
+        return this.profile.uid == this.dataInfo.uid
       }
     },
     methods:{

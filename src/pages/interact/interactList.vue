@@ -50,10 +50,10 @@
         collaborate(item){
             $api.post('/index.php/Help/apply',{rid:item.rid})
                     .then(res => {
-                        if(res.result){
-                this.$toast(res.msg);
-                item.applied = true;
-            }
+                      this.$toast(res.msg);
+                       if(res.code == 200){
+                         item.applied = true;
+                       }
                     },res=>{
                     this.$toast('服务器异常')
             });

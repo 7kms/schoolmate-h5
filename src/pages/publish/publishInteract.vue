@@ -48,15 +48,16 @@
 <template>
     <div :class="$style.content">
         <div :class="$style.picWrap">
-            <ImgContain :class="[$style.imgItem,{[$style.margin]:index>2}]" v-for="(img,index) in imgArr" :imgUrl="img.url">
-                <i :class="$style.deleteImg" @click="deleteImage(img)" v-if="img.url"></i>
-                <div :class="[$style.imgAdd,'text-center']" v-if="index == imgArr.length-1 && !img.url">
+            <ImgContain :class="[$style.imgItem]" v-for="(url,index) in uploadImageArr" :imgUrl="url">
+                <i :class="$style.deleteImg" @click="deleteImage(url)" v-if="url"></i>
+                <div :class="[$style.imgAdd,'text-center']" v-if="index == uploadImageArr.length-1 && !url">
                     <file-upload class="file-upload"
                                  :drop="false"
+                                 :post-action="action"
                                  :multiple="true"
-                                 post-action="http://10.0.6.213:9000/upload"
                                  accept="image/*"
                                  :events="events"
+                                 name="file0"
                     ></file-upload>
                     <i :class="$style.btnAdd"></i>
                     <span>点击上传</span>
@@ -76,18 +77,18 @@
                 <h3 class="pub-title">可见范围</h3>
                 <div class="pub-text">
                     <div class="pub-select" @click="showPicker('range')">
-                        <span>{{ selectRange.name || '所有人可见' }}</span>
+                        <span>{{ rangeStr || '所有人可见' }}</span>
                     </div>
                 </div>
             </div>
             <div class="pub-item">
                 <h3 class="pub-title">活动描述</h3>
                 <div class="pub-text">
-                    <textarea class="pub-area" placeholder="填写活动的具体注意事项、详细信息等"></textarea>
+                    <textarea class="pub-area" placeholder="填写活动的具体注意事项、详细信息等" v-model="description"></textarea>
                 </div>
             </div>
         </div>
-        <div class="pubBar">发布</div>
+        <div class="pubBar" @click="publish">发布</div>
         <mt-popup
             v-model="showNeeds"
             position="bottom"
@@ -100,14 +101,22 @@
             v-model="showRange"
             position="bottom"
             popup-transition="popup-fade">
-            <mt-picker :slots="rangeArr" valueKey="name" :showToolbar="true" :rotateEffect="true" @change="changeRange">
-                <span></span><span @click="hidePicker">确定</span>
-            </mt-picker>
+            <div class="pop-toolbar">
+                <span class="toolbar-cancel"></span>
+                <span class="toolbar-ok" @click="hidePicker('range')">确定</span>
+            </div>
+            <mt-checklist
+                    v-model="selectRange"
+                    :options="rangeOptions">
+            </mt-checklist>
         </mt-popup>
     </div>
 </template>
 <script>
   import FileUpload from 'vue-upload-component'
+  import {serverUrl} from '../../config'
+  import util from  '../../util';
+  import $api from 'api';
   export default {
     components:{
       FileUpload
@@ -115,28 +124,73 @@
     data(){
       return {
         imgArr:[],
-        events: {
+        selectNeed:{},
+        selectRange:[],
+        needsArr:[{flex:1,values:[{name:'拥有资源',value:1},{name:'寻求合作',value:2}]}],
+        showNeeds: false,
+        showRange: false,
+        rangeOptions: [],
+        description:''
+      }
+    },
+    computed:{
+      action(){
+        return serverUrl + '/index.php/Picture/multiPicUpload';
+      },
+      uploadImageArr(){
+        let arr = [...this.imgArr];
+        arr.length = 4;
+        return arr;
+      },
+      selectCircle(){
+        let arr = [];
+        this.selectRange.forEach(cid=>{
+          this.rangeOptions.forEach(obj=>{
+            if(obj.value == cid){
+              arr.push({
+                cid,
+                name:obj.label
+              })
+            }
+          });
+        });
+        return arr;
+      },
+      rangeStr(){
+        let arr = [],str;
+        this.selectCircle.forEach(circle => {
+          arr.push(circle.name);
+        });
+        str = arr.join(',');
+        return str;
+      },
+      events(){
+        let _this = this;
+        return {
           add(file, component) {
+            file.data.count = 1;
             component.active = true;
-            file.data.finename = file.name;
+            _this.loading = true;
           },
           progress(file, component) {
             console.log('progress ' + file.progress);
           },
           after(file, component) {
-            console.log('after');
-            console.log(file,component);
+            let res = util.parseJSON(file.response);
+            let url = res.data[0];
+            _this.imgArr.push(url);
           },
           before(file, component) {
             console.log('before');
           }
-        },
-        selectNeed:{},
-        selectRange:{},
-        needsArr:[{flex:1,values:[{name:'拥有资源',value:1},{name:'寻求合作',value:2}]}],
-        rangeArr:[{flex:1,values:[{name:'所有人可见',value:1},{name:'朋友圈1',value:1},{name:'朋友圈2',value:2}]}],
-        showNeeds: false,
-        showRange: false
+        }
+      },
+      activityStartTime(){
+//        console.log(new Date(util.dateFormat(this.startDate,'yyyy/MM/dd') + this.startTime).getTime();)
+
+      },
+      activityEndTime(){
+
       }
     },
     methods:{
@@ -148,7 +202,10 @@
         }
       },
       deleteImage(img){
-        console.log(img);
+        let index = this.imgArr.indexOf(img);
+        if(~index){
+          this.imgArr.splice(index,1);
+        }
       },
       hidePicker(type){
         if(type == 'needs'){
@@ -162,16 +219,51 @@
       changeNeeds(picker,values){
         this.selectNeed = values[0];
       },
-      changeRange(picker,values){
-        this.selectRange = values[0];
+      getPubInfo(){
+        let pubInfo = {
+            description: this.description,
+            type: this.selectNeed.value,
+            pictures: this.imgArr,
+            circle: this.selectRange
+        };
+        return pubInfo
+      },
+      valid(){
+        if(!this.selectNeed.name){
+          this.$toast('选择您的需求类型');
+          return false;
+        }
+        if(!this.description){
+          this.$toast('请填写详细信息');
+          return false;
+        }
+        return true;
+      },
+      publish(){
+        if(!this.valid()) return false;
+        let paramObj = this.getPubInfo();
+        $api.post('/index.php/Help/createRes',paramObj)
+          .then(res=>{
+
+          },res=>{
+            this.$toast('服务器异常')
+          })
       }
     },
     created(){
-      for(let i=0;i<4;i++){
-        this.imgArr.push({
-          url:i<=1 ? require('../../assets/moke/0.3.2.png') : ''
+      $api.get('/index.php/Circle/getCircle')
+        .then(res=>{
+
+        },res=>{
+          res.forEach(circle => {
+            var obj = {
+              label: circle.name,
+              value: circle.cid,
+            };
+            this.rangeOptions.push(obj);
+          });
+          console.log(res);
         })
-      }
     }
   }
 </script>

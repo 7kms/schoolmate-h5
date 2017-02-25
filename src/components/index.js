@@ -1,4 +1,4 @@
-import { Toast, Spinner, MessageBox, Popup, Picker, DatetimePicker } from 'mint-ui';
+import { Toast, Spinner, MessageBox, Popup, Picker, DatetimePicker, Checklist } from 'mint-ui';
 import Loading from './loading';
 import ImgContain from './imgContain';
 
@@ -7,6 +7,7 @@ const componentsObj = {
     Spinner,
     Popup,
     Picker,
+    Checklist,
     DatetimePicker
 };
 const customComponent = {
