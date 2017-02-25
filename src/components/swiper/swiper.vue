@@ -13,20 +13,21 @@
     <!-- Swiper -->
     <div :class="['swiper-container',$style.swiperContent]">
         <div class="swiper-wrapper">
-            <div class="swiper-slide" v-for="img in imageArr">
+            <div class="swiper-slide" v-for="img in imageArr" @click="cancel">
                 <div class="swiper-zoom-container">
-                    <img :src="img">
+                    <img :src="postUrl(img)">
                 </div>
             </div>
         </div>
         <!-- Add Pagination -->
         <div class="swiper-pagination swiper-pagination-white"></div>
         <!-- Add Navigation -->
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-button-next"></div>
+        <!--<div class="swiper-button-prev"></div>-->
+        <!--<div class="swiper-button-next"></div>-->
     </div>
 </template>
 <script>
+  import {serverUrl} from '../../config'
   var browser = typeof window !== 'undefined';
   if (browser) {
     window.Swiper = require('swiper');
@@ -39,6 +40,10 @@
           default(){
               return []
           }
+        },
+        initialSlide: {
+          type: Number,
+          default: 0
         }
       },
       data() {
@@ -46,12 +51,31 @@
             visible: false
         };
       },
+      methods:{
+        postUrl(url){
+          if(url && url.indexOf('/')==0){
+            return url;
+          }else if(url){
+            return `${serverUrl}/${url}`;
+          }
+        },
+        cancel(){
+          this.swiper && this.swiper.destroy();
+          this.close && this.close();
+        }
+      },
       mounted(){
-          var self = this;
-          var mount = function () {
-              self.swiper = new Swiper(self.$el, {zoom:true,pagination: '.swiper-pagination'})
-          };
-          this.$nextTick(mount);
+        this.$nextTick(()=>{
+          this.swiper = new Swiper(this.$el, {
+            zoom:true,
+            pagination: '.swiper-pagination',
+            initialSlide: this.initialSlide
+          });
+        });
+      },
+      updated(){
+        this.swiper.update();
+        this.swiper.slideTo(this.initialSlide,false);
       }
     }
 </script>

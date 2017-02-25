@@ -77,7 +77,7 @@
             <time class="weak">{{dataInfo.create_time | dateFormat('yyyy/MM/dd') }}</time>
         </div>
         <div :class="$style.imgContent" v-if="!dataInfo.noPicture">
-            <ImgContain :imgUrl="url" :class="$style.imgItem" v-if="index < 4" v-for="(url,index) in dataInfo.pictures"></ImgContain>
+            <ImgContain :imgUrl="url" :class="$style.imgItem" v-if="index < 4"  @click.native="showSwiper(index)" v-for="(url,index) in dataInfo.pictures"></ImgContain>
         </div>
         <div :class="$style.user">
             <div>
@@ -111,7 +111,9 @@
     </div>
 </template>
 <script>
-  import {serverUrl} from '../../config'
+  import {serverUrl} from '../../config';
+  import swiper from  '../../components/swiper';
+
   export default {
     props: {
       dataInfo: {
@@ -122,6 +124,13 @@
     methods:{
       click(){
         this.$emit('click',this.dataInfo);
+      },
+      showSwiper(currentIndex){
+        if(!this.dataInfo.pictures[currentIndex]) return;
+        swiper({
+          imageArr:this.dataInfo.pictures,
+          currentIndex
+        });
       },
       collaborate(){
           this.$emit('collaborate',this.dataInfo);

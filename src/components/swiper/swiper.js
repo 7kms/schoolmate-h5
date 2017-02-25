@@ -1,7 +1,10 @@
 import Vue from 'vue';
 import swiper from './swiper.vue'
 const SwiperConstructor = Vue.extend(swiper);
-
+SwiperConstructor.prototype.close = function(){
+  document.body.removeChild(this.$el);
+  this.$destroy();
+};
 let pool = [];
 
 let getAnInstance = () => {
@@ -11,21 +14,20 @@ let getAnInstance = () => {
 	return instance;
   }
   return new SwiperConstructor({
-	el: document.createElement('div')
+	  el: document.createElement('div')
   });
 };
 
-let Swiper = (options) => {
+let Swiper = ({imageArr,currentIndex}) => {
   let instance = getAnInstance();
-  instance.imageArr = options || [
-  	'http://cdn.gousa.cn/sites/default/files/styles/original_with_watermark/public/kennedy_meadows_0.jpg',
-	'http://cdn.gousa.cn/sites/default/files/styles/original_with_watermark/public/yosemite_national_park_0.jpg',
-	'http://cdn.gousa.cn/sites/default/files/styles/original_with_watermark/public/mount_rainier.jpg'
-  ];
+  imageArr.map(url=>{
+    instance.imageArr.push(url);
+  });
+  instance.initialSlide = currentIndex;
   document.body.appendChild(instance.$el);
   
   Vue.nextTick(function() {
-	instance.visible = true;
+	  instance.visible = true;
   });
   return instance;
 };
