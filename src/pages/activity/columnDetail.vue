@@ -85,14 +85,14 @@
             <div :class="['list-content',$style.info,$style.attendedList]">
                 <h3 class="item-header">报名名单</h3>
                 <ul>
-                    <attendedItem :dataInfo="dataInfo.creator" :isAuthor="true"></attendedItem>
-                    <attendedItem v-for="item in dataInfo.attendedCrowd" :key="item.uid" :dataInfo="item"></attendedItem>
+                    <attendedItem :dataInfo="dataInfo.creator" :isAuthor="true" @cancelExchange="cancelExchange" @exchange="exchange"></attendedItem>
+                    <attendedItem v-for="item in dataInfo.attendedCrowd" :key="item.uid" :dataInfo="item" @cancelExchange="cancelExchange" @exchange="exchange"></attendedItem>
                 </ul>
             </div>
             <div :class="['list-content',$style.info,$style.commentList]">
                 <h3 class="item-header">校友评论</h3>
                 <ul>
-                    <commentItem v-for="comment in dataInfo.comments" :dataInfo="comment" :key="comment.uid"></commentItem>
+                    <commentItem v-for="comment in dataInfo.comments" :dataInfo="comment" :key="comment.uid" @removeComment="removeComment"></commentItem>
                 </ul>
             </div>
             <operateBar :dataInfo="operateBarData" @click="operateBarClick"></operateBar>
@@ -107,8 +107,7 @@
     import commentItem from './commentItem.vue'
     export default {
         created(){
-            this.getData(this.$route.params)
-            console.log(this.$route.params)
+            this.getData(this.$route.params);
         },
         components:{
           attendedItem,
@@ -140,10 +139,30 @@
                 this.$toast({message: err});
                 this.loading = false;
               })
+          },
+          exchange(item){
+            var {uid} = item;
+            $api.post('/index.php/Profile/requestExchange',{uid})
+              .then(res => {
+              this.$toast(res.msg);
+            },res=>{
+              this.$toast('服务器异常')
+            })
+          },
+          cancelExchange(item){
+            var {uid} = item;
+            $api.post('/index.php/Profile/cancelExchange',{uid})
+              .then(res => {
+              if(res.result) {
+                this.$toast(res.msg)
+              }
+            },res=>{
+              this.$toast('服务器异常')
+            })
+          },
+          removeComment(item){
+            console.log(item);
           }
-        },
-        mounted(){
-
         }
     }
 </script>

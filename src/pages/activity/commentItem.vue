@@ -51,7 +51,7 @@
                     <span>{{dataInfo.hit}}个浏览</span>
                     <span>{{dataInfo.liked}}个赞</span>
                 </span>
-                <span v-else :class="[$style.deleteBtn,'inline-block']">删除评论</span>
+                <span v-else :class="[$style.deleteBtn,'inline-block']" @click="remove">删除评论</span>
             </div>
         </div>
     </li>
@@ -73,6 +73,11 @@
     data(){
       return {
         url: require('../../assets/moke/0.3.1.png')
+      }
+    },
+    methods:{
+      remove(){
+        this.$emit('removeComment',this.dataInfo)
       }
     }
   }

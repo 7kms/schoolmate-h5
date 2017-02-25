@@ -17,6 +17,7 @@
         flex: 1;
         .exchange{
             position: absolute;
+            display: block;
             right: 12px;
             top: 6px;
             width: 80px;
@@ -43,12 +44,14 @@
             <div :class="$style.pic">
                 <img :src="dataInfo.photo" alt="" width="40" height="40">
             </div>
-            <div :class="[$style.userText,'color-topic']">王阳明</div>
+            <div :class="[$style.userText,'color-topic']">{{dataInfo.name}}</div>
             <div :class="[$style.userText]" v-if="isAuthor">(发布者)</div>
         </div>
         <div :class="$style.desc">
-            <span :class="[$style.exchange,'text-center']" v-if="true">交换联系方式</span>
-            <span :class="[$style.exchange,$style.gray,'text-center']" v-else>撤销</span>
+            <template v-if="!isSelf">
+                <span :class="[$style.exchange,'text-center']" v-if="true" @click="exchange">交换联系方式</span>
+                <span :class="[$style.exchange,$style.gray,'text-center']" v-else @click.prevent="cancelExchange">撤销</span>
+            </template>
            <div>{{dataInfo.company}}</div>
            <div>{{dataInfo.department}}</div>
            <div>{{dataInfo.detail_job}}</div>
@@ -57,6 +60,7 @@
     </li>
 </template>
 <script>
+  import {mapState} from 'vuex'
     export default{
       props:{
         isAuthor:Boolean,
@@ -65,9 +69,21 @@
           required: true
         }
       },
-      data(){
-        return {
-          url: require('../../assets/moke/0.3.1.png')
+      computed:{
+        ...mapState({
+          profile:(state)=>state.user.profile
+        }),
+
+        isSelf(){
+          return this.profile.uid == this.dataInfo.uid
+        }
+      },
+      methods:{
+        cancelExchange(){
+          this.$emit('cancelExchange',this.dataInfo);
+        },
+        exchange(){
+          this.$emit('exchange',this.dataInfo);
         }
       }
     }

@@ -101,14 +101,8 @@
     </div>
 </template>
 <script>
-  import {serverUrl} from '../../config'
   import {mapState} from 'vuex'
   export default {
-    data(){
-      return {
-        testUrl:require('../../assets/moke/0.3.1.png')
-      }
-    },
     props: {
       dataInfo: {
         type: Object,
