@@ -126,7 +126,7 @@
         imgArr:[],
         selectNeed:{},
         selectRange:[],
-        needsArr:[{flex:1,values:[{name:'拥有资源',value:1},{name:'寻求合作',value:2}]}],
+        needsArr:[{flex:1,values:[{name:'拥有资源',value:2},{name:'寻求合作',value:1}]}],
         showNeeds: false,
         showRange: false,
         rangeOptions: [],
@@ -244,7 +244,10 @@
         let paramObj = this.getPubInfo();
         $api.post('/index.php/Help/createRes',paramObj)
           .then(res=>{
-
+            if(res.code == 200){
+              this.$toast(res.msg);
+              this.$router.back();
+            }
           },res=>{
             this.$toast('服务器异常')
           })

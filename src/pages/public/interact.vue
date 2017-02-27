@@ -69,9 +69,9 @@
 <template>
     <div :class="$style.content" @click="click">
         <div :class="$style.desc">
-            <span v-if="true" class="color-theme size-topic">拥有资源：</span>
+            <span v-if="dataInfo.type == 2" class="color-theme size-topic">拥有资源：</span>
             <span v-else　class="color-hint size-topic">寻求合作：</span>
-            {{ dataInfo.resource_description }}
+            {{ dataInfo.description }}
         </div>
         <div class="text-right">
             <time class="weak">{{dataInfo.create_time | dateFormat('yyyy/MM/dd') }}</time>
@@ -104,8 +104,10 @@
                 <div>
                     <span>{{dataInfo.creater.detail_job}}</span>
                 </div>
-                <span :class="$style.infoBtn" @click.prevent="collaborate" v-if="!dataInfo.applied">申请合作</span>
-                <span :class="[$style.infoBtn,$style.hint]" @click.prevent="revocation" v-else>撤销</span>
+                <template v-if="!isSelf">
+                    <span :class="$style.infoBtn" @click.prevent="collaborate" v-if="!dataInfo.applied">申请合作</span>
+                    <span :class="[$style.infoBtn,$style.hint]" @click.prevent="revocation" v-else>撤销</span>
+                </template>
             </div>
         </div>
     </div>
@@ -113,12 +115,21 @@
 <script>
   import {serverUrl} from '../../config';
   import swiper from  '../../components/swiper';
-
+  import {mapState} from 'vuex'
   export default {
     props: {
       dataInfo: {
         type: Object,
         required: true
+      }
+    },
+    computed:{
+      ...mapState({
+        profile:(state)=>state.user.profile
+      }),
+
+      isSelf(){
+        return this.profile.uid == this.dataInfo.uid
       }
     },
     methods:{

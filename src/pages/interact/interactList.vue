@@ -10,7 +10,7 @@
             infinite-scroll-immediate-check="false"
             infinite-scroll-disabled="noScroll"
             infinite-scroll-distance="80">
-            <Item v-for="(item,index) in interact.list" :class="$style.item" :key="index" :dataInfo="item" @collaborate="collaborate"></Item>
+            <Item v-for="(item,index) in interact.list" :class="$style.item" :key="index" :dataInfo="item" @collaborate="collaborate" @revocation="revocation"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
         <publishBtn text="发需求" @click="onPublish"></publishBtn>
@@ -49,15 +49,26 @@
       },
         collaborate(item){
             $api.post('/index.php/Help/apply',{rid:item.rid})
-                    .then(res => {
-                      this.$toast(res.msg);
-                       if(res.code == 200){
-                         item.applied = true;
-                       }
-                    },res=>{
-                    this.$toast('服务器异常')
+                .then(res => {
+                  this.$toast(res.msg);
+                   if(res.code == 200){
+                     item.applied = true;
+                   }
+                },res=>{
+                this.$toast('服务器异常')
             });
         },
+      revocation(item){
+        $api.post('/index.php/Help/revokeCoApply',{rid:item.rid})
+          .then(res => {
+            this.$toast(res.msg);
+            if(res.code == 200){
+              item.applied = false;
+            }
+          },res=>{
+            this.$toast('服务器异常')
+          });
+      },
       loadMore() {
         this.loading = true;
         this.$store.dispatch('interact/LOAD_INTERACT_LIST').then(()=>{
