@@ -115,7 +115,7 @@
 <template>
     <div :class="$style.content">
         <ul>
-            <li :class="$style.item">
+            <li :class="$style.item" v-if="dataInfo.is_member">
                 <div :class="$style.bar">
                     <span :class="[$style.title,'color-topic','inline-block']">我的信息</span>
                     <span class="inline-block">
@@ -222,12 +222,14 @@
                 </div>
             </li>
         </ul>
-        <div :class="[$style.join,'text-center']">
-            <span class="size-header">申请加入</span>
-        </div>
-        <div :class="[$style.quit,'text-center','size-header']">
-            <span>退出圈子</span>
-        </div>
+        <template v-if="!dataInfo.created_by_me">
+            <div :class="[$style.join,'text-center']" v-if="!dataInfo.is_member">
+                <span class="size-header">申请加入</span>
+            </div>
+            <div :class="[$style.quit,'text-center','size-header']" v-else>
+                <span>退出圈子</span>
+            </div>
+        </template>
     </div>
 </template>
 <script>

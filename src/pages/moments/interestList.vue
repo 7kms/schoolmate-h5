@@ -58,7 +58,7 @@
       },
       goDetail(item) {
 //        this.$router.push(`/moments/interest/${item.aid}`);
-        this.$router.push({path:`/moments/interest/${item.aid}`,query:{item:'basic'}});
+        this.$router.push({path:`/moments/interest/${item.cid}`,query:{item:'basic'}});
       }
     },
     created(){

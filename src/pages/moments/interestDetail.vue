@@ -44,7 +44,7 @@
             </div>
         </div>
         <div :class="$style.detail">
-            <Basic :dataInfo="{}" v-if="item=='basic'"></Basic>
+            <Basic :dataInfo="basicInfo" v-if="item=='basic'"></Basic>
             <Activity :dataInfo="{}" v-if="item=='activity'"></Activity>
             <Photo :dataInfo="{}" v-if="item=='photo'"></Photo>
             <Interact :dataInfo="{}" v-if="item=='interact'"></Interact>
@@ -52,6 +52,7 @@
     </div>
 </template>
 <script>
+  import $api from 'api';
   import {serverUrl} from '../../config'
   import Basic from './basic.vue'
   import Activity from './activity.vue'
@@ -67,12 +68,26 @@
     data(){
       return {
         item: '',
-        testUrl:require('../../assets/moke/0.3.1.png')
+        testUrl:require('../../assets/moke/0.3.1.png'),
+        basicInfo:{
+
+        }
       }
     },
     methods:{
       getData(item){
-        var url = '';
+        if(item == 'basic'){
+          $api.get('/index.php/Circle/getCircle',{cid: this.$route.params.id})
+            .then(res=>{
+                if(res.code == 200){
+                  Object.assign(this.basicInfo,res.data);
+                }
+            },res=>{
+
+            })
+        }
+
+
       },
       switchItem(item){
         var id = this.$route.params.id;
@@ -84,10 +99,12 @@
       var item = this.$route.query.item;
       this.item = item;
       console.log(id,item);
+      this.getData(this.item);
     },
     watch:{
       $route(to,from){
         this.item = this.$route.query.item;
+        this.getData(this.item);
       }
     }
   }

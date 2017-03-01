@@ -17,6 +17,7 @@
         .title{
             display: flex;
             justify-content: space-between;
+            align-items: center;
         }
     }
     .imgContent{
@@ -34,37 +35,30 @@
     <li :class="$style.content" @click="click">
         <div :class="$style.moments">
             <div :class="$style.portrait">
-                <img :src="testUrl" alt="" width="40px" height="40px">
+                <img :src="imageUrl(dataInfo.c_cover_file)" alt="" width="40px" height="40px">
             </div>
             <div :class="$style.desc">
                 <div :class="$style.title">
                     <div>
-                        <span class="topic">登山队</span><span>（<span class="color-hint">12</span>人）</span>
+                        <span class="topic">{{dataInfo.c_name}}</span><span>（<span class="color-hint">{{dataInfo.count}}</span>人）</span>
                     </div>
                     <div>
                         <span class="color-hint">待审核12人</span>
                     </div>
                 </div>
                 <div :class="$style.text">
-                    T登山队是一群爱好登山的朋友组成的圈子，享受山野，欢迎相同爱好的朋友加入。
+                    {{dataInfo.c_description}}
                 </div>
             </div>
         </div>
-        <div :class="$style.imgContent">
-            <ImgContain :imgUrl="testUrl" :class="$style.imgItem"></ImgContain>
-            <ImgContain :imgUrl="testUrl" :class="$style.imgItem"></ImgContain>
-            <ImgContain :imgUrl="testUrl" :class="$style.imgItem"></ImgContain>
+        <div :class="$style.imgContent" v-if="dataInfo.pictures.length > 0">
+            <ImgContain v-for="img in dataInfo.pictures" :imgUrl="img" :class="$style.imgItem"></ImgContain>
         </div>
     </li>
 </template>
 <script>
   import {serverUrl} from '../../config'
   export default {
-    data(){
-      return {
-        testUrl:require('../../assets/moke/0.3.1.png')
-      }
-    },
     props: {
       dataInfo: {
         type: Object,
@@ -74,6 +68,9 @@
     methods:{
       click(){
         this.$emit('click',this.dataInfo);
+      },
+      imageUrl(str){
+        return `${serverUrl}/${str}`;
       }
     }
   }

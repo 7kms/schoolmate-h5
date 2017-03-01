@@ -16,17 +16,21 @@ var state = {
 };
 
 function getParams (item) {
-  return {
+  let obj = {
     start: state[item].start,
     pageSize: state[item].pageSize
+  };
+  if(item == 'interest'){
+    obj.is_industry = '0';
   }
+  return obj;
 }
 
 const actions = {
   [types.LOAD_INTEREST_LIST] ({ commit, dispatch }) {
     let params = getParams('interest');
     return new Promise((resolve,reject) => {
-      $api.get('/index.php/Activity/getList',params)
+      $api.get('/index.php/Circle/getCircleList',params)
         .then(data =>{
           dispatch(types.APPEND_INTEREST_LIST, data.result);
           var noMore = (state.interest.list.length >= data.total);
