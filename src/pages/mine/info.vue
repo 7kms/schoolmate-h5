@@ -193,9 +193,13 @@
         <div :class="$style.save" @click="saveInfo">
             <span>保存</span>
         </div>
+
+
+        <placePicker></placePicker>
     </div>
 </template>
 <script>
+    import { placePicker } from '../../components/popPicker'
     import $api from  'api';
 	import { mapState } from 'vuex';
 	export default {
@@ -203,6 +207,9 @@
             return {
             	profile: {}
             }
+        },
+        components:{
+            placePicker
         },
 		created: function() {
 			this.$store.dispatch('user/GET_ACCOUNT')
