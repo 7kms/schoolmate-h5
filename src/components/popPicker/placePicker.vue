@@ -3,7 +3,7 @@
 </style>
 <template>
     <mt-popup
-            v-model="showPicker"
+            v-model="show"
             position="bottom"
             popup-transition="popup-fade">
         <mt-picker :slots="placeSlots" :showToolbar="true" :rotateEffect="true" @change="changePlace">
@@ -38,6 +38,16 @@
             }
         },
         computed:{
+            show :{
+              set: function (val){
+                if(!val){
+                  this.$emit('hide');
+                }
+              },
+              get: function (){
+                return this.showPicker;
+              }
+            },
             placeSlots(){
                 var provinceIndex = provinceArr.indexOf(this.province);
                 provinceIndex = provinceIndex > -1 ? provinceIndex : 0;
@@ -67,17 +77,27 @@
         },
         methods:{
             selectPlace(){
-                console.log(Object.assign(this.info));
+                this.$emit('selectEnd',Object.assign(this.info))
             },
             changePlace(picker,values){
-                if(!values[0]){
-                    var provinceIndex = provinceArr.indexOf(this.province);
-                    provinceIndex = provinceIndex > -1 ? provinceIndex : 0;
-                    values[0] = Object.keys(placeObj)[provinceIndex];
-                }
-                this.info.province = values[0];
-                this.info.city = values[1];
-                picker.setSlotValues(1, placeObj[values[0]]);
+              if(!values[0]){
+                values[0] = Object.keys(placeObj)[0];
+              }
+              picker.setSlotValues(1, placeObj[values[0]]);
+
+
+
+//                if(!values[0]){
+//                    var provinceIndex = provinceArr.indexOf(this.province);
+//                    provinceIndex = provinceIndex > -1 ? provinceIndex : 0;
+//                    values[0] = provinceArr[provinceIndex];
+//                }
+//                if(!values[1]){
+//                  values[1] = placeObj[values[0]][0];
+//                }
+//              picker.setSlotValues(1, placeObj[values[0]]);
+//              this.info.province = values[0];
+//              this.info.city = values[1];
             }
         }
     }

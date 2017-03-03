@@ -115,8 +115,8 @@
             </div>
             <div :class="$style.item">
                 <div :class="$style.dfn">籍      贯：</div>
-                <div :class="[$style.textInput,'color-topic']">
-                    <span :class="$style.input">江苏-无锡</span>
+                <div :class="[$style.textInput,'color-topic']" @click="showPicker('place')">
+                    <span :class="$style.input">{{ profile.bprovince + '-' + profile.bcity }}</span>
                 </div>
             </div>
         </div>
@@ -194,8 +194,12 @@
             <span>保存</span>
         </div>
 
-
-        <placePicker></placePicker>
+        <placePicker :showPicker="showPlacePicker"
+                     :province="profile.bprovince"
+                     :city="profile.bcity"
+                     @selectEnd="selectPlace"
+                     @hide="hidePicker"
+        ></placePicker>
     </div>
 </template>
 <script>
@@ -205,6 +209,7 @@
 	export default {
 		data() {
             return {
+                showPlacePicker: false,
             	profile: {}
             }
         },
@@ -213,16 +218,29 @@
         },
 		created: function() {
 			this.$store.dispatch('user/GET_ACCOUNT')
-				.then( (dataInfo) => {
-					console.log(dataInfo);
-					this.profile = {...dataInfo}
-				} )
+				.then( dataInfo => {
+				    console.log(dataInfo)
+                    this.profile = {...dataInfo}
+				})
 		},
         methods: {
-			saveInfo() {
-				this.$toast('保存成功');
-				this.$router.go(-1);
+          hidePicker(){
+            this.showPlacePicker = false;
+          },
+          showPicker(name){
+            if(name == 'place'){
+              this.showPlacePicker = true;
             }
+          },
+          selectPlace(placeObj){
+            this.showPlacePicker = false;
+            this.profile.bprovince = placeObj.province;
+            this.profile.bcity = placeObj.city;
+          },
+          saveInfo() {
+            this.$toast('保存成功');
+            this.$router.go(-1);
+          }
         }
     }
 </script>
