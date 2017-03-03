@@ -1,6 +1,3 @@
-<style lang="less" module>
-
-</style>
 <template>
     <mt-popup
             v-model="show"
@@ -18,11 +15,11 @@
         props:{
             province:{
                 type: String,
-                default: '北京'
+                default: '天津市'
             },
             city:{
                 type: String,
-                default: '东城'
+                default: '河西'
             },
             showPicker:{
                 type: Boolean,
@@ -32,8 +29,8 @@
         data(){
             return {
                 info:{
-                    province: '北京',
-                    city: '东城'
+                    province: '',
+                    city: ''
                 }
             }
         },
@@ -77,27 +74,25 @@
         },
         methods:{
             selectPlace(){
-                this.$emit('selectEnd',Object.assign(this.info))
+                var obj;
+                if(!this.info.province){
+                    var provinceIndex = provinceArr.indexOf(this.province);
+                    provinceIndex = provinceIndex > -1 ? provinceIndex : 0;
+                    var cityArr = placeObj[provinceArr[provinceIndex]];
+                    var cityIndex = cityArr.indexOf(this.info.city || this.city);
+                    cityIndex = cityIndex > -1 ? cityIndex : 0;
+                    obj = {province:provinceArr[provinceIndex],city:cityArr[cityIndex]}
+                }else{
+                    obj = Object.assign(this.info)
+                }
+                this.$emit('selectEnd',obj);
             },
             changePlace(picker,values){
-              if(!values[0]){
-                values[0] = Object.keys(placeObj)[0];
-              }
-              picker.setSlotValues(1, placeObj[values[0]]);
-
-
-
-//                if(!values[0]){
-//                    var provinceIndex = provinceArr.indexOf(this.province);
-//                    provinceIndex = provinceIndex > -1 ? provinceIndex : 0;
-//                    values[0] = provinceArr[provinceIndex];
-//                }
-//                if(!values[1]){
-//                  values[1] = placeObj[values[0]][0];
-//                }
-//              picker.setSlotValues(1, placeObj[values[0]]);
-//              this.info.province = values[0];
-//              this.info.city = values[1];
+                if(values[0]){
+                    picker.setSlotValues(1, placeObj[values[0]]);
+                }
+                this.info.province = values[0];
+                this.info.city = values[1];
             }
         }
     }

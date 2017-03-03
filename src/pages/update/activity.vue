@@ -9,25 +9,25 @@
         height: 225px;
         color: #fff;
         background-image: linear-gradient(-180deg, #56AEEA 0%, #81D2F8 98%);
-        .cover{
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-size: cover;
-        }
+    .cover{
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+    }
     }
     .imgAdd{
         position: relative;
-        .btnAdd{
-            display: block;
-            width: 93px;
-            height: 93px;
-            margin: 0 auto 12px;
-            background-size: contain;
-            background-image: url("../../assets/images/bg-add-plus.png");
-        }
+    .btnAdd{
+        display: block;
+        width: 93px;
+        height: 93px;
+        margin: 0 auto 12px;
+        background-size: contain;
+        background-image: url("../../assets/images/bg-add-plus.png");
+    }
     }
     .defaultImg{
         position: absolute;
@@ -43,11 +43,11 @@
                 <Loading text="上传中..." :class="$style.loading" v-show="loading"></Loading>
                 <div :class="[$style.imgAdd,'text-center']" v-show="!loading">
                     <file-upload class="file-upload"
-                         :drop="false"
-                         :post-action="action"
-                         accept="image/*"
-                         :events="events"
-                          name="file0"
+                                 :drop="false"
+                                 :post-action="action"
+                                 accept="image/*"
+                                 :events="events"
+                                 name="file0"
                     ></file-upload>
                     <i :class="$style.btnAdd"></i>
                     <span>添加封面</span>
@@ -139,204 +139,205 @@
             <div class="pubBar" @click="publish">发布</div>
         </div>
         <mt-datetime-picker
-            ref="startDatePicker"
-            type="date"
-            :startDate="dateNow"
-            cancelText="关闭"
-            year-format="{value} 年"
-            month-format="{value} 月"
-            date-format="{value} 日"
-            v-model="startDate">
+                ref="startDatePicker"
+                type="date"
+                :startDate="dateNow"
+                cancelText="关闭"
+                year-format="{value} 年"
+                month-format="{value} 月"
+                date-format="{value} 日"
+                v-model="startDate">
         </mt-datetime-picker>
         <mt-datetime-picker
-            ref="startTimePicker"
-            type="time"
-            cancelText="关闭"
-            v-model="startTime">
+                ref="startTimePicker"
+                type="time"
+                cancelText="关闭"
+                v-model="startTime">
         </mt-datetime-picker>
         <mt-datetime-picker
-            ref="endDatePicker"
-            type="date"
-            :startDate="dateNow"
-            cancelText="关闭"
-            year-format="{value} 年"
-            month-format="{value} 月"
-            date-format="{value} 日"
-            v-model="endDate">
+                ref="endDatePicker"
+                type="date"
+                :startDate="dateNow"
+                cancelText="关闭"
+                year-format="{value} 年"
+                month-format="{value} 月"
+                date-format="{value} 日"
+                v-model="endDate">
         </mt-datetime-picker>
         <mt-datetime-picker
-            cancelText="关闭"
-            ref="endTimePicker"
-            type="time"
-            v-model="endTime">
+                cancelText="关闭"
+                ref="endTimePicker"
+                type="time"
+                v-model="endTime">
         </mt-datetime-picker>
     </div>
 
 </template>
 <script>
-  import FileUpload from 'vue-upload-component';
-  import {serverUrl} from '../../config'
-  import util from  '../../util';
-  import $api from 'api';
-  export default {
-    components:{
-      FileUpload
-    },
-    data(){
-      return {
-        pubInfo:{
-            theme:'聚会',
-            time:'',
-            end_time: '',
-            description:'我们公司很牛b',
-            place:'天安门广场',
-            cover_file:'image/default-activity-cover.jpg',
-            amount:'18',
-            fee:'600',
-            contact: '13555555555'
+    import { singlePicker, placePicker,timePicker } from '../../components/popPicker';
+    import FileUpload from 'vue-upload-component';
+    import {serverUrl} from '../../config'
+    import util from  '../../util';
+    import $api from 'api';
+    export default {
+        components:{
+            FileUpload
         },
-        loading: false,
-        showBgImage: false,
-        dateNow: new Date(),
-        startDate: '',
-        startTime: '',
-        endDate: '',
-        endTime: '',
-        free: false,
-        timeLimit: true,
-        popupVisible: false
-      }
-    },
+        data(){
+            return {
+                pubInfo:{
+                    theme:'聚会',
+                    time:'',
+                    end_time: '',
+                    description:'我们公司很牛b',
+                    place:'天安门广场',
+                    cover_file:'image/default-activity-cover.jpg',
+                    amount:'18',
+                    fee:'600',
+                    contact: '13555555555'
+                },
+                loading: false,
+                showBgImage: false,
+                dateNow: new Date(),
+                startDate: '',
+                startTime: '',
+                endDate: '',
+                endTime: '',
+                free: false,
+                timeLimit: true,
+                popupVisible: false
+            }
+        },
 
-    computed:{
-        action(){
-            return serverUrl + '/index.php/Picture/multiPicUpload';
-        },
-        events(){
-            var _this = this;
-          return {
-              add(file, component) {
-                  file.data.count = 1;
-                  component.active = true;
-                  _this.loading = true;
-              },
-              progress(file, component) {
-                  console.log('progress ' + file.progress);
-              },
-              after(file, component) {
-                  var res = util.parseJSON(file.response);
-                  if(res.code == 200){
-                      _this.pubInfo.cover_file = res.data[0];
-                      _this.showBgImage = true;
-                  }else{
-                      this.$toast(res.msg);
-                  }
-                  _this.loading = false;
-              },
-              before(file, component) {
-                  console.log('before');
-              }
-          }
-        },
-      activityStartTime(){
+        computed:{
+            action(){
+                return serverUrl + '/index.php/Picture/multiPicUpload';
+            },
+            events(){
+                var _this = this;
+                return {
+                    add(file, component) {
+                        file.data.count = 1;
+                        component.active = true;
+                        _this.loading = true;
+                    },
+                    progress(file, component) {
+                        console.log('progress ' + file.progress);
+                    },
+                    after(file, component) {
+                        var res = util.parseJSON(file.response);
+                        if(res.code == 200){
+                            _this.pubInfo.cover_file = res.data[0];
+                            _this.showBgImage = true;
+                        }else{
+                            this.$toast(res.msg);
+                        }
+                        _this.loading = false;
+                    },
+                    before(file, component) {
+                        console.log('before');
+                    }
+                }
+            },
+            activityStartTime(){
 //        console.log(new Date(util.dateFormat(this.startDate,'yyyy/MM/dd') + this.startTime).getTime();)
 
-      },
-      activityEndTime(){
+            },
+            activityEndTime(){
 
-      }
-    },
-    watch:{
-        startDate(newValue,oldValue){
-            if(!oldValue) return;
-        }
-    },
-    methods:{
-      selectDefaultImage(){
-            this.pubInfo.cover_file = 'image/default-activity-cover.jpg';
-            this.showBgImage = true;
-      },
-      deleteImage(img){
-        console.log(img);
-      },
-      switchTime(){
-        this.timeLimit = !this.timeLimit;
-      },
-      switchFee(){
-        this.free = !this.free;
-      },
-      onValuesChange(picker, values) {
-        if (values[0] > values[1]) {
-          picker.setSlotValue(1, values[0]);
-        }
-      },
-      openTime(ref){
-        this.$refs[ref].open()
-      },
-      valid(){
-         if(!this.pubInfo.theme){
-            this.$toast('活动主题不能为空');
-            return false;
-         }
-          if(!this.pubInfo.place){
-              this.$toast('活动地址不能为空');
-              return false;
-          }
-          if(!/^1[3-8]\d{9}$/.test(this.pubInfo.contact)){
-              this.$toast('手机号码不正确');
-              return false;
-          }
-          if(this.pubInfo.free == ''){
-              this.$toast('活动费用未填写');
-              return false;
-          }
-          if(!this.pubInfo.amount){
-              this.$toast('限定人数未填写');
-              return false;
-          }
-          if(this.pubInfo.description == ''){
-              this.$toast('活动描述未填写');
-              return false;
-          }
-          return true;
-      },
-      getParams(){
-        let obj = Object.assign({},this.pubInfo);
-        if(this.free){
-          obj.fee = 0;
-        }
-        if(!this.timeLimit){
-          obj.time = 0;
-          obj.end_time = 0;
-        }else{
-          obj.time = String(new Date(util.dateFormat(this.startDate,'yyyy/MM/dd') + ' ' + this.startTime).getTime());
-          obj.end_time = String(new Date(util.dateFormat(this.endDate,'yyyy/MM/dd') + ' ' + this.endTime).getTime());
-        }
-        return obj;
-      },
-      publish(){
-        if(!this.valid())return false;
-        var paramObj = this.getParams();
-          if(paramObj.time * 1 > paramObj.end_time *1){
-              this.$toast('开始时间不能大于结束时间');
-              return false;
-          }
-        $api.post('/index.php/Activity/publish',paramObj)
-          .then(res=>{
-            if(res.code == 200){
-              this.$toast('发布成功');
-              this.$router.push('/')
-            }else{
-              this.$toast('发布失败');
             }
-          },res=>{
-            this.$toast('服务器异常');
-          })
-      },
-        imageUrl(str){
-            return `${serverUrl}/${str}`;
+        },
+        watch:{
+            startDate(newValue,oldValue){
+                if(!oldValue) return;
+            }
+        },
+        methods:{
+            selectDefaultImage(){
+                this.pubInfo.cover_file = 'image/default-activity-cover.jpg';
+                this.showBgImage = true;
+            },
+            deleteImage(img){
+                console.log(img);
+            },
+            switchTime(){
+                this.timeLimit = !this.timeLimit;
+            },
+            switchFee(){
+                this.free = !this.free;
+            },
+            onValuesChange(picker, values) {
+                if (values[0] > values[1]) {
+                    picker.setSlotValue(1, values[0]);
+                }
+            },
+            openTime(ref){
+                this.$refs[ref].open()
+            },
+            valid(){
+                if(!this.pubInfo.theme){
+                    this.$toast('活动主题不能为空');
+                    return false;
+                }
+                if(!this.pubInfo.place){
+                    this.$toast('活动地址不能为空');
+                    return false;
+                }
+                if(!/^1[3-8]\d{9}$/.test(this.pubInfo.contact)){
+                    this.$toast('手机号码不正确');
+                    return false;
+                }
+                if(this.pubInfo.free == ''){
+                    this.$toast('活动费用未填写');
+                    return false;
+                }
+                if(!this.pubInfo.amount){
+                    this.$toast('限定人数未填写');
+                    return false;
+                }
+                if(this.pubInfo.description == ''){
+                    this.$toast('活动描述未填写');
+                    return false;
+                }
+                return true;
+            },
+            getParams(){
+                let obj = Object.assign({},this.pubInfo);
+                if(this.free){
+                    obj.fee = 0;
+                }
+                if(!this.timeLimit){
+                    obj.time = 0;
+                    obj.end_time = 0;
+                }else{
+                    obj.time = String(new Date(util.dateFormat(this.startDate,'yyyy/MM/dd') + ' ' + this.startTime).getTime());
+                    obj.end_time = String(new Date(util.dateFormat(this.endDate,'yyyy/MM/dd') + ' ' + this.endTime).getTime());
+                }
+                return obj;
+            },
+            publish(){
+                if(!this.valid())return false;
+                var paramObj = this.getParams();
+                if(paramObj.time * 1 > paramObj.end_time *1){
+                    this.$toast('开始时间不能大于结束时间');
+                    return false;
+                }
+                $api.post('/index.php/Activity/publish',paramObj)
+                .then(res=>{
+                    if(res.code == 200){
+                        this.$toast('发布成功');
+                        this.$router.push('/')
+                    }else{
+                        this.$toast('发布失败');
+                    }
+                },res=>{
+                    this.$toast('服务器异常');
+                })
+            },
+            imageUrl(str){
+                return `${serverUrl}/${str}`;
+            }
         }
-    }
 
-  }
+    }
 </script>
