@@ -39,7 +39,7 @@
     <div>
         <div class="content">
             <div :class="$style.picWrap">
-                <div :class="$style.cover" v-if="showBgImage" :style="{backgroundImage:'url('+ imageUrl(pubInfo.cover_file) +')'}"></div>
+                <div :class="$style.cover" v-if="showBgImage" :style="{backgroundImage:'url('+ imageUrl(info.cover_file) +')'}"></div>
                 <Loading text="上传中..." :class="$style.loading" v-show="loading"></Loading>
                 <div :class="[$style.imgAdd,'text-center']" v-show="!loading">
                     <file-upload class="file-upload"
@@ -58,7 +58,7 @@
                 <div class="pub-item">
                     <h3 class="pub-title">活动主题</h3>
                     <div class="pub-text">
-                        <input type="text" class="pub-input" placeholder="填写28字以内活动主题" maxlength="28" v-model="pubInfo.theme">
+                        <input type="text" class="pub-input" placeholder="填写28字以内活动主题" maxlength="28" v-model="info.theme">
                     </div>
                 </div>
                 <div class="pub-item">
@@ -67,26 +67,26 @@
                         <div class="pub-dfn-item" v-show="timeLimit">
                             <div class="dfn-label">
                                 <!--<input type="text" class="dfn-input l-input">-->
-                                <span class="inline-block dfn-span">开始时间：</span><div class="dfn-input l-input inline-block" @click="openTime('startDatePicker')">{{ startDate | dateFormat('yyyy/MM/dd')}}</div><span class="inline-block">日期</span>
+                                <span class="inline-block dfn-span">开始时间：</span><div class="dfn-input l-input inline-block" @click="showPicker('showStartDatePicker')">{{ startDate}}</div><span class="inline-block">日期</span>
                             </div>
                             <div class="dfn-label">
                                 <!--<input type="text" class="dfn-input s-input">-->
-                                <div class="dfn-input s-input inline-block" @click="openTime('startTimePicker')">{{ startTime.split(':')[0] }}</div><span class="inline-block">时</span>
+                                <div class="dfn-input s-input inline-block" @click="showPicker('showStartTimePicker')">{{ startTime.split(':')[0] }}</div><span class="inline-block">时</span>
                             </div>
                             <div class="dfn-label">
                                 <!--<input type="text" class="dfn-input s-input">-->
-                                <div class="dfn-input s-input inline-block" @click="openTime('startTimePicker')">{{ startTime.split(':')[1] }}</div><span class="inline-block">分</span>
+                                <div class="dfn-input s-input inline-block" @click="showPicker('showStartTimePicker')">{{ startTime.split(':')[1] }}</div><span class="inline-block">分</span>
                             </div>
                         </div>
                         <div class="pub-dfn-item" v-show="timeLimit">
                             <div class="dfn-label">
-                                <span class="inline-block dfn-span">结束时间：</span><div class="dfn-input l-input inline-block" @click="openTime('endDatePicker')">{{ endDate | dateFormat('yyyy/MM/dd')}}</div><span class="inline-block">日期</span>
+                                <span class="inline-block dfn-span">结束时间：</span><div class="dfn-input l-input inline-block" @click="showPicker('showEndDatePicker')">{{ endDate}}</div><span class="inline-block">日期</span>
                             </div>
                             <div class="dfn-label">
-                                <div class="dfn-input s-input inline-block" @click="openTime('endTimePicker')">{{ endTime.split(':')[0] }}</div><span class="inline-block">时</span>
+                                <div class="dfn-input s-input inline-block" @click="showPicker('showEndTimePicker')">{{ endTime.split(':')[0] }}</div><span class="inline-block">时</span>
                             </div>
                             <div class="dfn-label">
-                                <div class="dfn-input s-input inline-block" @click="openTime('endTimePicker')">{{ endTime.split(':')[1] }}</div><span class="inline-block">分</span>
+                                <div class="dfn-input s-input inline-block" @click="showPicker('showEndTimePicker')">{{ endTime.split(':')[1] }}</div><span class="inline-block">分</span>
                             </div>
                         </div>
                         <div class="pub-dfn-item">
@@ -99,13 +99,13 @@
                 <div class="pub-item">
                     <h3 class="pub-title">活动地址</h3>
                     <div class="pub-text">
-                        <input type="text" class="pub-input" placeholder="填写您的具体活动地址" v-model="pubInfo.place">
+                        <input type="text" class="pub-input" placeholder="填写您的具体活动地址" v-model="info.place">
                     </div>
                 </div>
                 <div class="pub-item">
                     <h3 class="pub-title">手机号码</h3>
                     <div class="pub-text">
-                        <input type="tel" class="pub-input" placeholder="填写联系人号码" v-model="pubInfo.contact">
+                        <input type="tel" class="pub-input" placeholder="填写联系人号码" v-model="info.contact">
                     </div>
                 </div>
                 <div class="pub-item">
@@ -113,7 +113,7 @@
                     <div class="pub-time-content">
                         <div class="pub-dfn-item" v-show="!free">
                             <div class="dfn-label">
-                                <span class="inline-block dfn-span"><span>单人收费：</span></span><input type="text" class="dfn-input l-input" v-model="pubInfo.fee">
+                                <span class="inline-block dfn-span"><span>单人收费：</span></span><input type="text" class="dfn-input l-input" v-model="info.fee">
                             </div>
                         </div>
                         <div class="pub-dfn-item">
@@ -126,50 +126,50 @@
                 <div class="pub-item">
                     <h3 class="pub-title">限定人数</h3>
                     <div class="pub-text">
-                        <input type="text" class="pub-input" placeholder="填写参加的人数限制" v-model="pubInfo.amount">
+                        <input type="text" class="pub-input" placeholder="填写参加的人数限制" v-model="info.amount">
                     </div>
                 </div>
                 <div class="pub-item">
                     <h3 class="pub-title">活动描述</h3>
                     <div class="pub-text">
-                        <textarea class="pub-area" placeholder="填写活动的具体注意事项、详细信息等" v-model="pubInfo.description"></textarea>
+                        <textarea class="pub-area" placeholder="填写活动的具体注意事项、详细信息等" v-model="info.description"></textarea>
                     </div>
                 </div>
             </div>
             <div class="pubBar" @click="publish">发布</div>
         </div>
-        <mt-datetime-picker
-                ref="startDatePicker"
-                type="date"
+        <timePicker
+                :showPicker="showStartDatePicker"
+                :initDate="info.time"
                 :startDate="dateNow"
-                cancelText="关闭"
-                year-format="{value} 年"
-                month-format="{value} 月"
-                date-format="{value} 日"
-                v-model="startDate">
-        </mt-datetime-picker>
-        <mt-datetime-picker
-                ref="startTimePicker"
-                type="time"
-                cancelText="关闭"
-                v-model="startTime">
-        </mt-datetime-picker>
-        <mt-datetime-picker
-                ref="endDatePicker"
-                type="date"
-                :startDate="dateNow"
-                cancelText="关闭"
-                year-format="{value} 年"
-                month-format="{value} 月"
-                date-format="{value} 日"
-                v-model="endDate">
-        </mt-datetime-picker>
-        <mt-datetime-picker
-                cancelText="关闭"
-                ref="endTimePicker"
-                type="time"
-                v-model="endTime">
-        </mt-datetime-picker>
+                ref="showStartDate"
+                pickerRef="showStartDatePicker"
+                @selectEnd="selectStartDate"
+        ></timePicker>
+        <timePicker
+                :showPicker="showEndDatePicker"
+                :initDate="info.end_time"
+                :startDate="startDate"
+                ref="showEndDate"
+                pickerRef="showEndDatePicker"
+                @selectEnd="selectEndDate"
+        ></timePicker>
+        <timePicker
+                :showPicker="showStartTimePicker"
+                :initDate="info.time"
+                pickerType="time"
+                ref="showStartTime"
+                pickerRef="showStartTimePicker"
+                @selectEnd="selectStartTime"
+        ></timePicker>
+        <timePicker
+                :showPicker="showEndTimePicker"
+                :initDate="info.end_time"
+                pickerType="time"
+                ref="showEndTime"
+                pickerRef="showEndTimePicker"
+                @selectEnd="selectEndTime"
+        ></timePicker>
     </div>
 
 </template>
@@ -181,11 +181,16 @@
     import $api from 'api';
     export default {
         components:{
-            FileUpload
+            FileUpload,
+            timePicker
         },
         data(){
             return {
-                pubInfo:{
+                showStartDatePicker: false,
+                showEndDatePicker: false,
+                showStartTimePicker: false,
+                showEndTimePicker: false,
+                info:{
                     theme:'聚会',
                     time:'',
                     end_time: '',
@@ -198,7 +203,7 @@
                 },
                 loading: false,
                 showBgImage: false,
-                dateNow: new Date(),
+                dateNow: util.dateFormat(new Date(),'yyyy/MM/dd'),
                 startDate: '',
                 startTime: '',
                 endDate: '',
@@ -208,10 +213,12 @@
                 popupVisible: false
             }
         },
-
         computed:{
             action(){
                 return serverUrl + '/index.php/Picture/multiPicUpload';
+            },
+            limitTime(){
+                return this.startDate + ' ' + this.startTime;
             },
             events(){
                 var _this = this;
@@ -227,7 +234,7 @@
                     after(file, component) {
                         var res = util.parseJSON(file.response);
                         if(res.code == 200){
-                            _this.pubInfo.cover_file = res.data[0];
+                            _this.info.cover_file = res.data[0];
                             _this.showBgImage = true;
                         }else{
                             this.$toast(res.msg);
@@ -239,22 +246,39 @@
                     }
                 }
             },
-            activityStartTime(){
-//        console.log(new Date(util.dateFormat(this.startDate,'yyyy/MM/dd') + this.startTime).getTime();)
-
-            },
-            activityEndTime(){
-
-            }
-        },
-        watch:{
-            startDate(newValue,oldValue){
-                if(!oldValue) return;
-            }
         },
         methods:{
+            selectStartDate(val){
+                this.hidePicker();
+                this.startDate = val;
+            },
+            selectEndDate(val){
+                this.hidePicker();
+                this.endDate = val;
+            },
+            selectStartTime(val){
+                this.hidePicker();
+                this.startTime = val;
+                console.log(val)
+            },
+            selectEndTime(val){
+                this.hidePicker();
+                this.endTime = val;
+                console.log(val)
+            },
+            hidePicker(){
+                this.showStartDatePicker = false;
+                this.showEndDatePicker = false;
+                this.showStartTimePicker = false;
+                this.showEndTimePicker = false;
+            },
+            showPicker(name){
+                let ref = name.slice(0,-6);
+                this.$refs[ref].$refs[name].open();
+                this[name] = true;
+            },
             selectDefaultImage(){
-                this.pubInfo.cover_file = 'image/default-activity-cover.jpg';
+                this.info.cover_file = 'image/default-activity-cover.jpg';
                 this.showBgImage = true;
             },
             deleteImage(img){
@@ -266,43 +290,39 @@
             switchFee(){
                 this.free = !this.free;
             },
-            onValuesChange(picker, values) {
-                if (values[0] > values[1]) {
-                    picker.setSlotValue(1, values[0]);
-                }
-            },
-            openTime(ref){
-                this.$refs[ref].open()
-            },
             valid(){
-                if(!this.pubInfo.theme){
+                if(!this.info.theme){
                     this.$toast('活动主题不能为空');
                     return false;
                 }
-                if(!this.pubInfo.place){
+                if(!this.info.place){
                     this.$toast('活动地址不能为空');
                     return false;
                 }
-                if(!/^1[3-8]\d{9}$/.test(this.pubInfo.contact)){
+                if(!/^1[3-8]\d{9}$/.test(this.info.contact)){
                     this.$toast('手机号码不正确');
                     return false;
                 }
-                if(this.pubInfo.free == ''){
+                if(this.info.free == ''){
                     this.$toast('活动费用未填写');
                     return false;
                 }
-                if(!this.pubInfo.amount){
+                if(!this.info.amount){
                     this.$toast('限定人数未填写');
                     return false;
                 }
-                if(this.pubInfo.description == ''){
+                if(this.info.description == ''){
                     this.$toast('活动描述未填写');
+                    return false;
+                }
+                if(!this.startDate || !this.endDate || !this.startTime || !this.endTime){
+                    this.$toast('活动时间不能为空');
                     return false;
                 }
                 return true;
             },
             getParams(){
-                let obj = Object.assign({},this.pubInfo);
+                let obj = Object.assign({},this.info);
                 if(this.free){
                     obj.fee = 0;
                 }
@@ -310,8 +330,8 @@
                     obj.time = 0;
                     obj.end_time = 0;
                 }else{
-                    obj.time = String(new Date(util.dateFormat(this.startDate,'yyyy/MM/dd') + ' ' + this.startTime).getTime());
-                    obj.end_time = String(new Date(util.dateFormat(this.endDate,'yyyy/MM/dd') + ' ' + this.endTime).getTime());
+                    obj.time = String(new Date(this.startDate + ' ' + this.startTime).getTime());
+                    obj.end_time = String(new Date(this.endDate + ' ' + this.endTime).getTime());
                 }
                 return obj;
             },

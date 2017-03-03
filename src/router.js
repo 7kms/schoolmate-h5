@@ -149,7 +149,8 @@ const ROUTER_SETTING = {
           children:[
             {
               path:'activity',
-              component: resolve => require(['./pages/publish/publishActivity.vue'], resolve)
+              // component: resolve => require(['./pages/publish/publishActivity.vue'], resolve)
+              component: resolve => require(['./pages/update/activity.vue'], resolve)
             },
             {
               path:'photo',

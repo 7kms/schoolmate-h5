@@ -67,7 +67,13 @@
         },
         methods:{
             handleConfirm(val){
-                this.$emit('selectEnd',util.dateFormat(val,'yyyy/MM/dd'));
+                let result;
+                if(this.pickerType == 'date'){
+                    result = util.dateFormat(val,'yyyy/MM/dd');
+                }else{
+                    result = val;
+                }
+                this.$emit('selectEnd', result);
             }
         }
     }
