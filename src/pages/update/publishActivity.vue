@@ -259,12 +259,10 @@
             selectStartTime(val){
                 this.hidePicker();
                 this.startTime = val;
-                console.log(val)
             },
             selectEndTime(val){
                 this.hidePicker();
                 this.endTime = val;
-                console.log(val)
             },
             hidePicker(){
                 this.showStartDatePicker = false;

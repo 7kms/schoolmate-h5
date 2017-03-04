@@ -3,11 +3,27 @@
             v-model="show"
             position="bottom"
             popup-transition="popup-fade">
-        <mt-picker :slots="slots" :showToolbar="true" :rotateEffect="true" @change="changePicker">
-            <span></span><span @click="selectPicker">确定</span>
-        </mt-picker>
+        <template v-if="!valueKey">
+            <mt-picker :slots="slots"
+                       :showToolbar="true"
+                       :rotateEffect="true"
+                       @change="changePicker">
+                <span></span><span @click="selectPicker">确定</span>
+            </mt-picker>
+        </template>
+        <template v-else>
+            <mt-picker :slots="slots"
+                       :valueKey="valueKey"
+                       :showToolbar="true"
+                       :rotateEffect="true"
+                       @change="changePicker">
+                <span></span><span @click="selectPicker">确定</span>
+            </mt-picker>
+        </template>
+
     </mt-popup>
 </template>
+
 <script>
     export default {
         props:{
@@ -16,6 +32,11 @@
                 default(){
                     return []
                 }
+            },
+            valueKey: String,
+            initValue:{
+                type: String,
+                default: ''
             },
             text:{
                 type: String,
@@ -28,10 +49,24 @@
         },
         data(){
             return {
-                selectText:''
+                selectValue:''
             }
         },
         computed:{
+            defaultIndex(){
+              let dataList = this.dataArr,defaultIndex;
+              if(!this.valueKey){
+                defaultIndex = dataList.indexOf(this.text);
+              }else {
+                dataList.forEach((obj,index)=>{
+                  if(obj.value == this.initValue){
+                    defaultIndex = index;
+                  }
+                })
+              }
+              defaultIndex = defaultIndex > -1 ? defaultIndex : 0;
+              return defaultIndex;
+            },
             show :{
                 set: function (val){
                     if(!val){
@@ -43,32 +78,26 @@
                 }
             },
             slots(){
-                var dataList = this.dataArr;
-                var defaultIndex = dataList.indexOf(this.text);
-                defaultIndex = defaultIndex > -1 ? defaultIndex : 0;
-                var initArr = [
-                    {
-                        flex:1,
-                        values:dataList,
-                        defaultIndex: defaultIndex,
-                    }
-                ];
-                return initArr;
+              let initArr = [
+                {
+                  flex: 1,
+                  values: this.dataArr,
+                  defaultIndex: this.defaultIndex,
+                }
+              ];
+              return initArr;
             }
         },
         methods:{
             selectPicker(){
-                let str = this.selectText;
-                if(!str){
-                    let dataList = this.dataArr;
-                    let defaultIndex = dataList.indexOf(this.text);
-                    defaultIndex = defaultIndex > -1 ? defaultIndex : 0;
-                    str = this.dataArr[defaultIndex];
+                let val = this.selectValue;
+                if(!val){
+                    val = this.dataArr[this.defaultIndex];
                 }
-                this.$emit('selectEnd',str);
+                this.$emit('selectEnd',val);
             },
             changePicker(picker,values){
-                this.selectText = values[0];
+                this.selectValue = values[0];
             }
         }
     }
