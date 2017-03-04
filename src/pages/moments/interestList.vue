@@ -10,7 +10,7 @@
             infinite-scroll-immediate-check="false"
             infinite-scroll-disabled="noScroll"
             infinite-scroll-distance="80">
-            <Item v-for="(item,index) in interest.list" :class="$style.item" :key="index" :dataInfo="item" @click="goDetail(item)"></Item>
+            <Item v-for="(item,index) in interest.list" :class="$style.item" :key="index" :dataInfo="item" @click.native="goDetail(item)" @verify="goVerify"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
         <publishBtn text="建圈子" @click="onPublish"></publishBtn>
@@ -56,8 +56,10 @@
           this.$toast({message: err});
         });
       },
+      goVerify(item){
+        console.table(item);
+      },
       goDetail(item) {
-//        this.$router.push(`/moments/interest/${item.aid}`);
         this.$router.push({path:`/moments/interest/${item.cid}`,query:{item:'basic'}});
       }
     },

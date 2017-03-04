@@ -8,6 +8,7 @@
         display: flex;
         padding: 0 12px;
         .desc{
+            flex: 1;
             margin-left: 12px;
             .text{
                 margin-top: 6px;
@@ -17,12 +18,13 @@
         .title{
             display: flex;
             justify-content: space-between;
-            align-items: center;
+        }
+        .verify{
+            padding-bottom: 6px;
         }
     }
     .imgContent{
         display: flex;
-        margin-top: 6px;
         justify-content: space-between;
     }
     .imgItem{
@@ -32,7 +34,7 @@
     }
 </style>
 <template>
-    <li :class="$style.content" @click="click">
+    <li :class="$style.content">
         <div :class="$style.moments">
             <div :class="$style.portrait">
                 <img :src="imageUrl(dataInfo.c_cover_file)" alt="" width="40px" height="40px">
@@ -40,9 +42,9 @@
             <div :class="$style.desc">
                 <div :class="$style.title">
                     <div>
-                        <span class="topic">{{dataInfo.c_name}}</span><span>（<span class="color-hint">{{dataInfo.count}}</span>人）</span>
+                        <span class="topic">{{dataInfo.c_name}}</span><span>（<span class="color-hint">{{ dataInfo.count }}</span>人）</span>
                     </div>
-                    <div>
+                    <div :class="$style.verify" @click.prevent.stop="goVerify">
                         <span class="color-hint">待审核12人</span>
                     </div>
                 </div>
@@ -66,11 +68,11 @@
       }
     },
     methods:{
-      click(){
-        this.$emit('click',this.dataInfo);
-      },
       imageUrl(str){
         return `${serverUrl}/${str}`;
+      },
+      goVerify(){
+        this.$emit('verify',this.dataInfo);
       }
     }
   }

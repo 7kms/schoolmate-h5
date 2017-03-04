@@ -9,6 +9,7 @@ var state = {
   },
   industry: {
     list: [],
+    keywords:'',
     noMore: false,
     pageSize: 10,
     start: 0
@@ -22,6 +23,9 @@ function getParams (item) {
   };
   if(item == 'interest'){
     obj.is_industry = '0';
+  }else{
+    obj.is_industry = '1';
+    obj.keywords = state[item].keywords;
   }
   return obj;
 }
@@ -51,7 +55,7 @@ const actions = {
   [types.LOAD_INDUSTRY_LIST] ({ commit, dispatch }) {
     let params = getParams('industry');
     return new Promise((resolve,reject) => {
-      $api.get('/index.php/Picture/getList',params)
+      $api.get('/index.php/Circle/getCircleList',params)
         .then(data =>{
           dispatch(types.APPEND_INDUSTRY_LIST, data.result);
           var noMore = (state.industry.list.length >= data.total);
@@ -93,13 +97,14 @@ const mutations = {
   },
   [types.RESET_INDUSTRY_LIST] (state) {
     state.industry.list = [];
+    state.industry.keywords = '';
     state.industry.start = 0;
     state.industry.noMore = false;
   },
   [types.CHANGE_INDUSTRY_STATUS] (state, status) {
     state.industry = Object.assign(state.industry, status);
   }
-}
+};
 
 export default {
   state,

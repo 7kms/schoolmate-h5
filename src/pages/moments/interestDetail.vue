@@ -32,9 +32,9 @@
         <div class="top">
             <div :class="$style.header">
                 <div :class="$style.pic">
-                    <img :src="testUrl" alt="" width="60" height="60">
+                    <imgContain :imgUrl="basicInfo.c_cover_file" :onlyImage="true" style="width:60px ;height:60px"></imgContain>
                 </div>
-                <div class="size-topic text-center">野兽骑行</div>
+                <div class="size-topic text-center">{{ basicInfo.c_name }}</div>
             </div>
             <div :class="[$style.nav,'size-topic','text-center']">
                 <span :class="[$style.navItem,{[$style.active]:item=='basic'}]" @click="switchItem('basic')">简介</span>
@@ -43,7 +43,7 @@
                 <span :class="[$style.navItem,{[$style.active]:item=='interact'}]" @click="switchItem('interact')">互助</span>
             </div>
         </div>
-        <div :class="$style.detail">
+        <div :class="$style.detail" v-if="!loading">
             <Basic :dataInfo="basicInfo" v-if="item=='basic'"></Basic>
             <Activity :dataInfo="{}" v-if="item=='activity'"></Activity>
             <Photo :dataInfo="{}" v-if="item=='photo'"></Photo>
@@ -68,26 +68,20 @@
     data(){
       return {
         item: '',
+        loading: true,
         testUrl:require('../../assets/moke/0.3.1.png'),
-        basicInfo:{
-
-        }
+        basicInfo:''
       }
     },
     methods:{
       getData(item){
         if(item == 'basic'){
           $api.get('/index.php/Circle/getCircle',{cid: this.$route.params.id})
-            .then(res=>{
-                if(res.code == 200){
-                  Object.assign(this.basicInfo,res.data);
-                }
-            },res=>{
-
+            .then(data=>{
+                this.basicInfo = {...data};
+                this.loading = false;
             })
         }
-
-
       },
       switchItem(item){
         var id = this.$route.params.id;

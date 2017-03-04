@@ -57,9 +57,9 @@
     <div :class="[$style.content,'page-content']">
         <div :class="$style.search">
             <div :class="$style.input">
-                <input type="text">
+                <input type="text" v-model="industry.keywords">
             </div>
-            <span :class="[$style.btn,'size-topic','color-theme']">搜索</span>
+            <span :class="[$style.btn,'size-topic','color-theme']" @click="search">搜索</span>
         </div>
         <div :class="[$style.bar,'size-topic','color-theme']">
             <span>我在的行业圈</span>
@@ -116,6 +116,15 @@
           this.loading = false;
           this.$toast({message: err});
         });
+      },
+      search(){
+        this.$store.dispatch('moments/RESET_INDUSTRY_LIST');
+        this.$store.dispatch('moments/LOAD_INDUSTRY_LIST').then(() => {
+             this.loading = false;
+          },(err)=>{
+              this.loading = false;
+              this.$toast({message: err});
+          });
       }
     },
     created(){

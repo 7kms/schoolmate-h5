@@ -71,9 +71,9 @@
             click(){
                 this.$emit('click',this.dataInfo);
             },
-          imageUrl(str){
-            return `${serverUrl}/${str}`;
-          }
+            imageUrl(str){
+                return `${serverUrl}/${str}`;
+            }
         }
     }
 </script>

@@ -50,7 +50,7 @@
             <div :class="$style.info">
                 <ImgContain :class="$style.cover" :imgUrl="dataInfo.info.cover_file"></ImgContain>
                 <div :class="$style.desc">
-                    <span :class="[$style.ing,'size-topic']">活动进行中</span>
+                    <span :class="[$style.ing,'size-topic']" v-if="dataInfo.info.ongoing">活动进行中</span>
                     <h3 class="topic">{{dataInfo.info.theme}}</h3>
                     <div :class="$style.item">
                         <div class="itemDfn"><span>活动时间：</span></div>

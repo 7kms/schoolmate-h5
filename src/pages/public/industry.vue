@@ -24,39 +24,42 @@
     }
 </style>
 <template>
-    <div :class="$style.content" @click="click">
+    <div :class="$style.content">
         <div :class="$style.moments">
             <div :class="$style.portrait">
-                <img :src="testUrl" alt="" width="40px" height="40px">
+                <img :src="postUrl(dataInfo.c_cover_file)" alt="" width="40px" height="40px">
             </div>
             <div>
-                <span class="topic">设计圈</span><span>（<span class="color-hint">12</span>人）</span>
+                <span class="topic">{{ dataInfo.c_name }}</span><span>（<span class="color-hint">{{ dataInfo.count }}</span>人）</span>
             </div>
         </div>
         <div :class="$style.imgContent">
-            <ImgContain :imgUrl="testUrl" :class="$style.imgItem"></ImgContain>
-            <ImgContain :imgUrl="testUrl" :class="$style.imgItem"></ImgContain>
-            <ImgContain :imgUrl="testUrl" :class="$style.imgItem"></ImgContain>
+            <ImgContain :imgUrl="img" :class="$style.imgItem" v-for="img in imgArr"></ImgContain>
         </div>
     </div>
 </template>
 <script>
   import {serverUrl} from '../../config'
   export default {
-    data(){
-      return {
-        testUrl:require('../../assets/moke/0.3.1.png')
-      }
-    },
     props: {
       dataInfo: {
         type: Object,
         required: true
       }
     },
+    computed:{
+      imgArr(){
+        var arr = this.dataInfo.pictures || [];
+        arr.length = 3;
+        return arr;
+      }
+    },
     methods:{
-      click(){
-        this.$emit('click',this.dataInfo);
+      postUrl(url){
+        if(url){
+          url = `${serverUrl}/${url}`;
+        }
+        return url;
       }
     }
   }

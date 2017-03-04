@@ -256,17 +256,17 @@
       }
     },
     created(){
-      $api.get('/index.php/Circle/getCircle')
+      $api.get('/index.php/Circle/getMyCircle')
         .then(res=>{
-
-        },res=>{
           res.forEach(circle => {
             var obj = {
-              label: circle.name,
+              label: circle.c_name,
               value: circle.cid,
             };
             this.rangeOptions.push(obj);
           });
+        },res=>{
+
           console.log(res);
         })
     }

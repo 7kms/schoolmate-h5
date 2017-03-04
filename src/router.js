@@ -144,7 +144,7 @@ const ROUTER_SETTING = {
         },
         {
           path: '/publish',
-          component: resolve => require(['./pages/publish/index.vue'], resolve),
+          component: resolve => require(['./pages/update/index.vue'], resolve),
           redirect: '/publish/activity',
           children:[
             {

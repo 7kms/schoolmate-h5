@@ -65,6 +65,7 @@
         .tag{
             height: 24px;
             margin-bottom: 6px;
+            margin-right: 5px;
             line-height: 24px;
             padding: 0 12px;
             border: 1px solid @theme-color;
@@ -125,23 +126,23 @@
                 <div :class="$style.user">
                     <div :class="$style.info">
                         <div :class="$style.portrait">
-                            <img :src="testUrl" width="40" height="40">
+                            <imgContain :imgUrl="dataInfo.me.photo" :onlyImage="true" style="width:40px ;height:40px"></imgContain>
                         </div>
                         <div :class="[$style.text,$style.text1]">
                             <div>
-                                <span>2008级</span><span> | </span><span>土木工程</span>
+                                <span>{{dataInfo.me.enrol_time.slice(0,4)}}级</span><span> | </span><span>{{dataInfo.me.major}}</span>
                             </div>
                             <div>
-                                <span>小桔科技有限公司</span>
+                                <span>{{dataInfo.me.company}}</span>
                             </div>
                         </div>
                     </div>
                     <div :class="[$style.info,$style.info2]">
                         <div :class="$style.portrait">
-                            <span class="color-topic">王阳明</span>
+                            <span class="color-topic">{{dataInfo.me.name}}</span>
                         </div>
                         <div :class="$style.text">
-                            <div>开发总监</div>
+                            <div>{{dataInfo.me.detail_job}}</div>
                         </div>
                     </div>
                 </div>
@@ -150,23 +151,14 @@
                 <div :class="$style.bar">
                     <span :class="[$style.title,'color-topic','inline-block']">圈子介绍</span>
                 </div>
-                <div :class="$style.desc">
-                    骑行圈是专业的自行车运动交流平台,提供前沿骑行资讯,权威骑行
-                    装备信息,参与和组织户外骑行活动的平台,分享和交流户外骑行经
-                    验的社区,结识和维护车友关系的圈子。
-                </div>
+                <div :class="$style.desc">{{ dataInfo.c_description }}</div>
             </li>
             <li :class="$style.item">
                 <div :class="$style.bar">
                     <span :class="[$style.title,'color-topic','inline-block']">标签</span>
                 </div>
                 <div :class="$style.tagContent">
-                    <span :class="[$style.tag,'inline-block']">酷炫</span>
-                    <span :class="[$style.tag,'inline-block']">热骑行情</span>
-                    <span :class="[$style.tag,'inline-block']">骑行</span>
-                    <span :class="[$style.tag,'inline-block']">骑骑行骑行行</span>
-                    <span :class="[$style.tag,'inline-block']">骑骑行骑行行</span>
-                    <span :class="[$style.tag,'inline-block']">骑骑行骑行行</span>
+                    <span :class="[$style.tag,'inline-block']" v-for="tag of tags">{{tag}}</span>
                 </div>
             </li>
             <li :class="$style.item" @click="goMemberList">
@@ -176,57 +168,20 @@
                     <i :class="[$style.icon,$style.iconArrow,'inline-block']"></i>
                 </div>
                 <div :class="$style.memberContent">
-                    <div :class="$style.member">
+                    <div :class="$style.member" v-for="member of dataInfo.members">
                         <div :class="$style.img">
-                            <img :src="testUrl" alt="" width="40" height="40">
+                            <imgContain :imgUrl="member.photo" :onlyImage="true" style="width:40px ;height:40px"></imgContain>
                         </div>
-                        <div class="one-line">name01</div>
+                        <div class="one-line">{{member.name}}</div>
                     </div>
-                    <div :class="$style.member">
-                        <div :class="$style.img">
-                            <img :src="testUrl" alt="" width="40" height="40">
-                        </div>
-                        <div class="one-line">name01</div>
-                    </div>
-                    <div :class="$style.member">
-                        <div :class="$style.img">
-                            <img :src="testUrl" alt="" width="40" height="40">
-                        </div>
-                        <div class="one-line">name01</div>
-                    </div>
-                    <div :class="$style.member">
-                        <div :class="$style.img">
-                            <img :src="testUrl" alt="" width="40" height="40">
-                        </div>
-                        <div class="one-line">name01</div>
-                    </div>
-                    <div :class="$style.member">
-                        <div :class="$style.img">
-                            <img :src="testUrl" alt="" width="40" height="40">
-                        </div>
-                        <div class="one-line">name01</div>
-                    </div>
-                    <div :class="$style.member">
-                        <div :class="$style.img">
-                            <img :src="testUrl" alt="" width="40" height="40">
-                        </div>
-                        <div class="one-line">name01</div>
-                    </div>
-                    <div :class="$style.member">
-                        <div :class="$style.img">
-                            <img :src="testUrl" alt="" width="40" height="40">
-                        </div>
-                        <div class="one-line">name01</div>
-                    </div>
-
                 </div>
             </li>
         </ul>
         <template v-if="!dataInfo.created_by_me">
-            <div :class="[$style.join,'text-center']" v-if="!dataInfo.is_member">
+            <div :class="[$style.join,'text-center']" v-if="!dataInfo.is_member" @click="attend">
                 <span class="size-header">申请加入</span>
             </div>
-            <div :class="[$style.quit,'text-center','size-header']" v-else>
+            <div :class="[$style.quit,'text-center','size-header']" v-else @click="exit">
                 <span>退出圈子</span>
             </div>
         </template>
@@ -234,22 +189,59 @@
 </template>
 <script>
   import {serverUrl} from '../../config'
+  import $api from 'api'
   export default {
-    data(){
-      return {
-        testUrl:require('../../assets/moke/0.3.1.png')
-      }
-    },
     props: {
       dataInfo: {
         type: Object,
         required: true
       }
     },
+    computed: {
+      tags(){
+        if(!this.dataInfo.labels)return [];
+        return this.dataInfo.labels.split(/\s+/);
+      }
+    },
     methods:{
       goMemberList(){
         var id = this.$route.params.id;
         this.$router.push(`/moments/interest/${id}/member`);
+      },
+      attend(){
+        this.$dialog.confirm('确认要加入?').then(data=>{
+          return $api.post('/index.php/Circle/attend',{cid:this.dataInfo.cid});
+        },data=>{
+          return false;
+        }).then(res=>{
+
+          if(!res)return false;
+          if(res.result){
+            this.dataInfo.is_member = !this.dataInfo.is_member;
+            this.$toast('加入成功')
+          }else{
+            this.$toast(res.msg);
+          }
+        },error=>{
+          this.$toast('服务器异常')
+        });
+      },
+      exit(){
+        this.$dialog.confirm('确认要退出?').then(data=>{
+          return $api.post('/index.php/Circle/cancel',{cid:this.dataInfo.cid});
+        },data=>{
+            return false;
+        }).then(res=>{
+            if(!res)return false;
+            if(res.result){
+              this.dataInfo.is_member = !this.dataInfo.is_member;
+              this.$toast('退出成功')
+            }else{
+              this.$toast(res.msg);
+            }
+        },error=>{
+          this.$toast('服务器异常')
+        });
       }
     }
   }

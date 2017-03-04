@@ -20,14 +20,14 @@
         },
         methods:{
           postUrl(url){
-            if(url){
+            if(url && url.indexOf('http') != 0){
               url = `${serverUrl}/${url}`;
             }
             return url;
           },
           postStyle(url){
             var styleObj = {};
-            if(url && url.indexOf('/')==0){
+            if(url && url.indexOf('http')==0){
               styleObj.backgroundImage = `url(${url})`;
             }else if(url){
               styleObj.backgroundImage = `url(${serverUrl}/${url})`;

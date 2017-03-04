@@ -191,15 +191,15 @@
                 showStartTimePicker: false,
                 showEndTimePicker: false,
                 info:{
-                    theme:'聚会',
+                    theme:'',
                     time:'',
                     end_time: '',
-                    description:'我们公司很牛b',
-                    place:'天安门广场',
+                    description:'',
+                    place:'',
                     cover_file:'image/default-activity-cover.jpg',
-                    amount:'18',
-                    fee:'600',
-                    contact: '13555555555'
+                    amount:'',
+                    fee:'',
+                    contact: ''
                 },
                 loading: false,
                 showBgImage: false,
@@ -250,6 +250,7 @@
         methods:{
             selectStartDate(val){
                 this.hidePicker();
+                console.log(val)
                 this.startDate = val;
             },
             selectEndDate(val){
@@ -301,8 +302,9 @@
                     this.$toast('手机号码不正确');
                     return false;
                 }
-                if(this.info.free == ''){
-                    this.$toast('活动费用未填写');
+
+                if(!this.free && !/[1-9]\d*/.test(this.info.fee)){
+                    this.$toast('活动费用不正确');
                     return false;
                 }
                 if(!this.info.amount){
