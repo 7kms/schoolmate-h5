@@ -13,6 +13,9 @@
             <Item v-for="(item,index) in column.list" :class="$style.item" :key="index" :dataInfo="item" @click="goDetail(item)"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
+        <div v-if="!loading && column.noMore && column.list.length == 0" class="empty-data-item">
+            <span>数据为空</span>
+        </div>
     </div>
 </template>
 <script>
@@ -36,16 +39,10 @@
         column: state => state.activity.column
       })
     },
-    beforeRouteLeave (to, from, next) {
-      if(to.name != 'column-detail'){
-        this.$store.dispatch('activity/RESET_COLUMN_LIST');
-      }
-      next();
-    },
     methods:{
       loadMore() {
         this.loading = true;
-        this.$store.dispatch('activity/LOAD_COLUMN_LIST').then(()=>{
+        this.$store.dispatch('activity/LOAD_COLUMN_LIST',{cid: this.$route.params.id}).then(()=>{
           this.loading = false;
         },(err)=>{
           this.loading = false;

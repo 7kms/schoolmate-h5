@@ -28,6 +28,7 @@
             &.gray{
                 color: #fff;
                 background-color: #C7CED2;
+                border: none;
              }
         }
         & > div {
@@ -49,8 +50,9 @@
         </div>
         <div :class="$style.desc">
             <template v-if="!isSelf">
-                <span :class="[$style.exchange,'text-center']" v-if="true" @click="exchange">交换联系方式</span>
-                <span :class="[$style.exchange,$style.gray,'text-center']" v-else @click.prevent="cancelExchange">撤销</span>
+                <span :class="[$style.exchange,'text-center']" v-if="dataInfo.exchange_status == 0" @click="exchange('exchange')">交换联系方式</span>
+                <span :class="[$style.exchange,$style.gray,'text-center']" v-if="dataInfo.exchange_status == 1" @click="exchange('cancel')">撤销</span>
+                <span :class="[$style.exchange,'text-center']" v-if="dataInfo.exchange_status == 2" @click="exchange('contact')">查看联系方式</span>
             </template>
            <div>{{dataInfo.company}}</div>
            <div>{{dataInfo.department}}</div>
@@ -60,7 +62,8 @@
     </li>
 </template>
 <script>
-  import {mapState} from 'vuex'
+  import {mapState} from 'vuex';
+  import $api from  'api';
     export default{
       props:{
         isAuthor:Boolean,
@@ -79,11 +82,31 @@
         }
       },
       methods:{
-        cancelExchange(){
-          this.$emit('cancelExchange',this.dataInfo);
-        },
-        exchange(){
-          this.$emit('exchange',this.dataInfo);
+        exchange(type){
+          var {uid} = this.dataInfo;
+          if(type == 'exchange'){
+            $api.post('/index.php/Profile/requestExchange',{uid})
+              .then(res => {
+                    this.$toast(res.msg);
+                    if(res.result) {
+                        this.dataInfo.exchange_status = 1;
+                    }
+                },res=>{
+                    this.$toast('服务器异常')
+                });
+          }else if(type == 'cancel'){
+            $api.post('/index.php/Profile/cancelExchange',{uid})
+              .then(res => {
+                this.$toast(res.msg)
+                if(res.result) {
+                this.dataInfo.exchange_status = 0;
+                }
+            },res=>{
+              this.$toast('服务器异常')
+            })
+          }else{
+
+          }
         }
       }
     }

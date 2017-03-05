@@ -85,14 +85,14 @@
             <div :class="['list-content',$style.info,$style.attendedList]">
                 <h3 class="item-header">报名名单</h3>
                 <ul>
-                    <attendedItem :dataInfo="dataInfo.creator" :isAuthor="true" @cancelExchange="cancelExchange" @exchange="exchange"></attendedItem>
-                    <attendedItem v-for="item in dataInfo.attendedCrowd" :key="item.uid" :dataInfo="item" @cancelExchange="cancelExchange" @exchange="exchange"></attendedItem>
+                    <attendedItem :dataInfo="dataInfo.creator" :isAuthor="true" ></attendedItem>
+                    <attendedItem v-for="item in dataInfo.attendedCrowd" :key="item.uid" :dataInfo="item"></attendedItem>
                 </ul>
             </div>
             <div :class="['list-content',$style.info,$style.commentList]">
                 <h3 class="item-header">校友评论</h3>
                 <ul>
-                    <commentItem v-for="comment in dataInfo.comments" :dataInfo="comment" :key="comment.uid" @removeComment="removeComment"></commentItem>
+                    <commentItem v-for="comment in dataInfo.comments" :dataInfo="comment" :key="index" :showRemove="showRemove(comment)" @removeComment="removeComment"></commentItem>
                 </ul>
             </div>
             <operateBar :dataInfo="operateBarData" @click="operateBarClick"></operateBar>
@@ -102,6 +102,7 @@
 </template>
 <script>
     import $api from 'api';
+    import {mapState} from 'vuex';
     import operateBar from  '../public/operateBar.vue'
     import attendedItem from './attendedItem.vue'
     import commentItem from './commentItem.vue'
@@ -116,18 +117,49 @@
         },
         data(){
           return {
-            operateBarData:{
-              leftText:'报名预定',
-              rightText:'评论',
-              rightImage: require('../../assets/images/icon-comment.png')
-            },
             loading: true,
             dataInfo:{}
           }
         },
+        computed:{
+          ...mapState({
+            self:(state)=>state.user.profile
+          }),
+          operateBarData(){
+            var obj = {
+              leftText:'报名预定',
+              rightText:'评论',
+              rightImage: require('../../assets/images/icon-comment.png')
+            };
+            if(this.dataInfo.attended){
+              obj.leftText = '已报名'
+            }
+            return obj;
+          }
+        },
         methods: {
+          showRemove(comment){
+            return this.self.uid == this.dataInfo.creator.uid || this.self.uid == comment.uid;
+          },
           operateBarClick(type){
-            console.log(type)
+            if(type == 'left'){
+              if(this.dataInfo.attended) return false;
+              $api.post('/index.php/Activity/join',{aid:this.dataInfo.info.aid})
+                .then(res=>{
+                  this.$toast(res.msg);
+                  if(res.result){
+                    this.dataInfo.attended = true;
+                    this.dataInfo.attendedCrowd.push(this.self);
+                  }
+              },err=>{
+                  this.$toast('服务器异常');
+              })
+            }else{
+                this.$router.push({
+                  path: '/comment/activity',
+                  query:{aid: this.dataInfo.info.aid}
+                });
+            }
           },
           getData({id}){
             this.loading = true;
@@ -140,28 +172,21 @@
                 this.loading = false;
               })
           },
-          exchange(item){
-            var {uid} = item;
-            $api.post('/index.php/Profile/requestExchange',{uid})
-              .then(res => {
-              this.$toast(res.msg);
-            },res=>{
-              this.$toast('服务器异常')
-            })
-          },
-          cancelExchange(item){
-            var {uid} = item;
-            $api.post('/index.php/Profile/cancelExchange',{uid})
-              .then(res => {
-              if(res.result) {
-                this.$toast(res.msg)
-              }
-            },res=>{
-              this.$toast('服务器异常')
-            })
-          },
           removeComment(item){
-            console.log(item);
+            $api.post('/index.php/Picture/deleteComment',{cid:item.cid})
+              .then(res=>{
+                this.$toast(res.msg);
+                if(res.result) {
+                  this.dataInfo.comments = this.dataInfo.comments.filter(obj=>{
+                    if(obj.cid == item.cid){
+                      return false;
+                    }
+                    return true;
+                  });
+                }
+              },err=>{
+                this.$toast('服务器异常')
+              })
           }
         }
     }

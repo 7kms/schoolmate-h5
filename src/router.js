@@ -143,6 +143,11 @@ const ROUTER_SETTING = {
             component: resolve => require(['./pages/entrance/index.vue'], resolve)
         },
         {
+          path: '/comment/:column',
+          name: 'comment',
+          component: resolve => require(['./pages/comment/index.vue'], resolve)
+        },
+        {
           path: '/publish',
           component: resolve => require(['./pages/update/index.vue'], resolve),
           redirect: '/publish/activity',

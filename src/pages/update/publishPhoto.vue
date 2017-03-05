@@ -112,7 +112,7 @@
             },
             after(file, component) {
               let res = util.parseJSON(file.response);
-              let url = res.data[0];
+              let url = res[0];
               _this.info.pictures.push(url);
             },
             before(file, component) {

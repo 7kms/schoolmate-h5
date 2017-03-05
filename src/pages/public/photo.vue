@@ -80,14 +80,14 @@
             </div>
             <div :class="$style.descItem">
                 <div>
-                    <span>{{dataInfo.user.graduate_time}}级</span>
+                    <span>{{dataInfo.user.enrol_time.slice(0,4)}}级</span>
                     <span :class="$style.split">|</span>
                     <span>{{dataInfo.user.major}}</span>
                 </div>
                 <div class="color-topic">
                     <span class="inline-block" @click.prevent.stop="like">
                         <i :class="['inline-block',$style.icon,$style.iconLike]"></i>
-                        <span class="inline-block">点赞</span>
+                        <span class="inline-block">{{dataInfo.is_liked == 1 ? '已赞' : '点赞'}}</span>
                     </span>
                     <span :class="[$style.marginLeft,'inline-block']" @click.prevent.stop="comment">
                         <i :class="['inline-block',$style.icon,$style.iconComment]"></i>
@@ -100,6 +100,7 @@
 </template>
 <script>
   import {serverUrl} from '../../config'
+  import $api from 'api';
     export default {
       props: {
         dataInfo: {
@@ -118,10 +119,26 @@
           return `${serverUrl}/${str}`;
         },
         like(){
-
+            if(this.dataInfo.is_liked){
+              this.$toast('已经点过赞了');
+            }else{
+              $api.post('/index.php/Picture/like',{pid:this.dataInfo.pid})
+                .then(res=>{
+                  this.$toast(res.msg);
+                  if(res.result){
+                    this.dataInfo.is_liked = true;
+                    this.dataInfo.liked = this.dataInfo.liked * 1 + 1;
+                  }
+              },err=>{
+                this.$toast('服务器异常');
+              })
+            }
         },
         comment(){
-
+          this.$router.push({
+            path: '/comment/picture',
+            query:{pid: this.dataInfo.pid}
+          });
         }
       }
     }

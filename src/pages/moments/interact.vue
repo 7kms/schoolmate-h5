@@ -13,6 +13,9 @@
             <Item v-for="(item,index) in interact.list" :class="$style.item" :key="index" :dataInfo="item"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
+        <div v-if="!loading && interact.noMore && interact.list.length == 0" class="empty-data-item">
+            <span>数据为空</span>
+        </div>
     </div>
 </template>
 <script>
@@ -36,14 +39,10 @@
         interact: state => state.interact.interact
       })
     },
-    beforeRouteLeave (to, from, next) {
-      this.$store.dispatch('interact/RESET_INTERACT_LIST');
-      next();
-    },
     methods:{
       loadMore() {
         this.loading = true;
-        this.$store.dispatch('interact/LOAD_INTERACT_LIST').then(()=>{
+        this.$store.dispatch('interact/LOAD_INTERACT_LIST',{cid: this.$route.params.id}).then(()=>{
           this.loading = false;
         },(err)=>{
           this.loading = false;

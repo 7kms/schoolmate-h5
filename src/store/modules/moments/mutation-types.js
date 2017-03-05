@@ -7,3 +7,7 @@ export const APPEND_INDUSTRY_LIST = 'moments/APPEND_INDUSTRY_LIST'
 export const LOAD_INDUSTRY_LIST = 'moments/LOAD_INDUSTRY_LIST'
 export const RESET_INDUSTRY_LIST = 'moments/RESET_INDUSTRY_LIST'
 export const CHANGE_INDUSTRY_STATUS = 'moments/CHANGE_INDUSTRY_STATUS'
+
+
+//detail
+

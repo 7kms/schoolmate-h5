@@ -45,14 +45,15 @@
         </div>
         <div :class="$style.detail" v-if="!loading">
             <Basic :dataInfo="basicInfo" v-if="item=='basic'"></Basic>
-            <Activity :dataInfo="{}" v-if="item=='activity'"></Activity>
-            <Photo :dataInfo="{}" v-if="item=='photo'"></Photo>
-            <Interact :dataInfo="{}" v-if="item=='interact'"></Interact>
+            <Activity  v-if="item=='activity'"></Activity>
+            <Photo  v-if="item=='photo'"></Photo>
+            <Interact v-if="item=='interact'"></Interact>
         </div>
     </div>
 </template>
 <script>
   import $api from 'api';
+  import { mapGetters } from 'vuex'
   import {serverUrl} from '../../config'
   import Basic from './basic.vue'
   import Activity from './activity.vue'
@@ -69,9 +70,14 @@
       return {
         item: '',
         loading: true,
-        testUrl:require('../../assets/moke/0.3.1.png'),
         basicInfo:''
       }
+    },
+    beforeRouteLeave (to, from, next){
+      this.$store.dispatch('activity/RESET_PHOTO_LIST');
+      this.$store.dispatch('interact/RESET_INTERACT_LIST');
+      this.$store.dispatch('activity/RESET_COLUMN_LIST');
+      next();
     },
     methods:{
       getData(item){
@@ -79,8 +85,10 @@
           $api.get('/index.php/Circle/getCircle',{cid: this.$route.params.id})
             .then(data=>{
                 this.basicInfo = {...data};
-                this.loading = false;
+              this.loading = false;
             })
+        }else{
+          this.loading = false;
         }
       },
       switchItem(item){
@@ -92,7 +100,6 @@
       var id = this.$route.params.id;
       var item = this.$route.query.item;
       this.item = item;
-      console.log(id,item);
       this.getData(this.item);
     },
     watch:{

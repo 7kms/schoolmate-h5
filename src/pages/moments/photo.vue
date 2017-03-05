@@ -13,6 +13,9 @@
             <Item v-for="(item,index) in photo.list" :class="$style.item" :key="index" :dataInfo="item" @click="goDetail(item)"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
+        <div v-if="!loading && photo.noMore && photo.list.length == 0" class="empty-data-item">
+            <span>数据为空</span>
+        </div>
     </div>
 </template>
 <script>
@@ -28,12 +31,6 @@
         loading: false
       }
     },
-    beforeRouteLeave (to, from, next){
-      if(to.name != 'photo-detail'){
-        this.$store.dispatch('activity/RESET_PHOTO_LIST');
-      }
-      next();
-    },
     computed:{
       noScroll(){
         return this.loading || this.photo.noMore;
@@ -48,7 +45,7 @@
       },
       loadMore() {
         this.loading = true;
-        this.$store.dispatch('activity/LOAD_PHOTO_LIST').then(()=>{
+        this.$store.dispatch('activity/LOAD_PHOTO_LIST',{cid: this.$route.params.id}).then(()=>{
           this.loading = false;
         });
       },

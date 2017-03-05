@@ -42,7 +42,7 @@
             <div :class="['list-content',$style.info,$style.commentList]">
                 <h3 class="item-header">校友评论</h3>
                 <ul>
-                    <commentItem v-for="(comment,index) in dataInfo.comments" :dataInfo="comment" :key="index"></commentItem>
+                    <commentItem v-for="(comment,index) in dataInfo.comments" :dataInfo="comment" :key="index" :showRemove="showRemove(comment)" @removeComment="removeComment"></commentItem>
                 </ul>
             </div>
             <operateBar :dataInfo="operateBarData" @click="operateBarClick"></operateBar>
@@ -53,6 +53,7 @@
 </template>
 <script>
   import $api from 'api';
+  import {mapState} from 'vuex';
   import operateBar from  '../public/operateBar.vue'
   import commentItem from './commentItem.vue'
   export default {
@@ -62,12 +63,6 @@
     data(){
       return {
         loading: true,
-        operateBarData:{
-          leftText:'评论',
-          leftImage:require('../../assets/images/icon-comment.png'),
-          rightText:'点赞',
-          rightImage: require('../../assets/images/icon-like.png')
-        },
         url:require('../../assets/moke/1.png'),
         dataInfo:{}
       }
@@ -76,9 +71,47 @@
       commentItem,
       operateBar
     },
+    computed:{
+      ...mapState({
+        self:(state)=>state.user.profile
+      }),
+      operateBarData(){
+        var obj = {
+          leftText:'评论',
+          leftImage:require('../../assets/images/icon-comment.png'),
+          rightText:'点赞',
+          rightImage: require('../../assets/images/icon-like.png')
+        };
+        if(this.dataInfo.is_liked){
+          obj.rightText = '已赞';
+        }
+        return obj;
+      }
+    },
     methods: {
+      showRemove(comment){
+        return this.self.uid == this.dataInfo.uid || this.self.uid == comment.uid;
+      },
       operateBarClick(type){
-
+        if(type == 'left'){
+          this.$router.push({
+            path: '/comment/picture',
+            query:{pid: this.dataInfo.pid}
+          });
+        }else{
+          if(!this.dataInfo.is_liked){
+            $api.post('/index.php/Picture/like',{pid:this.dataInfo.pid})
+              .then(res=>{
+                this.$toast(res.msg);
+                if(res.result){
+                  this.dataInfo.is_liked = true;
+                  this.dataInfo.liked = this.dataInfo.liked * 1 + 1;
+                }
+            },err=>{
+              this.$toast('服务器异常');
+            });
+          }
+        }
       },
       getData({id}){
         this.loading = true;
@@ -90,6 +123,22 @@
             this.$toast({message: err});
             this.loading = false;
           })
+      },
+      removeComment(item){
+        $api.post('/index.php/Picture/deleteComment',{cid:item.cid})
+          .then(res=>{
+          this.$toast(res.msg);
+          if(res.result) {
+            this.dataInfo.comments = this.dataInfo.comments.filter(obj=>{
+              if(obj.cid == item.cid){
+                return false;
+              }
+              return true;
+            });
+          }
+        },err=>{
+          this.$toast('服务器异常')
+        })
       }
     },
     mounted(){

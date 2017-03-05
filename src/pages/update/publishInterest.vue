@@ -161,7 +161,7 @@
           },
           after(file, component) {
             let res = util.parseJSON(file.response);
-            let url = res.data[0];
+            let url = res[0];
             _this.info.c_cover_file = url;
           },
           before(file, component) {

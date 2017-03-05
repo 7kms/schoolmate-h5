@@ -32,7 +32,7 @@
             }
         },
         beforeRouteLeave (to, from, next){
-            if(to.name != 'photo-detail'){
+            if(to.name != 'photo-detail' &&  to.name != 'comment'){
                 this.$store.dispatch('activity/RESET_PHOTO_LIST');
             }
             next();

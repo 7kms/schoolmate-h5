@@ -13,18 +13,21 @@ var state = {
         pageSize: 10,
         start: 0
     }
-}
+};
 
 function getParams (item) {
     return {
-        start: state[item].start,
-        pageSize: state[item].pageSize
-    }
+      start: state[item].start,
+      pageSize: state[item].pageSize
+    };
 }
 
 const actions = {
-    [types.LOAD_COLUMN_LIST] ({ commit, dispatch }) {
+    [types.LOAD_COLUMN_LIST] ({ commit, dispatch },payload) {
       let params = getParams('column');
+      if(payload){
+        params.cid = payload.cid;
+      }
       return new Promise((resolve,reject) => {
         $api.get('/index.php/Activity/getList',params)
           .then(data =>{
@@ -44,8 +47,11 @@ const actions = {
         commit(types.RESET_COLUMN_LIST);
     },
 
-    [types.LOAD_PHOTO_LIST] ({ commit, dispatch }) {
+    [types.LOAD_PHOTO_LIST] ({ commit, dispatch },payload) {
       let params = getParams('photo');
+      if(payload){
+        params.cid = payload.cid;
+      }
       return new Promise((resolve,reject) => {
         $api.get('/index.php/Picture/getList',params)
           .then(data =>{

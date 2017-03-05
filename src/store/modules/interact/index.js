@@ -34,8 +34,11 @@ function getParams (item) {
 }
 
 const actions = {
-  [types.LOAD_INTERACT_LIST] ({ commit, dispatch }) {
+  [types.LOAD_INTERACT_LIST] ({ commit, dispatch }, payload) {
     let params = getParams('interact');
+    if(payload){
+      params.cid = payload.cid;
+    }
     return new Promise((resolve,reject) => {
       $api.get('/index.php/Help/getResList',params)
         .then(data =>{

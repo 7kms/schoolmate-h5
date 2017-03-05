@@ -67,7 +67,7 @@
     }
 </style>
 <template>
-    <div :class="$style.content" @click="click">
+    <div :class="$style.content">
         <div :class="$style.desc">
             <span v-if="dataInfo.type == 2" class="color-theme size-topic">拥有资源：</span>
             <span v-else　class="color-hint size-topic">寻求合作：</span>
@@ -106,7 +106,8 @@
                 </div>
                 <template v-if="!isSelf">
                     <span :class="$style.infoBtn" @click.prevent="collaborate" v-if="!dataInfo.applied">申请合作</span>
-                    <span :class="[$style.infoBtn,$style.hint]" @click.prevent="revocation" v-else>撤销</span>
+                    <span :class="[$style.infoBtn,$style.hint]" @click.prevent="revocation"  v-if="dataInfo.applied">撤销</span>
+                    <span :class="$style.infoBtn" v-if="dataInfo.exchange_status == 2">查看联系方式</span>
                 </template>
             </div>
         </div>
@@ -116,6 +117,7 @@
   import {serverUrl} from '../../config';
   import swiper from  '../../components/swiper';
   import {mapState} from 'vuex'
+  import $api from 'api';
   export default {
     props: {
       dataInfo: {
@@ -144,11 +146,27 @@
         });
       },
       collaborate(){
-          this.$emit('collaborate',this.dataInfo);
+        $api.post('/index.php/Help/apply',{rid:this.dataInfo.rid})
+          .then(res => {
+          this.$toast(res.msg);
+          if(res.code == 200){
+            this.dataInfo.applied = true;
+          }
+        },res=>{
+          this.$toast('服务器异常')
+        });
       },
-      revocation(){
-        this.$emit('revocation',this.dataInfo);
-      }
+      revocation(item){
+        $api.post('/index.php/Help/revokeCoApply',{rid:this.dataInfo.rid})
+          .then(res => {
+          this.$toast(res.msg);
+          if(res.code == 200){
+            this.dataInfo.applied = false;
+          }
+        },res=>{
+          this.$toast('服务器异常')
+        });
+      },
     }
   }
 </script>

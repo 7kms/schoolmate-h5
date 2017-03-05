@@ -80,14 +80,14 @@
             </div>
             <div :class="$style.descItem">
                 <div>
-                    <span>{{dataInfo.user.graduate_time}}级</span>
+                    <span>{{dataInfo.user.graduate_time.slice(0,4)}}级</span>
                     <span :class="$style.split">|</span>
                     <span>{{dataInfo.user.major}}</span>
                 </div>
                 <div class="color-topic">
                     <span class="inline-block" @click.prevent.stop="like">
                         <i :class="['inline-block',$style.icon,$style.iconLike]"></i>
-                        <span class="inline-block">点赞</span>
+                        <span class="inline-block">{{dataInfo.is_liked == 1 ? '已赞' : '点赞'}}</span>
                     </span>
                     <span :class="[$style.marginLeft,'inline-block']" @click.prevent.stop="comment">
                         <i :class="['inline-block',$style.icon,$style.iconComment]"></i>

@@ -234,7 +234,7 @@
                     after(file, component) {
                         var res = util.parseJSON(file.response);
                         if(res.code == 200){
-                            _this.info.cover_file = res.data[0];
+                            _this.info.cover_file = res[0];
                             _this.showBgImage = true;
                         }else{
                             this.$toast(res.msg);

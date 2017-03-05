@@ -51,7 +51,7 @@
                     <span>{{dataInfo.hit}}个浏览</span>
                     <span>{{dataInfo.liked}}个赞</span>
                 </span>
-                <span v-else :class="[$style.deleteBtn,'inline-block']" @click="remove">删除评论</span>
+                <span v-else-if="showRemove" :class="[$style.deleteBtn,'inline-block']" @click="remove">删除评论</span>
             </div>
         </div>
     </li>
@@ -60,6 +60,10 @@
   export default{
     props:{
       isOwner:{
+        type: Boolean,
+        default: false
+      },
+      showRemove:{
         type: Boolean,
         default: false
       },
@@ -77,7 +81,10 @@
     },
     methods:{
       remove(){
-        this.$emit('removeComment',this.dataInfo)
+        this.$dialog.confirm('确认删除此评论?').then(data=>{
+          this.$emit('removeComment',this.dataInfo);
+        },data=>{
+        });
       }
     }
   }
