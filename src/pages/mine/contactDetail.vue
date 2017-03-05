@@ -69,13 +69,14 @@
             color: @font-color-topic;
         }
     }
-    textarea{
+    .textArea{
         margin: 0;
-        padding: 0;
+        padding-left:4px;
         width: 100%;
         height: 40px;
         resize: none;
         outline: none;
+        border: none;
     }
 </style>
 <template>
@@ -87,43 +88,43 @@
             <div :class="$style.item">
                 <div :class="$style.dfn">班级代码：</div>
                 <div :class="[$style.textInput,'color-topic']">
-                    <span :class="$style.input">B08056038</span>
+                    <span :class="$style.input">{{ userInfo.class }}</span>
                 </div>
             </div>
             <div :class="$style.item">
                 <div :class="$style.dfn">姓      名：</div>
                 <div :class="[$style.textInput,'color-topic']">
-                    <input type="text" :class="$style.input" value="陈博">
+                    <span :class="$style.input">{{ userInfo.name }}</span>
                 </div>
             </div>
             <div :class="$style.item">
                 <div :class="$style.dfn">性      别：</div>
                 <div :class="[$style.textInput,'color-topic']">
-                    <span :class="$style.input">男</span>
+                    <span :class="$style.input"> {{ userInfo.gender }}</span>
                 </div>
             </div>
             <div :class="$style.item">
                 <div :class="$style.dfn">微 信 号 ：</div>
                 <div :class="[$style.textInput,'color-topic']">
-                    <span :class="$style.input">wind_road</span>
+                    <span :class="$style.input">{{ userInfo.wechat }}</span>
                 </div>
             </div>
             <div :class="$style.item">
                 <div :class="$style.dfn">手机号码：</div>
                 <div :class="[$style.textInput,'color-topic']">
-                    <span :class="$style.input">13301523576</span>
+                    <span :class="$style.input">{{ userInfo.phonenum }}</span>
                 </div>
             </div>
             <div :class="$style.item">
                 <div :class="$style.dfn">出生日期：</div>
                 <div :class="[$style.textInput,'color-topic']">
-                    <span :class="$style.input">1989/08/04</span>
+                    <span :class="$style.input">{{ userInfo.birthday }}</span>
                 </div>
             </div>
             <div :class="$style.item">
                 <div :class="$style.dfn">籍      贯：</div>
                 <div :class="[$style.textInput,'color-topic']">
-                    <span :class="$style.input">江苏-无锡</span>
+                    <span :class="$style.input">{{ userInfo.birth_from }}</span>
                 </div>
             </div>
         </div>
@@ -134,19 +135,19 @@
             <div :class="$style.item">
                 <div :class="$style.dfn">专业名称：</div>
                 <div :class="[$style.textInput,'color-topic']">
-                    <span :class="$style.input">计算机科学与技术</span>
+                    <span :class="$style.input">{{ userInfo.major }}</span>
                 </div>
             </div>
             <div :class="$style.item">
                 <div :class="$style.dfn">入学时间：</div>
                 <div :class="[$style.textInput,'color-topic']">
-                    <span :class="$style.input">2008</span>
+                    <span :class="$style.input">{{ userInfo.enrol_time ?  userInfo.enrol_time.slice(0,4) : '' }}</span>
                 </div>
             </div>
             <div :class="$style.item">
                 <div :class="$style.dfn">毕业时间：</div>
                 <div :class="[$style.textInput,'color-topic']">
-                    <span :class="$style.input">2012</span>
+                    <span :class="$style.input">{{ userInfo.graduate_time ?  userInfo.graduate_time.slice(0,4) : ''}}</span>
                 </div>
             </div>
         </div>
@@ -157,43 +158,43 @@
             <div :class="$style.item">
                 <div :class="$style.dfn">工作单位：</div>
                 <div :class="[$style.textInput,'color-topic']">
-                    <span :class="$style.input">星河互联</span>
+                    <span :class="$style.input">{{ userInfo.company }}</span>
                 </div>
             </div>
             <div :class="$style.item">
                 <div :class="$style.dfn">所属行业：</div>
                 <div :class="[$style.textInput,'color-topic']">
-                    <span :class="$style.input">计算机／互联网</span>
+                    <span :class="$style.input">{{ userInfo.industry }}</span>
                 </div>
             </div>
             <div :class="$style.item">
                 <div :class="$style.dfn">细分行业：</div>
                 <div :class="[$style.textInput,'color-topic']">
-                    <span :class="$style.input">计算机软件</span>
+                    <span :class="$style.input">{{ userInfo.job }}</span>
                 </div>
             </div>
             <div :class="$style.item">
                 <div :class="$style.dfn">所在部门：</div>
                 <div :class="[$style.textInput,'color-topic']">
-                    <span :class="$style.input">产品部</span>
+                    <span :class="$style.input">{{ userInfo.department }}</span>
                 </div>
             </div>
             <div :class="$style.item">
                 <div :class="$style.dfn">担任职务：</div>
                 <div :class="[$style.textInput,'color-topic']">
-                    <span :class="$style.input">设计师</span>
+                    <span :class="$style.input">{{ userInfo.detail_job }}</span>
                 </div>
             </div>
             <div :class="$style.item">
                 <div :class="$style.dfn">工作城市：</div>
                 <div :class="[$style.textInput,'color-topic']">
-                    <span :class="$style.input">北京</span>
+                    <span :class="$style.input">{{ userInfo.province + '-' + userInfo.city }}</span>
                 </div>
             </div>
             <div :class="$style.itemText">
                 <div :class="$style.dfn">岗位描述：</div>
                 <div :class="[$style.textInput,$style.textArea]">
-                    <textarea disabled class="color-topic">内容描述内容描述内容描述内容内容描述内容描述内容描述内容</textarea>
+                    <textarea disabled :class="['color-topic',$style.textArea]">{{ userInfo.resource_description }}</textarea>
                 </div>
             </div>
         </div>
@@ -203,3 +204,21 @@
         </div>
     </div>
 </template>
+<script>
+    import $api from 'api'
+    export default {
+      data(){
+        return {
+          userInfo:{}
+        }
+      },
+      created(){
+        $api.get('/index.php/Profile/getUserCard',{uid:this.$route.params.id})
+          .then(data=>{
+            this.userInfo = data;
+          },err=>{
+            this.$toast('服务器异常')
+          })
+      }
+    }
+</script>

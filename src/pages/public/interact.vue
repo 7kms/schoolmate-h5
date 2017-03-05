@@ -107,7 +107,9 @@
                 <template v-if="!isSelf">
                     <span :class="$style.infoBtn" @click.prevent="collaborate" v-if="!dataInfo.applied">申请合作</span>
                     <span :class="[$style.infoBtn,$style.hint]" @click.prevent="revocation"  v-if="dataInfo.applied">撤销</span>
-                    <span :class="$style.infoBtn" v-if="dataInfo.exchange_status == 2">查看联系方式</span>
+                </template>
+                <template v-else>
+                    <span :class="$style.infoBtn" @click.prevent="goContacts">合作名单</span>
                 </template>
             </div>
         </div>
@@ -156,7 +158,7 @@
           this.$toast('服务器异常')
         });
       },
-      revocation(item){
+      revocation(){
         $api.post('/index.php/Help/revokeCoApply',{rid:this.dataInfo.rid})
           .then(res => {
           this.$toast(res.msg);
@@ -167,6 +169,9 @@
           this.$toast('服务器异常')
         });
       },
+      goContacts(){
+        this.$router.push({path:'/mine/contacts',query:{channel:'resource',rid:this.dataInfo.rid}})
+      }
     }
   }
 </script>

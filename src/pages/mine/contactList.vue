@@ -10,21 +10,30 @@
     </ul>
 </template>
 <script>
-  import {serverUrl} from '../../config'
   import contact from './contact.vue'
+  import $api from 'api'
   export default {
     components:{
       contact
     },
     data(){
       return {
-        item: '',
-        testUrl:require('../../assets/moke/0.3.1.png')
       }
     },
     methods:{
       goContactDetail(contact){
-        this.$router.push(`/mine/contacts/${contact.id || 1212}`)
+        this.$router.push(`/mine/contacts/${contact.uid}`)
+      }
+    },
+    created(){
+      const {channel,rid} = this.$route.query;
+      if(channel == 'resource'){
+        $api.get('/index.php/Help/getCoList',{rid})
+          .then(res=>{
+            console.log(res);
+        },error=>{
+            this.$toast('服务器异常')
+        })
       }
     }
   }
