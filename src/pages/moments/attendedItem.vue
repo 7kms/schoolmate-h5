@@ -65,16 +65,7 @@
         },
         dataInfo:{
           type:Object,
-          default() {
-            return {
-              photo:require('../../assets/moke/0.3.1.png'),
-              name:'王阳明',
-              company:'百度金融',
-              department:'',
-              detail_job:'',
-              resource_description:'优秀的开发团队，成熟的技术，高级算法，系统架构等多种资源提供。'
-            }
-          }
+          require: true
         }
       }
     }

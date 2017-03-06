@@ -117,7 +117,6 @@
 </template>
 <script>
   import {serverUrl} from '../../config';
-  import swiper from  '../../components/swiper';
   import {mapState} from 'vuex'
   import $api from 'api';
   export default {
@@ -142,10 +141,10 @@
       },
       showSwiper(currentIndex){
         if(!this.dataInfo.pictures[currentIndex]) return;
-        swiper({
-          imageArr:this.dataInfo.pictures,
-          currentIndex
-        });
+          this.$emit('showSwiper',{
+              imageArr:this.dataInfo.pictures,
+              currentIndex
+          });
       },
       collaborate(){
         $api.post('/index.php/Help/apply',{rid:this.dataInfo.rid})

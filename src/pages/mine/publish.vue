@@ -6,6 +6,7 @@
         top: 0;
         left: 0;
         width: 100%;
+        z-index: 2;
         height: 30px;
         line-height: 30px;
         background-color: #fff;

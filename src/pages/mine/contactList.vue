@@ -5,9 +5,15 @@
     }
 </style>
 <template>
-    <ul :class="$style.list">
-        <contact @click="goContactDetail"></contact>
-    </ul>
+    <div>
+        <ul :class="$style.list">
+            <contact @click="goContactDetail" v-for="contact in list" :dataInfo="contact"></contact>
+        </ul>
+        <Loading v-if="loading"></Loading>
+        <div v-if="!loading && list.length == 0" class="empty-data-item">
+            <span>数据为空</span>
+        </div>
+    </div>
 </template>
 <script>
   import contact from './contact.vue'
@@ -18,6 +24,8 @@
     },
     data(){
       return {
+          loading: true,
+          list:[]
       }
     },
     methods:{
@@ -28,9 +36,10 @@
     created(){
       const {channel,rid} = this.$route.query;
       if(channel == 'resource'){
-        $api.get('/index.php/Help/getCoList',{rid})
+        $api.post('/index.php/Help/getCoList',{rid})
           .then(res=>{
-            console.log(res);
+              this.loading = false;
+              this.list = [...res.data];
         },error=>{
             this.$toast('服务器异常')
         })

@@ -52,12 +52,12 @@
                 <i :class="$style.deleteImg" @click="deleteImage(url)" v-if="url"></i>
                 <div :class="[$style.imgAdd,'text-center']" v-if="index == uploadImageArr.length-1 && !url">
                     <file-upload class="file-upload"
-                                 :drop="false"
-                                 :post-action="action"
-                                 :multiple="true"
-                                 accept="image/*"
-                                 :events="events"
-                                 name="file0"
+                         :drop="false"
+                         :post-action="action"
+                         :multiple="true"
+                         accept="image/*"
+                         :events="events"
+                         name="file0"
                     ></file-upload>
                     <i :class="$style.btnAdd"></i>
                     <span>点击上传</span>
@@ -68,8 +68,8 @@
             <div class="pub-item">
                 <h3 class="pub-title">需求类型</h3>
                 <div class="pub-text">
-                    <div class="pub-select" @click="showPicker('needs')">
-                        <span>{{ selectNeed.name || '选择您的需求类型' }}</span>
+                    <div class="pub-select" @click.prevent="showPicker('needs')">
+                        <span>{{ needsText || '选择您的需求类型' }}</span>
                     </div>
                 </div>
             </div>
@@ -84,19 +84,22 @@
             <div class="pub-item">
                 <h3 class="pub-title">活动描述</h3>
                 <div class="pub-text">
-                    <textarea class="pub-area" placeholder="填写活动的具体注意事项、详细信息等" v-model="description"></textarea>
+                    <textarea class="pub-area" placeholder="填写活动的具体注意事项、详细信息等" v-model="info.description"></textarea>
                 </div>
             </div>
         </div>
         <div class="pubBar" @click="publish">发布</div>
-        <mt-popup
-            v-model="showNeeds"
-            position="bottom"
-            popup-transition="popup-fade">
-            <mt-picker :slots="needsArr" valueKey="name" :showToolbar="true" :rotateEffect="true" @change="changeNeeds" ref="needPicker">
-                <span></span><span @click="hidePicker('needs')">确定</span>
-            </mt-picker>
-        </mt-popup>
+
+        <singlePicker v-if="!loading"
+           :dataArr="needsArr"
+           valueKey="name"
+           :initValue="info.type"
+           :showPicker="showNeeds"
+           @selectEnd="changeNeeds"
+           @hide="hidePicker"
+           @show="showPicker('needs')"
+        ></singlePicker>
+
         <mt-popup
             v-model="showRange"
             position="bottom"
@@ -106,45 +109,59 @@
                 <span class="toolbar-ok" @click="hidePicker('range')">确定</span>
             </div>
             <mt-checklist
-                    v-model="selectRange"
+                    v-model="info.circle"
                     :options="rangeOptions">
             </mt-checklist>
         </mt-popup>
     </div>
 </template>
 <script>
+  import { singlePicker } from '../../components/popPicker';
   import FileUpload from 'vue-upload-component'
   import {serverUrl} from '../../config'
   import util from  '../../util';
   import $api from 'api';
   export default {
     components:{
-      FileUpload
+      FileUpload,
+        singlePicker
     },
     data(){
       return {
-        imgArr:[],
-        selectNeed:{},
-        selectRange:[],
-        needsArr:[{flex:1,values:[{name:'拥有资源',value:2},{name:'寻求合作',value:1}]}],
+        loading: false,
+        needsArr:[{name:'拥有资源',value:2},{name:'寻求合作',value:1}],
         showNeeds: false,
         showRange: false,
         rangeOptions: [],
-        description:''
+        info:{
+          description:'',
+          type: '2',
+          pictures: [],
+          circle: []
+        }
       }
     },
     computed:{
       action(){
         return serverUrl + '/index.php/Picture/multiPicUpload';
       },
+      needsText(){
+          var text = '';
+          this.needsArr.forEach(obj=>{
+              if(obj.value == this.info.type){
+                  text = obj.name;
+              }
+          });
+          return text;
+      },
       uploadImageArr(){
-        let arr = [...this.imgArr];
+        let arr = [...this.info.pictures];
         arr.length = 4;
         return arr;
       },
       selectCircle(){
         let arr = [];
-        this.selectRange.forEach(cid=>{
+        this.info.circle.forEach(cid=>{
           this.rangeOptions.forEach(obj=>{
             if(obj.value == cid){
               arr.push({
@@ -170,27 +187,23 @@
           add(file, component) {
             file.data.count = 1;
             component.active = true;
-            _this.loading = true;
           },
           progress(file, component) {
             console.log('progress ' + file.progress);
           },
           after(file, component) {
             let res = util.parseJSON(file.response);
-            let url = res.data[0];
-            _this.imgArr.push(url);
+            let url = res[0];
+              if(url){
+                  _this.info.pictures.push(url);
+              }else{
+                 _this.$toast(res.msg);
+              }
           },
           before(file, component) {
             console.log('before');
           }
         }
-      },
-      activityStartTime(){
-//        console.log(new Date(util.dateFormat(this.startDate,'yyyy/MM/dd') + this.startTime).getTime();)
-
-      },
-      activityEndTime(){
-
       }
     },
     methods:{
@@ -202,38 +215,25 @@
         }
       },
       deleteImage(img){
-        let index = this.imgArr.indexOf(img);
+        let index = this.info.pictures.indexOf(img);
         if(~index){
-          this.imgArr.splice(index,1);
+            this.info.pictures.splice(index,1);
         }
       },
-      hidePicker(type){
-        if(type == 'needs'){
-          let obj = this.$refs['needPicker'].getSlotValue(0);
-          if(obj.value != this.selectNeed.vaule)this.selectNeed = obj;
-          this.showNeeds = false;
-        }else{
-          this.showRange = false;
-        }
+      hidePicker(){
+         this.showNeeds = false;
+         this.showRange = false;
       },
-      changeNeeds(picker,values){
-        this.selectNeed = values[0];
-      },
-      getPubInfo(){
-        let pubInfo = {
-            description: this.description,
-            type: this.selectNeed.value,
-            pictures: this.imgArr,
-            circle: this.selectRange
-        };
-        return pubInfo
+      changeNeeds(obj){
+          this.info.type = String(obj.value);
+          this.hidePicker();
       },
       valid(){
-        if(!this.selectNeed.name){
+        if(!this.info.type){
           this.$toast('选择您的需求类型');
           return false;
         }
-        if(!this.description){
+        if(!this.info.description){
           this.$toast('请填写详细信息');
           return false;
         }
@@ -241,8 +241,7 @@
       },
       publish(){
         if(!this.valid()) return false;
-        let paramObj = this.getPubInfo();
-        $api.post('/index.php/Help/createRes',paramObj)
+        $api.post('/index.php/Help/createRes',this.info)
           .then(res=>{
             if(res.code == 200){
               this.$toast(res.msg);
@@ -254,17 +253,16 @@
       }
     },
     created(){
-      $api.get('/index.php/Circle/getCircle')
+      $api.get('/index.php/Circle/getMyCircle')
         .then(res=>{
-
-        },res=>{
           res.forEach(circle => {
             var obj = {
-              label: circle.name,
+              label: circle.c_name,
               value: circle.cid,
             };
             this.rangeOptions.push(obj);
           });
+        },res=>{
           console.log(res);
         })
     }

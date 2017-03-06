@@ -61,8 +61,8 @@
                 <div class="pub-item">
                     <h3 class="pub-title">设置</h3>
                     <div class="pub-text">
-                        <div class="pub-select" @click="showPicker('needs')">
-                            <span>{{ selectRange.name || '允许任何人加入' }}</span>
+                        <div class="pub-select" @click="showPicker()">
+                            <span>{{ settingText }}</span>
                         </div>
                     </div>
                 </div>
@@ -90,26 +90,27 @@
             </div>
             <div class="pubBar" @click.prevent="publish">发布</div>
         </div>
-
-        <mt-popup
-                v-model="showRange"
-                position="bottom"
-                popup-transition="popup-fade">
-            <mt-picker :slots="rangeArr" valueKey="name" :showToolbar="true" :rotateEffect="true" @change="changeRange" ref="rangePicker">
-                <span></span><span @click="hidePicker()">确定</span>
-            </mt-picker>
-        </mt-popup>
+        <singlePicker  v-if="!loading"
+               :dataArr="settingArr"
+                valueKey="name"
+               :initValue="info.setting"
+               :showPicker="showSettingPicker"
+               @selectEnd="selectSetting"
+               @hide="hidePicker"
+        ></singlePicker>
     </div>
 
 </template>
 <script>
+  import { singlePicker } from '../../components/popPicker';
   import FileUpload from 'vue-upload-component'
   import {serverUrl} from '../../config'
   import util from  '../../util';
   import $api from 'api';
   export default {
     components:{
-      FileUpload
+      FileUpload,
+      singlePicker
     },
     data(){
       return {
@@ -118,21 +119,34 @@
           c_name:'',
           labels:'',
           c_description:'',
-          setting:'0',
+          setting:'1',
           master:'',
           tel:'',
           c_email:'',
           qq:'',
-          c_wechat:'',
+          c_wechat:''
         },
-        showRange: false,
-        selectRange:{},
-        rangeArr:[{flex:1,values:[{name:'允许任何人加入',value:0},{name:'需要身份认证',value:1},{name:'不许任何人加入',value:2}]}],
+        loading: false,
+        showSettingPicker: false,
+        settingArr:[
+          {name:'允许任何人加入',value:0},
+          {name:'需要身份认证',value:1},
+          {name:'不许任何人加入',value:2}
+          ]
       }
     },
     computed:{
       action(){
         return serverUrl + '/index.php/Picture/multiPicUpload';
+      },
+      settingText(){
+        let str;
+        this.settingArr.forEach(obj=>{
+          if(obj.value == this.info.setting){
+            str = obj.name;
+          }
+        });
+        return str;
       },
       events(){
         let _this = this;
@@ -147,8 +161,12 @@
           },
           after(file, component) {
             let res = util.parseJSON(file.response);
-            let url = res.data[0];
-            _this.info.c_cover_file = url;
+            let url = res[0];
+              if(url){
+                  _this.info.c_cover_file = url;
+              }else{
+                  this.$toast(res.msg);
+              }
           },
           before(file, component) {
             console.log('before');
@@ -157,14 +175,15 @@
       }
     },
     methods:{
-      hidePicker(type){
-        this.showRange = false;
+      hidePicker(){
+        this.showSettingPicker = false;
       },
       showPicker(){
-        this.showRange = true;
+        this.showSettingPicker = true;
       },
-      changeRange(picker,values){
-        this.selectRange = values[0];
+      selectSetting(obj){
+        this.showSettingPicker = false;
+        this.info.setting = String(obj.value);
       },
       valid(){
 
@@ -173,12 +192,12 @@
         var param = this.info;
         $api.post('/index.php/Circle/upCircle',param)
           .then(res=>{
-            this.$toast(res.msg)
+            this.$toast(res.msg);
             if(res.code == 200){
               this.$router.back();
             }
           },res=>{
-            this.$toast(res.msg)
+            this.$toast(res.msg);
           })
       }
     },

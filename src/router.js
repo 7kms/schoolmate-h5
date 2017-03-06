@@ -149,28 +149,24 @@ const ROUTER_SETTING = {
         },
         {
           path: '/publish',
-          component: resolve => require(['./pages/update/index.vue'], resolve),
+          component: resolve => require(['./pages/publish/index.vue'], resolve),
           redirect: '/publish/activity',
           children:[
             {
               path:'activity',
-              // component: resolve => require(['./pages/publish/publishActivity.vue'], resolve)
-              component: resolve => require(['./pages/update/publishActivity.vue'], resolve)
+              component: resolve => require(['./pages/publish/publishActivity.vue'], resolve)
             },
             {
               path:'photo',
-              // component: resolve => require(['./pages/publish/publishPhoto.vue'], resolve)
-              component: resolve => require(['./pages/update/publishPhoto.vue'], resolve)
+              component: resolve => require(['./pages/publish/publishPhoto.vue'], resolve)
             },
             {
               path:'interact',
-              // component: resolve => require(['./pages/publish/publishInteract.vue'], resolve)
-              component: resolve => require(['./pages/update/publishInteract.vue'], resolve)
+              component: resolve => require(['./pages/publish/publishInteract.vue'], resolve)
             },
             {
               path:'interest',
-              // component: resolve => require(['./pages/publish/publishInterest.vue'], resolve)
-              component: resolve => require(['./pages/update/publishInterest.vue'], resolve)
+              component: resolve => require(['./pages/publish/publishInterest.vue'], resolve)
             }
           ]
         },

@@ -44,7 +44,7 @@
                     <div>
                         <span class="topic">{{dataInfo.c_name}}</span><span>（<span class="color-hint">{{ dataInfo.count }}</span>人）</span>
                     </div>
-                    <div :class="$style.verify" @click.prevent.stop="goVerify">
+                    <div :class="$style.verify" v-if="isSelf" @click.prevent.stop="goVerify">
                         <span class="color-hint">待审核12人</span>
                     </div>
                 </div>
@@ -60,11 +60,21 @@
 </template>
 <script>
   import {serverUrl} from '../../config'
+  import {mapState} from 'vuex'
   export default {
     props: {
       dataInfo: {
         type: Object,
         required: true
+      }
+    },
+    computed:{
+      ...mapState({
+          profile:(state)=>state.user.profile
+      }),
+
+      isSelf(){
+          return this.profile.uid == this.dataInfo.uid
       }
     },
     methods:{

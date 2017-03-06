@@ -10,7 +10,7 @@
             infinite-scroll-immediate-check="false"
             infinite-scroll-disabled="noScroll"
             infinite-scroll-distance="80">
-            <Item v-for="(item,index) in interact.list" :class="$style.item" :key="index" :dataInfo="item"></Item>
+            <Item v-for="(item,index) in interact.list" :class="$style.item" :key="index" :dataInfo="item" @showSwiper="showSwiper"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
         <publishBtn text="发需求" @click="onPublish"></publishBtn>
@@ -18,6 +18,7 @@
 </template>
 <script>
   import { mapState } from 'vuex';
+  import swiper from  '../../components/swiper';
   import Item from '../public/interact.vue';
   import $api from 'api';
   import publishBtn from '../../components/publish';
@@ -41,9 +42,13 @@
     },
     beforeRouteLeave (to, from, next) {
       this.$store.dispatch('interact/RESET_INTERACT_LIST');
+        this.swiperInstance && this.swiperInstance.close();
       next();
     },
     methods:{
+        showSwiper(info){
+            this.swiperInstance = swiper(info);
+        },
       onPublish() {
         this.$router.push(`/publish/interact`);
       },
