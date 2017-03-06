@@ -212,7 +212,6 @@
                 });
             },
             register(){
-              debugger
                 $api.post('/index.php/Profile/upProfile',this.userInfo)
                 .then(res => {
                     this.$toast(res.data.msg);

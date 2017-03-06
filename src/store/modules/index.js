@@ -4,6 +4,7 @@ import activity from './activity';
 import interact from './interact';
 import entrance from './entrance';
 import moments from './moments';
+import mine from './mine';
 import user from './user';
 export default {
     nav,
@@ -12,5 +13,6 @@ export default {
     interact,
     moments,
     entrance,
-	user
+    user,
+    mine
 }

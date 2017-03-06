@@ -81,7 +81,7 @@
                     <i :class="[$style.icon,$style.iconArrow]"></i>
                 </div>
             </router-link>
-            <router-link :class="$style.item" :to="{path:'/mine/contacts'}" tag="li">
+            <router-link :class="$style.item" :to="{path:'/mine/contacts',query:{channel:'friends'}}" tag="li">
                 <i :class="[$style.icon,$style.iconCon]"></i>
                 <div :class="$style.text">
                     <span :class="$style.label">通信录</span>

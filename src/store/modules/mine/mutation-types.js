@@ -1,0 +1,4 @@
+export const APPEND_CONTACT_LIST = 'contact/APPEND_CONTACT_LIST'
+export const LOAD_CONTACT_LIST = 'contact/LOAD_CONTACT_LIST'
+export const RESET_CONTACT_LIST = 'contact/RESET_CONTACT_LIST'
+export const CHANGE_CONTACT_STATUS = 'contact/CHANGE_CONTACT_STATUS'

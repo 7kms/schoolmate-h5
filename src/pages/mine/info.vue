@@ -262,6 +262,7 @@
     import { majorArr,industryObj } from '../../data';
     import $api from  'api';
 	import { mapState } from 'vuex';
+	var arr = ['']
 	export default {
 		data() {
             return {
@@ -378,9 +379,26 @@
               this.hidePicker();
               this.info.birthday = value;
           },
+          getParams(){
+            let obj = {};
+            let baseInfo =  ['uid','class','name','gender','wechat','phonenum','birthday','bprovince','bcity','major','enrol_time','graduate_time','company','industry','job','department','detail_job','province','city','resource_description'];
+            baseInfo.map(item=>{
+              obj[item] = this.info[item];
+            });
+            return obj;
+          },
           saveInfo() {
-            this.$toast('保存成功');
-            this.$router.back();
+            $api.post('/index.php/Profile/upProfile',this.getParams())
+              .then(res=>{
+                if(res.code == 200){
+                  this.$toast(res.data.msg);
+                  if(res.data.result){
+                    this.$router.back();
+                  }
+                }
+              },err=>{
+                this.$toast('服务器异常');
+              });
           }
         }
     }
