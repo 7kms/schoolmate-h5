@@ -12,6 +12,12 @@ var state = {
         noMore: false,
         pageSize: 10,
         start: 0
+    },
+    attend: {
+      list: [],
+      noMore: false,
+      pageSize: 10,
+      start: 0
     }
 };
 
@@ -26,7 +32,8 @@ const actions = {
     [types.LOAD_COLUMN_LIST] ({ commit, dispatch },payload) {
       let params = getParams('column');
       if(payload){
-        params.cid = payload.cid;
+        payload.cid && (params.cid = payload.cid);
+        payload.uid && (params.uid = payload.uid);
       }
       return new Promise((resolve,reject) => {
         $api.get('/index.php/Activity/getList',params)
@@ -50,7 +57,8 @@ const actions = {
     [types.LOAD_PHOTO_LIST] ({ commit, dispatch },payload) {
       let params = getParams('photo');
       if(payload){
-        params.cid = payload.cid;
+        payload.cid && (params.cid = payload.cid);
+        payload.uid && (params.uid = payload.uid);
       }
       return new Promise((resolve,reject) => {
         $api.get('/index.php/Picture/getList',params)
@@ -69,7 +77,35 @@ const actions = {
     },
     [types.RESET_PHOTO_LIST] ({ commit }) {
         commit(types.RESET_PHOTO_LIST);
+    },
+
+
+
+
+  [types.LOAD_ATTEND_LIST] ({ commit, dispatch },payload) {
+    let params = getParams('attend');
+    if(payload){
+      payload.cid && (params.cid = payload.cid);
+      payload.uid && (params.uid = payload.uid);
     }
+    return new Promise((resolve,reject) => {
+      $api.get('/index.php/Activity/getAttendList',params)
+        .then(data =>{
+          dispatch(types.APPEND_ATTEND_LIST, data.result);
+          var noMore = (state.attend.list.length >= data.total);
+          commit(types.CHANGE_ATTEND_STATUS, { noMore, start: state.attend.start + state.attend.pageSize });
+          resolve();
+        },data =>{
+          reject(data);
+        });
+    });
+  },
+  [types.APPEND_ATTEND_LIST] ({ commit }, dataList) {
+    commit(types.APPEND_ATTEND_LIST, dataList);
+  },
+  [types.RESET_ATTEND_LIST] ({ commit }) {
+    commit(types.RESET_ATTEND_LIST);
+  }
 };
 
 const mutations = {
@@ -91,7 +127,6 @@ const mutations = {
         item.pictures.length = 3;
         state.photo.list.push(item);
       });
-        // state.photo.list = [...state.photo.list, ...dataList];
     },
     [types.RESET_PHOTO_LIST] (state) {
         state.photo.list = [];
@@ -100,8 +135,22 @@ const mutations = {
     },
     [types.CHANGE_PHOTO_STATUS] (state, status) {
         state.photo = Object.assign(state.photo, status);
+    },
+
+
+
+    [types.APPEND_ATTEND_LIST] (state, dataList) {
+      state.attend.list = [...state.attend.list, ...dataList];
+    },
+    [types.RESET_ATTEND_LIST] (state) {
+      state.attend.list = [];
+      state.attend.start = 0;
+      state.attend.noMore = false;
+    },
+    [types.CHANGE_ATTEND_STATUS] (state, status) {
+      state.attend = Object.assign(state.attend, status);
     }
-}
+};
 
 export default {
     state,

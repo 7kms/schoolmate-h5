@@ -261,8 +261,7 @@
     import { singlePicker, placePicker,timePicker } from '../../components/popPicker';
     import { majorArr,industryObj } from '../../data';
     import $api from  'api';
-	import { mapState } from 'vuex';
-	var arr = ['']
+	import { mapState } from 'vuex'
 	export default {
 		data() {
             return {

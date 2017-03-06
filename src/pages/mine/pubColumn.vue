@@ -10,11 +10,19 @@
     </div>
 </template>
 <script>
+  import {mapState} from 'vuex'
     import pubInteract from './pubInteract.vue'
     import pubAttend from './pubAttend.vue'
     import pubPhoto from './pubPhoto.vue'
     import pubActivity from './pubActivity.vue'
   export default{
+    beforeRouteLeave (to, from, next) {
+      this.$store.dispatch('interact/RESET_INTERACT_LIST');
+      this.$store.dispatch('activity/RESET_COLUMN_LIST');
+      this.$store.dispatch('interact/RESET_INTERACT_LIST');
+      this.$store.dispatch('activity/RESET_ATTEND_LIST');
+      next();
+    },
     components:{
       pubInteract,
       pubAttend,
@@ -25,6 +33,11 @@
       return {
         currentItem : ''
       }
+    },
+    computed:{
+      ...mapState({
+        uid:state=>state.user.profile.uid
+      })
     },
     watch:{
       $route(to,from){

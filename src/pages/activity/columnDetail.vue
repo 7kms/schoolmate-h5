@@ -92,7 +92,7 @@
             <div :class="['list-content',$style.info,$style.commentList]">
                 <h3 class="item-header">校友评论</h3>
                 <ul>
-                    <commentItem v-for="comment in dataInfo.comments" :dataInfo="comment" :key="index" :showRemove="showRemove(comment)" @removeComment="removeComment"></commentItem>
+                    <commentItem v-for="(comment ,index) in dataInfo.comments" :dataInfo="comment" :key="index" :showRemove="showRemove(comment)" @removeComment="removeComment"></commentItem>
                 </ul>
             </div>
             <operateBar :dataInfo="operateBarData" @click="operateBarClick"></operateBar>

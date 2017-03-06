@@ -51,7 +51,7 @@
       },
       loadMore() {
         this.loading = true;
-        this.$store.dispatch('activity/LOAD_PHOTO_LIST').then(()=>{
+        this.$store.dispatch('activity/LOAD_PHOTO_LIST',{uid:this.$parent.uid}).then(()=>{
           this.loading = false;
         });
       },

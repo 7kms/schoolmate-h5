@@ -25,15 +25,16 @@
 <template>
     <div :class="$style.content">
         <div :class="[$style.header,'text-center','size-topic']">
-            <div :class="[$style.item,{[$style.active]:currentItem=='interact'}]" @click="switchNav('interact')">需求</div>
-            <div :class="[$style.item,{[$style.active]:currentItem=='attend'}]" @click="switchNav('attend')">报名</div>
-            <div :class="[$style.item,{[$style.active]:currentItem=='photo'}]" @click="switchNav('photo')">照片</div>
+            <div :class="[$style.item,{[$style.active]:currentItem=='interact'}]"  @click="switchNav('interact')">需求</div>
+            <div :class="[$style.item,{[$style.active]:currentItem=='attend'}]"  @click="switchNav('attend')">报名</div>
+            <div :class="[$style.item,{[$style.active]:currentItem=='photo'}]"  @click="switchNav('photo')">照片</div>
             <div :class="[$style.item,{[$style.active]:currentItem=='activity'}]" @click="switchNav('activity')">活动</div>
         </div>
         <router-view></router-view>
     </div>
 </template>
 <script>
+
     export default{
       computed:{
         currentItem(){

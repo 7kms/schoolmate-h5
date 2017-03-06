@@ -13,7 +13,6 @@
             <Item v-for="(item,index) in column.list" :class="$style.item" :key="index" :dataInfo="item" @click="goDetail(item)"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
-        <publishBtn text="发活动" @click="onPublish"></publishBtn>
     </div>
 </template>
 <script>
@@ -51,7 +50,7 @@
       },
       loadMore() {
         this.loading = true;
-        this.$store.dispatch('activity/LOAD_COLUMN_LIST').then(()=>{
+        this.$store.dispatch('activity/LOAD_COLUMN_LIST',{uid:this.$parent.uid}).then(()=>{
           this.loading = false;
         },(err)=>{
           this.loading = false;

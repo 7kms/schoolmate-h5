@@ -13,7 +13,6 @@
             <Item v-for="(item,index) in interact.list" :class="$style.item" :key="index" :dataInfo="item"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
-        <publishBtn text="发需求" @click="onPublish"></publishBtn>
     </div>
 </template>
 <script>
@@ -22,6 +21,10 @@
   import $api from 'api';
   import publishBtn from '../../components/publish';
   export default {
+    props:{
+      uid: String,
+      require: true
+    },
     data(){
       return {
         loading: false
@@ -39,18 +42,11 @@
         interact: state => state.interact.interact
       })
     },
-    beforeRouteLeave (to, from, next) {
-      this.$store.dispatch('interact/RESET_INTERACT_LIST');
-      next();
-    },
     methods:{
-      onPublish() {
-        this.$router.push(`/publish/interact`);
-      },
       loadMore() {
         this.loading = true;
-        this.$store.dispatch('interact/LOAD_INTERACT_LIST').then(()=>{
-          this.loading = false;
+        this.$store.dispatch('interact/LOAD_INTERACT_LIST',{uid:this.$parent.uid}).then(()=>{
+        this.loading = false;
         },(err)=>{
           this.loading = false;
           this.$toast({message: err});
