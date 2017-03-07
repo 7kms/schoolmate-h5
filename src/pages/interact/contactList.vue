@@ -16,11 +16,11 @@
     </div>
 </template>
 <script>
-  import contact from './contact.vue'
+  import Item from '../public/contact.vue'
   import $api from 'api'
   export default {
     components:{
-      contact
+      Item
     },
     data(){
       return {
@@ -29,25 +29,19 @@
       }
     },
     methods:{
-      goContactDetail(contact){
-        this.$router.push(`/mine/contacts/${contact.uid}`)
+      goDetail(contact){
+        this.$router.push(`/mine/contacts/${contact.uid}`);
       }
     },
     created(){
-      const {channel,rid} = this.$route.query;
-//      if(channel == 'resource'){
-//        $api.post('/index.php/Help/getCoList',{rid})
-//          .then(res=>{
-//              this.loading = false;
-//              this.list = [...res.data];
-//        },error=>{
-//            this.$toast('服务器异常')
-//        })
-//      }else if(channel == 'friends'){
-//
-//      }
-
-
+      const {rid} = this.$route.query;
+        $api.post('/index.php/Help/getCoList',{rid})
+        .then(res=>{
+            this.loading = false;
+            this.list = [...res.data];
+        },error=>{
+            this.$toast('服务器异常')
+        });
     }
   }
 </script>

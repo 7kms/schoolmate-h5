@@ -17,31 +17,31 @@
         width: 90px;
         height: 90px;
         background-color: @theme-color-weak;
-    &.margin{
-         margin-top: 1px;
-     }
-    .deleteImg{
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        width: 20px;
-        height: 20px;
-        background-size: contain;
-        background-image: url("../../assets/images/icon-delete.png");
-    }
+        &.margin{
+             margin-top: 1px;
+         }
+        .deleteImg{
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 20px;
+            height: 20px;
+            background-size: contain;
+            background-image: url("../../assets/images/icon-delete.png");
+        }
     }
     .imgAdd{
         font-size: @font-size-header;
         color:#fff;
         position: relative;
-    .btnAdd{
-        display: block;
-        width: 43px;
-        height: 43px;
-        margin: 0 auto 12px;
-        background-size: contain;
-        background-image: url("../../assets/images/bg-add.png");
-    }
+        .btnAdd{
+            display: block;
+            width: 43px;
+            height: 43px;
+            margin: 0 auto 12px;
+            background-size: contain;
+            background-image: url("../../assets/images/bg-add.png");
+        }
     }
 
 </style>
@@ -88,7 +88,7 @@
                 </div>
             </div>
         </div>
-        <div class="pubBar" @click="publish">发布</div>
+        <div class="pubBar" @click="publish"><span v-if="edit">修改</span><span v-else>发布</span></div>
 
         <singlePicker v-if="!loading"
            :dataArr="needsArr"
@@ -133,6 +133,7 @@
         showNeeds: false,
         showRange: false,
         rangeOptions: [],
+        edit: false,
         info:{
           description:'',
           type: '2',
@@ -267,11 +268,17 @@
         });
         let {rid} =  this.$route.query;
         if(rid){
+            this.edit = true;
             $api.get('/index.php/Help/getResList',{rid,start:0,pageSize:1})
             .then(res=>{
                 console.log(res);
                 let data = res.result[0];
                 let keyArr = Object.keys(this.info);
+                let cids = [];
+                data.scope.forEach(circle=>{
+                    cids.push(circle.cid);
+                });
+                data.circle = cids;
                 keyArr.forEach(key=>{
                     this.info[key] = data[key];
                 });

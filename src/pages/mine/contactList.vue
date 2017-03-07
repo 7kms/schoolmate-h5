@@ -20,7 +20,7 @@
     </div>
 </template>
 <script>
-  import Item from './contact.vue'
+  import Item from '../public/contact.vue'
   import { mapState } from 'vuex'
   import $api from 'api'
   export default {
@@ -42,18 +42,17 @@
       })
     },
     methods:{
-      goDetail(item){
-//        this.$router.push(`/mine/contacts/${contact.uid}`)
-          console.log(item);
+      goDetail(contact){
+        this.$router.push(`/mine/contacts/${contact.uid}`);
       },
       loadMore() {
         this.loading = true;
         this.$store.dispatch('contact/LOAD_CONTACT_LIST').then(()=>{
-          this.loading = false;
-        },(err)=>{
-          this.loading = false;
-          this.$toast({message: err});
-        });
+              this.loading = false;
+          },(err)=>{
+              this.loading = false;
+              this.$toast({message: err});
+          });
       }
     },
     created(){

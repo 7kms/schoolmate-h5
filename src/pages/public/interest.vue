@@ -37,7 +37,7 @@
     <li :class="$style.content">
         <div :class="$style.moments">
             <div :class="$style.portrait">
-                <img :src="imageUrl(dataInfo.c_cover_file)" alt="" width="40px" height="40px">
+                <imgContain :imgUrl="dataInfo.c_cover_file" :onlyImage="true" style="width:40px ;height:40px"></imgContain>
             </div>
             <div :class="$style.desc">
                 <div :class="$style.title">
@@ -59,7 +59,6 @@
     </li>
 </template>
 <script>
-  import {serverUrl} from '../../config'
   import {mapState} from 'vuex'
   export default {
     props: {
@@ -78,9 +77,6 @@
       }
     },
     methods:{
-      imageUrl(str){
-        return `${serverUrl}/${str}`;
-      },
       goVerify(){
         this.$emit('verify',this.dataInfo);
       }

@@ -41,7 +41,7 @@
     methods:{
       loadMore() {
         this.loading = true;
-        this.$store.dispatch('activity/LOAD_ATTEND_LIST').then(()=>{
+        this.$store.dispatch('activity/LOAD_ATTEND_LIST',{uid:this.$parent.uid}).then(()=>{
           this.loading = false;
         },(err)=>{
           this.loading = false;

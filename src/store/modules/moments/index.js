@@ -76,7 +76,11 @@ const actions = {
 
 const mutations = {
   [types.APPEND_INTEREST_LIST] (state, dataList) {
-    state.interest.list = [...state.interest.list, ...dataList];
+    dataList.forEach(item=>{
+      if(!item.pictures)item.pictures=[];
+      // item.pictures.length = 3;
+      state.interest.list.push(item);
+    });
   },
   [types.RESET_INTEREST_LIST] (state) {
     state.interest.list = [];
@@ -90,6 +94,7 @@ const mutations = {
 
   [types.APPEND_INDUSTRY_LIST] (state, dataList) {
     dataList.forEach(item=>{
+      if(!item.pictures)item.pictures=[];
       item.pictures.length = 3;
       state.industry.list.push(item);
     });

@@ -83,64 +83,52 @@
                 </div>
             </div>
         </div>
-        <div class="pubBar" @click="publish">发布</div>
-        <mt-popup
-                v-model="showRange"
-                position="bottom"
-                popup-transition="popup-fade">
-            <div class="pop-toolbar">
-                <span class="toolbar-cancel"></span>
-                <span class="toolbar-ok" @click="hidePicker('range')">确定</span>
-            </div>
-            <mt-checklist
-                    v-model="info.circle"
-                    :options="rangeOptions">
-            </mt-checklist>
-        </mt-popup>
+        <div class="pubBar" @click="publish"><span v-if="edit">重新发布</span><span v-else>发布</span></div>
+        <singlePicker
+                v-if="!loadingCircle && !loadingInfo"
+                      :dataArr="rangeOptions"
+                      valueKey="name"
+                      :initValue="info.cid"
+                      :showPicker="showRange"
+                      @selectEnd="selectRange"
+                      @hide="hidePicker"
+        ></singlePicker>
     </div>
 </template>
 <script>
   import FileUpload from 'vue-upload-component'
+  import { singlePicker } from '../../components/popPicker';
   import {serverUrl} from '../../config'
   import util from  '../../util';
   import $api from 'api';
     export default {
       components:{
-        FileUpload
+        FileUpload,
+        singlePicker
       },
       data(){
         return {
           showRange:false,
-          rangeOptions: [],
+            loadingInfo: true,
+            loadingCircle: true,
+            rangeOptions: [{name:'所有人可见',value:'0'}],
+            edit:false,
           info:{
             theme:'',
             description: '',
             pictures:[],
-            circle:[]
+            cid:'0'
           }
         }
       },
       computed:{
-          selectCircle(){
-              let arr = [];
-              this.info.circle.forEach(cid=>{
-                  this.rangeOptions.forEach(obj=>{
-                      if(obj.value == cid){
-                          arr.push({
-                              cid,
-                              name:obj.label
-                          })
-                      }
-                  });
-              });
-              return arr;
-          },
         rangeStr(){
-          let arr = [],str;
-          this.selectCircle.forEach(circle => {
-              arr.push(circle.name);
+          let str ;
+          this.rangeOptions.forEach(obj=>{
+            if(obj.value == this.info.cid){
+                str = obj.name;
+            }
           });
-          str = arr.join(',');
           return str;
         },
         action(){
@@ -184,28 +172,32 @@
           showPicker(){
               this.showRange = true;
           },
-        deleteImage(index){
-          this.info.pictures.splice(index,1);
-        },
-        valid(){
-          if(!this.info.theme){
-            this.$toast('照片主题未填写');
-            return false;
-          }
-          if(!this.info.description){
-            this.$toast('活动描述未填写');
-            return false;
-          }
-          return true;
-        },
+          selectRange(obj){
+              this.info.cid = obj.value;
+              this.hidePicker();
+          },
+          deleteImage(index){
+              this.info.pictures.splice(index,1);
+          },
+            valid(){
+              if(!this.info.theme){
+                this.$toast('照片主题未填写');
+                return false;
+              }
+              if(!this.info.description){
+                this.$toast('活动描述未填写');
+                return false;
+              }
+              return true;
+            },
         publish(){
             if(this.valid()){
                 $api.post('/index.php/Picture/upPicture',this.info)
                         .then(res=>{
                     this.$toast(res.msg);
-                    if(res.result){
-                        this.$router.back();
-                    }
+                if(res.result){
+                    this.$router.back();
+                }
                 },err=>{
                     this.$toast('服务器异常');
                 })
@@ -214,28 +206,33 @@
       },
       created(){
             $api.get('/index.php/Circle/getMyCircle')
-                .then(res=>{
+                .then(res => {
                     res.forEach(circle => {
-                    var obj = {
-                        label: circle.c_name,
-                        value: circle.cid,
-                    };
-                    this.rangeOptions.push(obj);
+                        var obj = {
+                            name: circle.c_name,
+                            value: circle.cid,
+                        };
+                        this.rangeOptions.push(obj);
+                    });
+                    this.loadingCircle = false;
+                },res=>{
+                    console.log(res);
                 });
-            },res=>{
-                console.log(res);
-            });
           let {pid} =  this.$route.query;
           if(pid){
-              $api.get('/index.php/Picture/getDetail',{pid})
-                .then(res =>{
+              this.edit = true;
+              $api.get('/index.php/Picture/getDetail',{ pid })
+              .then(data => {
                     let keyArr = Object.keys(this.info);
                     keyArr.forEach(key =>{
-                      this.info[key] = res[key];
+                      this.info[key] = data[key];
                     });
-                },err=>{
+                    if(!this.info.pictures)this.info.pictures = [];
+                    this.info.pid = data.pid;
+                    this.loadingInfo = false;
+               },err=>{
                   this.$toast({message: err});
-                });
+               })
           }
       }
     }

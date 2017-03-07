@@ -132,7 +132,7 @@
               rightImage: require('../../assets/images/icon-comment.png')
             };
             if(this.dataInfo.attended){
-              obj.leftText = '已报名'
+              obj.leftText = '取消报名'
             }
             return obj;
           }
@@ -143,17 +143,30 @@
           },
           operateBarClick(type){
             if(type == 'left'){
-              if(this.dataInfo.attended) return false;
-              $api.post('/index.php/Activity/join',{aid:this.dataInfo.info.aid})
-                .then(res=>{
-                  this.$toast(res.msg);
-                  if(res.result){
-                    this.dataInfo.attended = true;
-                    this.dataInfo.attendedCrowd.push(this.self);
-                  }
-              },err=>{
-                  this.$toast('服务器异常');
-              })
+              if(this.dataInfo.attended) {
+                  $api.post('/index.php/Activity/cancelAttend',{aid:this.dataInfo.info.aid})
+                  .then(res=>{
+                      this.$toast(res.msg);
+                      if(res.result){
+                          this.dataInfo.attended = false;
+                          this.dataInfo.attendedCrowd = this.dataInfo.attendedCrowd.filter(user => user.uid != this.self.uid);
+                      }
+                  },err=>{
+                       this.$toast('服务器异常');
+                   })
+              }else{
+                  $api.post('/index.php/Activity/join',{aid:this.dataInfo.info.aid})
+                          .then(res=>{
+                            this.$toast(res.msg);
+                              if(res.result){
+                                  this.dataInfo.attended = true;
+                                  this.dataInfo.attendedCrowd.push(this.self);
+                              }
+                    },err=>{
+                      this.$toast('服务器异常');
+                  })
+              }
+
             }else{
                 this.$router.push({
                   path: '/comment/activity',

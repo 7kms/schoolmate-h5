@@ -93,6 +93,7 @@ const actions = {
 const mutations = {
   [types.APPEND_INTERACT_LIST] (state, dataList) {
     dataList.map(item=>{
+      if(!item.pictures)item.pictures=[];
       if(item.pictures.length == 0){
         item.noPicture = true;
       }

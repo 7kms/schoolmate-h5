@@ -89,7 +89,7 @@
             <div :class="$style.info">
                 <div :class="$style.label">
                     <div>
-                        <span>{{dataInfo.enrol_time}}级</span>
+                        <span>{{dataInfo.enrol_time.slice(0,4)}}级</span>
                         <span> | </span>
                         <span>{{dataInfo.creater.major}}</span>
                     </div>
@@ -105,11 +105,11 @@
                     <span>{{dataInfo.creater.detail_job}}</span>
                 </div>
                 <template v-if="!isSelf">
-                    <span :class="$style.infoBtn" @click.prevent="collaborate" v-if="!dataInfo.applied">申请合作</span>
-                    <span :class="[$style.infoBtn,$style.hint]" @click.prevent="revocation"  v-if="dataInfo.applied">撤销</span>
+                    <span :class="$style.infoBtn" @click.stop.prevent="collaborate" v-if="!dataInfo.applied">申请合作</span>
+                    <span :class="[$style.infoBtn,$style.hint]" @click.stop.prevent="revocation"  v-if="dataInfo.applied">撤销</span>
                 </template>
                 <template v-else>
-                    <span :class="$style.infoBtn" @click.prevent="goContacts">合作名单</span>
+                    <span :class="$style.infoBtn" @click.stop.prevent="goContacts">合作名单</span>
                 </template>
             </div>
         </div>
@@ -136,9 +136,6 @@
       }
     },
     methods:{
-      click(){
-        this.$emit('click',this.dataInfo);
-      },
       showSwiper(currentIndex){
         if(!this.dataInfo.pictures[currentIndex]) return;
           this.$emit('showSwiper',{
@@ -169,7 +166,7 @@
         });
       },
       goContacts(){
-        this.$router.push({path:'/mine/contacts',query:{channel:'resource',rid:this.dataInfo.rid}})
+        this.$router.push({path:'/interact/contacts',query:{rid:this.dataInfo.rid}})
       }
     }
   }

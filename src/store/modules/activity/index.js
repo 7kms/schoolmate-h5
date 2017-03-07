@@ -124,6 +124,9 @@ const mutations = {
 
     [types.APPEND_PHOTO_LIST] (state, dataList) {
       dataList.forEach(item=>{
+          if(!item.pictures){
+              item.pictures = [];
+          }
         item.pictures.length = 3;
         state.photo.list.push(item);
       });

@@ -65,7 +65,7 @@
                     <h3 class="pub-title">可见范围</h3>
                     <div class="pub-text">
                         <div class="pub-select" @click="showPicker('range')">
-                            <span>{{ rangeStr || '所有人可见' }}</span>
+                            <span>{{ rangeStr }}</span>
                         </div>
                     </div>
                 </div>
@@ -126,7 +126,7 @@
                         </div>
                         <div class="pub-dfn-item">
                             <div class="dfn-label">
-                                <span class="inline-block dfn-span">免&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;费：</span><div class="dfn-input l-input inline-block dfn-box" :class="{on: free}" @click="switchFee"><span>免费</span></div>
+                                <span class="inline-block dfn-span">免&nbsp;&nbsp;&nbsp;费：</span><div class="dfn-input l-input inline-block dfn-box" :class="{on: free}" @click="switchFee"><span>免费</span></div>
                             </div>
                         </div>
                     </div>
@@ -144,7 +144,7 @@
                     </div>
                 </div>
             </div>
-            <div class="pubBar" @click="publish">发布</div>
+            <div class="pubBar" @click="publish"><span v-if="edit">重新发布</span><span v-else>发布</span></div>
         </div>
         <timePicker
                 :showPicker="showStartDatePicker"
@@ -178,24 +178,19 @@
                 pickerRef="showEndTimePicker"
                 @selectEnd="selectEndTime"
         ></timePicker>
-        <mt-popup
-                v-model="showRange"
-                position="bottom"
-                popup-transition="popup-fade">
-            <div class="pop-toolbar">
-                <span class="toolbar-cancel"></span>
-                <span class="toolbar-ok" @click="hidePicker('range')">确定</span>
-            </div>
-            <mt-checklist
-                    v-model="info.circle"
-                    :options="rangeOptions">
-            </mt-checklist>
-        </mt-popup>
+        <singlePicker v-if="!loadingCircle && !loadingInfo"
+              :dataArr="rangeOptions"
+              valueKey="name"
+              :initValue="info.cid"
+              :showPicker="showRange"
+              @selectEnd="selectRange"
+              @hide="hidePicker"
+        ></singlePicker>
     </div>
 
 </template>
 <script>
-    import { timePicker } from '../../components/popPicker';
+    import { timePicker,singlePicker } from '../../components/popPicker';
     import FileUpload from 'vue-upload-component';
     import {serverUrl} from '../../config'
     import util from  '../../util';
@@ -203,7 +198,8 @@
     export default {
         components:{
             FileUpload,
-            timePicker
+            timePicker,
+            singlePicker
         },
         data(){
             return {
@@ -212,7 +208,8 @@
                 showStartTimePicker: false,
                 showEndTimePicker: false,
                 showRange: false,
-                rangeOptions: [],
+                rangeOptions: [{name:'所有人可见',value:'0'}],
+                edit:false,
                 info:{
                     theme:'',
                     time:'',
@@ -223,9 +220,11 @@
                     amount:'',
                     fee:'',
                     contact: '',
-                    circle:[]
+                    cid: '0'
                 },
                 loading: false,
+                loadingCircle: true,
+                loadingInfo: true,
                 showBgImage: false,
                 dateNow: util.dateFormat(new Date(),'yyyy/MM/dd'),
                 startDate: '',
@@ -238,26 +237,13 @@
             }
         },
         computed:{
-            selectCircle(){
-                let arr = [];
-                this.info.circle.forEach(cid=>{
-                    this.rangeOptions.forEach(obj=>{
-                        if(obj.value == cid){
-                            arr.push({
-                                cid,
-                                name:obj.label
-                            })
-                        }
-                    });
-                });
-                return arr;
-            },
             rangeStr(){
-                let arr = [],str;
-                this.selectCircle.forEach(circle => {
-                    arr.push(circle.name);
+                let str ;
+                this.rangeOptions.forEach(obj=>{
+                    if(obj.value == this.info.cid){
+                        str = obj.name;
+                    }
                 });
-                str = arr.join(',');
                 return str;
             },
             action(){
@@ -297,7 +283,7 @@
         methods:{
             selectStartDate(val){
                 this.hidePicker();
-                console.log(val)
+                console.log(val);
                 this.startDate = val;
             },
             selectEndDate(val){
@@ -311,6 +297,10 @@
             selectEndTime(val){
                 this.hidePicker();
                 this.endTime = val;
+            },
+            selectRange(obj){
+                this.info.cid = obj.value;
+                this.hidePicker();
             },
             hidePicker(){
                 this.showStartDatePicker = false;
@@ -367,9 +357,11 @@
                     this.$toast('活动描述未填写');
                     return false;
                 }
-                if(!this.startDate || !this.endDate || !this.startTime || !this.endTime){
-                    this.$toast('活动时间不能为空');
-                    return false;
+                if(this.timeLimit){
+                    if(!this.startDate || !this.endDate || !this.startTime || !this.endTime){
+                        this.$toast('活动时间不能为空');
+                        return false;
+                    }
                 }
                 return true;
             },
@@ -394,17 +386,27 @@
                     this.$toast('开始时间不能大于结束时间');
                     return false;
                 }
-                $api.post('/index.php/Activity/publish',paramObj)
-                .then(res=>{
-                    if(res.code == 200){
-                        this.$toast('发布成功');
-                        this.$router.push('/')
-                    }else{
-                        this.$toast('发布失败');
-                    }
-                },res=>{
-                    this.$toast('服务器异常');
-                })
+                if(paramObj.aid){
+                    $api.post('/index.php/Activity/upActivity',paramObj)
+                            .then(res=>{
+                                this.$toast(res.msg);
+                                if(res.result){
+                                    this.$router.back();
+                                }
+                            },res=>{
+                                this.$toast('服务器异常');
+                            })
+                }else{
+                    $api.post('/index.php/Activity/publish',paramObj)
+                    .then(res=>{
+                        this.$toast(res.msg);
+                        if(res.result){
+                            this.$router.back();
+                        }
+                    },res=>{
+                        this.$toast('服务器异常');
+                    })
+                }
             },
             imageUrl(str){
                 return `${serverUrl}/${str}`;
@@ -415,22 +417,46 @@
             .then(res=>{
                 res.forEach(circle => {
                     var obj = {
-                        label: circle.c_name,
+                        name: circle.c_name,
                         value: circle.cid,
                     };
                     this.rangeOptions.push(obj);
                 });
+                this.loadingCircle = false;
             },res=>{
                 console.log(res);
             });
             let {aid} =  this.$route.query;
             if(aid){
+                this.edit = true;
                 $api.get('/index.php/Activity/getDetail',{aid})
                 .then(res=>{
+                    let data = res.info;
                     let keyArr = Object.keys(this.info);
                     keyArr.forEach(key=>{
-                       this.info[key] = res[key];
+                       this.info[key] = data[key];
                     });
+                    this.info.aid = data.aid;
+                    this.showBgImage = true;
+                    if(this.info.time == '0' || this.info.end_time == '0'){
+                        this.info.time = '';
+                        this.info.end_time = '';
+                        this.timeLimit = false;
+                    }else{
+                        let dateStart = new Date(this.info.time * 1000);
+                        let dateEnd = new Date(this.info.end_time * 1000);
+                        this.info.time = util.dateFormat(dateStart,'yyyy/MM/dd');
+                        this.info.end_time = util.dateFormat(dateEnd,'yyyy/MM/dd');
+                        this.startDate = util.dateFormat(dateStart,'yyyy/MM/dd');
+                        this.endDate = util.dateFormat(dateEnd,'yyyy/MM/dd');
+                        this.startTime = util.dateFormat(dateStart,'HH:mm');
+                        this.endTime = util.dateFormat(dateEnd,'HH:mm');
+                    }
+                    if(!parseInt(this.info.fee)){
+                        this.free = true;
+                        this.info.fee = '';
+                    }
+                    this.loadingInfo = false;
                 },err=>{
                     this.$toast({message: err});
                 });

@@ -62,6 +62,11 @@ const ROUTER_SETTING = {
                         showNav: true
                     },
                     component: resolve => require(['./pages/interact/mateList.vue'], resolve)
+                },
+                {
+                    path: 'contacts',
+                    name: 'interact-contacts',
+                    component: resolve => require(['./pages/interact/contactList.vue'], resolve)
                 }
             ]
         },

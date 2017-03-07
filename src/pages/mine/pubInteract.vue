@@ -6,10 +6,10 @@
 <template>
     <div>
         <ul
-                v-infinite-scroll="loadMore"
-                infinite-scroll-immediate-check="false"
-                infinite-scroll-disabled="noScroll"
-                infinite-scroll-distance="80">
+            v-infinite-scroll="loadMore"
+            infinite-scroll-immediate-check="false"
+            infinite-scroll-disabled="noScroll"
+            infinite-scroll-distance="80">
             <Item v-for="(item,index) in interact.list" :class="$style.item" :key="index" :dataInfo="item" @click.native="goEdit(item)"></Item>
         </ul>
         <Loading v-if="loading"></Loading>

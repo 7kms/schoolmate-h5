@@ -2,7 +2,7 @@
     @import '../../assets/less/const.less';
 </style>
 <template>
-    <div class="content">
+    <div class="content" v-if="uid">
         <pub-interact v-if="currentItem=='interact'"></pub-interact>
         <pub-attend v-else-if="currentItem=='attend'"></pub-attend>
         <pub-photo v-else-if="currentItem=='photo'"></pub-photo>
@@ -19,7 +19,7 @@
     beforeRouteLeave (to, from, next) {
       this.$store.dispatch('interact/RESET_INTERACT_LIST');
       this.$store.dispatch('activity/RESET_COLUMN_LIST');
-      this.$store.dispatch('interact/RESET_INTERACT_LIST');
+      this.$store.dispatch('activity/RESET_PHOTO_LIST');
       this.$store.dispatch('activity/RESET_ATTEND_LIST');
       next();
     },

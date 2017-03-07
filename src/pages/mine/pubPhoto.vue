@@ -13,7 +13,6 @@
             <Item v-for="(item,index) in photo.list" :class="$style.item" :key="index" :dataInfo="item" @click="goEdit(item)"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
-        <publishBtn text="传照片" @click="onPublish"></publishBtn>
     </div>
 </template>
 <script>
@@ -46,9 +45,6 @@
       })
     },
     methods:{
-      onPublish() {
-        this.$router.push(`/publish/photo`);
-      },
       loadMore() {
         this.loading = true;
         this.$store.dispatch('activity/LOAD_PHOTO_LIST',{uid:this.$parent.uid}).then(()=>{

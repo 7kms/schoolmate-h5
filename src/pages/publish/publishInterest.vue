@@ -88,9 +88,9 @@
                     </div>
                 </div>
             </div>
-            <div class="pubBar" @click.prevent="publish">发布</div>
+            <div class="pubBar" @click.prevent="publish"><span v-if="edit">修改</span><span v-else>发布</span></div>
         </div>
-        <singlePicker  v-if="!loading"
+        <singlePicker  v-if="!loadingInfo"
                :dataArr="settingArr"
                 valueKey="name"
                :initValue="info.setting"
@@ -126,13 +126,14 @@
           qq:'',
           c_wechat:''
         },
-        loading: false,
+        edit: false,
+        loadingInfo: true,
         showSettingPicker: false,
         settingArr:[
           {name:'允许任何人加入',value:0},
           {name:'需要身份认证',value:1},
           {name:'不许任何人加入',value:2}
-          ]
+        ]
       }
     },
     computed:{
@@ -204,15 +205,20 @@
     created(){
         let {cid} =  this.$route.query;
         if(cid){
+            this.edit = true;
             $api.get('/index.php/Circle/getCircle',{cid})
             .then(res=>{
+                this.loadingInfo = false;
                 let keyArr = Object.keys(this.info);
                 keyArr.forEach(key=>{
-                    this.info[key] = res[key];
+                    this.info[key] = res[key] ? res[key] : this.info[key];
                 });
+                this.info.cid = res.cid;
             },err=>{
                 this.$toast({message: err});
             });
+        }else{
+            this.loadingInfo = false;
         }
     }
   }
