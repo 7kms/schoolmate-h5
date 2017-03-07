@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import store from './store'
+import util from './util/index'
 Vue.use(VueRouter)
 const ROUTER_SETTING = {
 	mode: 'history', // default value 'hash'
@@ -16,7 +16,8 @@ const ROUTER_SETTING = {
                     name: 'column-list',
                     meta: {
                         showHeader: true,
-                        showNav: true
+                        showNav: true,
+                        title:'活动栏'
                     },
                     component: resolve => require(['./pages/activity/columnList.vue'], resolve)
                 },
@@ -25,18 +26,25 @@ const ROUTER_SETTING = {
                     name: 'photo-list',
                     meta: {
                         showHeader: true,
-                        showNav: true
+                        showNav: true,
+                        title:'照片墙'
                     },
                     component: resolve => require(['./pages/activity/photoList.vue'], resolve)
                 },
                 {
                     path: 'column-detail/:id',
                     name: 'column-detail',
+                    meta: {
+                      title:'活动详情'
+                    },
                     component: resolve => require(['./pages/activity/columnDetail.vue'], resolve)
                 },
                 {
                     path: 'photo-detail/:id',
                     name: 'photo-detail',
+                    meta: {
+                      title:'照片详情'
+                    },
                     component: resolve => require(['./pages/activity/photoDetail.vue'], resolve)
                 }
             ]
@@ -50,7 +58,8 @@ const ROUTER_SETTING = {
                     name: 'interact-list',
                     meta: {
                         showHeader: true,
-                        showNav: true
+                        showNav: true,
+                        title:'互助'
                     },
                     component: resolve => require(['./pages/interact/interactList.vue'], resolve)
                 },
@@ -59,13 +68,17 @@ const ROUTER_SETTING = {
                     name: 'interact-mates',
                     meta: {
                         showHeader: true,
-                        showNav: true
+                        showNav: true,
+                        title:'校友录'
                     },
                     component: resolve => require(['./pages/interact/mateList.vue'], resolve)
                 },
                 {
                     path: 'contacts',
                     name: 'interact-contacts',
+                    meta: {
+                      title:'联系人'
+                    },
                     component: resolve => require(['./pages/interact/contactList.vue'], resolve)
                 }
             ]
@@ -79,23 +92,33 @@ const ROUTER_SETTING = {
                     name: 'interest-list',
                     meta: {
                       showHeader: true,
-                      showNav: true
+                      showNav: true,
+                      title:'兴趣圈'
                     },
                     component: resolve => require(['./pages/moments/interestList.vue'], resolve)
                 },
                 {
                     path: 'interest/:id',
                     name: 'interest-detail',
+                    meta: {
+                      title:'兴趣圈'
+                    },
                     component: resolve => require(['./pages/moments/interestDetail.vue'], resolve)
                 },
                 {
                   path: 'interest/:cid/verify',
                   name: 'interest-verify',
+                  meta: {
+                    title:'兴趣圈'
+                  },
                   component: resolve => require(['./pages/moments/verifyList.vue'], resolve)
                 },
                 {
                     path: 'interest/:id/member',
                     name: 'interest-member',
+                    meta: {
+                      title:'兴趣圈'
+                    },
                     component: resolve => require(['./pages/moments/memberList.vue'], resolve)
                 },
                 {
@@ -103,7 +126,8 @@ const ROUTER_SETTING = {
                     name: 'industry-list',
                     meta: {
                         showHeader: true,
-                        showNav: true
+                        showNav: true,
+                        title:'行业圈'
                     },
                     component: resolve => require(['./pages/moments/industryList.vue'], resolve)
                 }
@@ -116,24 +140,37 @@ const ROUTER_SETTING = {
                   {
                     path:'',
                     meta: {
-                      showNav: true
+                      showNav: true,
+                      meta:'我的'
                     },
                     component: resolve => require(['./pages/mine/menu.vue'], resolve)
                   },
                   {
                     path:'info',
+                    meta: {
+                      meta:'我的资料'
+                    },
                     component: resolve => require(['./pages/mine/info.vue'], resolve)
                   },
                   {
                     path:'contacts',
+                    meta: {
+                      meta:'通讯录'
+                    },
                     component: resolve => require(['./pages/mine/contactList.vue'], resolve)
                   },
                   {
                     path:'contacts/:id',
+                    meta: {
+                      meta:'联系人'
+                    },
                     component: resolve => require(['./pages/mine/contactDetail.vue'], resolve)
                   },
                   {
                     path:'publish',
+                    meta: {
+                      meta:'我的发布'
+                    },
                     component: resolve => require(['./pages/mine/publish.vue'], resolve),
                     children:[
                       {
@@ -150,11 +187,17 @@ const ROUTER_SETTING = {
         },
         {
             path: '/entrance',
+            meta: {
+              meta:'注册'
+            },
             component: resolve => require(['./pages/entrance/index.vue'], resolve)
         },
         {
           path: '/comment/:column',
           name: 'comment',
+          meta: {
+            meta:'评论'
+          },
           component: resolve => require(['./pages/comment/index.vue'], resolve)
         },
         {
@@ -164,18 +207,30 @@ const ROUTER_SETTING = {
           children:[
             {
               path:'activity',
+              meta: {
+                meta:'发布活动'
+              },
               component: resolve => require(['./pages/publish/publishActivity.vue'], resolve)
             },
             {
               path:'photo',
+              meta: {
+                meta:'发布照片'
+              },
               component: resolve => require(['./pages/publish/publishPhoto.vue'], resolve)
             },
             {
               path:'interact',
+              meta: {
+                meta:'发布需求'
+              },
               component: resolve => require(['./pages/publish/publishInteract.vue'], resolve)
             },
             {
               path:'interest',
+              meta: {
+                meta:'发布圈子'
+              },
               component: resolve => require(['./pages/publish/publishInterest.vue'], resolve)
             }
           ]
@@ -206,8 +261,23 @@ router.beforeEach((to, from, next) => {
     } else {
         titleStr += title;
     }
-    document.title = titleStr;
+    changeTitle(titleStr);
     next();
 });
-
+function changeTitle(titleStr) {
+  document.title = titleStr;
+  if(util.isIOS()){
+    let iframe = document.createElement('iframe');
+    iframe.src= require('./assets/images/favicon.ico');
+    iframe.style.display = 'none';
+    document.getElementsByTagName('body')[0].appendChild(iframe);
+    let refreshFn = function () {
+      setTimeout(function() {
+        iframe.removeEventListener('load',refreshFn,false);
+        iframe.parentNode.removeChild(iframe);
+      }, 0);
+    };
+    iframe.addEventListener('load',refreshFn, false);
+  }
+}
 export default router;

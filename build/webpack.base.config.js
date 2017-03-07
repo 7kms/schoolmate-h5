@@ -68,7 +68,7 @@ module.exports = {
     resolve: {
         //在search的时候能快速找到该模块
         alias: {
-            'vue': path.join(nodeModulePath, 'vue/dist/vue.js'),
+            'vue': path.join(nodeModulePath, 'vue/dist/vue.common.js'),
             'vuex': path.join(nodeModulePath, 'vuex'),
             'vue-router': path.join(nodeModulePath, 'vue-router/dist/vue-router.js'),
             'api': path.resolve(__dirname, '../src/api')

@@ -129,5 +129,9 @@ export default {
         return str;
       }
       
+    },
+    isIOS(){
+      let ua = navigator.userAgent.toLowerCase();
+      return /iphone|ipad|ipod/.test(ua);
     }
 }
