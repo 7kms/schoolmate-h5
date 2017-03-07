@@ -89,6 +89,11 @@ const ROUTER_SETTING = {
                     component: resolve => require(['./pages/moments/interestDetail.vue'], resolve)
                 },
                 {
+                  path: 'interest/:cid/verify',
+                  name: 'interest-verify',
+                  component: resolve => require(['./pages/moments/verifyList.vue'], resolve)
+                },
+                {
                     path: 'interest/:id/member',
                     name: 'interest-member',
                     component: resolve => require(['./pages/moments/memberList.vue'], resolve)

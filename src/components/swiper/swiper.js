@@ -2,8 +2,12 @@ import Vue from 'vue';
 import swiper from './swiper.vue'
 const SwiperConstructor = Vue.extend(swiper);
 SwiperConstructor.prototype.close = function(){
-  document.body.removeChild(this.$el);
-  this.$destroy();
+  try{
+    document.body.removeChild(this.$el);
+    this.$destroy();
+  }catch (e){
+
+  }
 };
 let pool = [];
 

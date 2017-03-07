@@ -10,7 +10,10 @@
             infinite-scroll-immediate-check="false"
             infinite-scroll-disabled="noScroll"
             infinite-scroll-distance="80">
-            <Item v-for="(item,index) in interact.list" :class="$style.item" :key="index" :dataInfo="item" @showSwiper="showSwiper"></Item>
+            <Item v-for="(item,index) in interact.list"
+                  :class="$style.item" :key="index"
+                  :dataInfo="item"
+                  @showSwiper="showSwiper"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
         <publishBtn text="发需求" @click="onPublish"></publishBtn>
@@ -42,7 +45,10 @@
     },
     beforeRouteLeave (to, from, next) {
       this.$store.dispatch('interact/RESET_INTERACT_LIST');
-        this.swiperInstance && this.swiperInstance.close();
+      if(this.swiperInstance){
+        this.swiperInstance.close();
+        this.swiperInstance = null;
+      }
       next();
     },
     methods:{

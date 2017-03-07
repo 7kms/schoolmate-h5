@@ -59,7 +59,7 @@
     }
 </style>
 <template>
-    <li :class="$style.content" @click="click">
+    <li :class="$style.content">
         <div :class="[$style.portrait,'text-center']">
             <div :class="$style.pic">
                 <imgContain :imgUrl="dataInfo.photo" :onlyImage="true" style="width:40px ;height:40px"></imgContain>
@@ -71,9 +71,9 @@
             <div :class="$style.text">{{dataInfo.department || '部门未填写'}}</div>
             <div>{{dataInfo.detail_job || '职位未填写'}}</div>
             <div :class="$style.desText">我的资源：<span>{{dataInfo.resource_description}}</span></div>
-            <div :class="[$style.operate,'text-center']">
-                <span :class="[$style.reject,'inline-block']">拒绝</span>
-                <span :class="[$style.agree,'inline-block']">同意</span>
+            <div :class="[$style.operate,'text-center']" v-if="showBtn">
+                <span :class="[$style.reject,'inline-block']" @click="reject">拒绝</span>
+                <span :class="[$style.agree,'inline-block']" @click="agree">同意</span>
             </div>
         </div>
         <i :class="$style.iconArrow"></i>
@@ -82,8 +82,8 @@
 <script>
   export default{
     props:{
-      isAuthor:{
-        type:Boolean,
+      showBtn:{
+        type: Boolean,
         default: false
       },
       dataInfo:{
@@ -92,8 +92,11 @@
       }
     },
     methods:{
-        click(){
-          this.$emit('click',this.dataInfo);
+        reject(){
+            this.$emit('reject',this.dataInfo);
+        },
+        agree(){
+            this.$emit('agree',this.dataInfo);
         }
     }
   }
