@@ -215,30 +215,20 @@
                 <span></span><span @click="setDefaultPlace">确定</span>
             </mt-picker>
         </mt-popup>
-        <mt-datetime-picker
-            ref="startDatePicker"
-            type="date"
-            cancelText="关闭"
-            year-format="{value} 年"
-            month-format="{value} 月"
-            date-format="{value} 日"
-            :startDate="minDate"
-            :endDate="maxLimitDate"
-            v-model="roleStartDate"
-        >
-        </mt-datetime-picker>
-        <mt-datetime-picker
-            ref="endDatePicker"
-            type="date"
-            cancelText="关闭"
-            year-format="{value} 年"
-            month-format="{value} 月"
-            date-format="{value} 日"
-            :startDate="minLimitDate"
-            :endDate="maxDate"
-            v-model="roleEndDate"
-        >
-        </mt-datetime-picker>
+        <timePicker
+                :showPicker="showMajorStartPicker"
+                :initDate="roleStartDate"
+                :endDate="condition.graduate_time"
+                pickerRef="majorStartDatePicker"
+                @selectEnd="selectMajorStart"
+        ></timePicker>
+        <timePicker
+                :showPicker="showMajorEndPicker"
+                :initDate="roleEndDate"
+                :startDate="condition.enrol_time"
+                pickerRef="majorEndDatePicker"
+                @selectEnd="selectMajorEnd"
+        ></timePicker>
         <mt-popup
                 v-model="showIndustryPicker"
                 position="bottom"
@@ -258,6 +248,7 @@
     </div>
 </template>
 <script>
+    import { singlePicker, placePicker,timePicker } from '../../components/popPicker';
     import { placeObj,departmentArr,majorArr,industryObj } from '../../data';
     import { mapState } from 'vuex';
     import util from  '../../util'
@@ -266,15 +257,17 @@
           return {
               showMore: false,
               showMajorPicker: false,
+              showMajorStartPicker: false,
+              showMajorEndPicker: false,
               showPlacePicker: false,
               showIndustryPicker: false,
               showIndustryDetailPicker: false,
-              minDate:new Date('1950/09/01'),
-              maxDate:new Date('2050/07/01'),
-              minLimitDate: new Date('2050/07/01'),
-              maxLimitDate: new Date('1950/09/01'),
               roleStartDate:'',
               roleEndDate:'',
+              info:{
+                  enrol_time: '',
+                  graduate_time: ''
+              },
 	          majorSlots:[{
 		          flex: 1,
 		          values: majorArr
@@ -311,25 +304,15 @@
               ]
           }
        },
+        components:{
+            timePicker
+        },
       computed:{
         ...mapState({
           condition: state => state.interact.mates.condition,
             mates: state => state.interact.mates,
             profile: state => state.user.profile
         })
-      },
-      watch:{
-          roleStartDate(newValue,oldValue){
-              if(!newValue || !oldValue || newValue == oldValue) return;
-              this.minLimitDate = newValue;
-              this.$store.dispatch('interact/CHANGE_MATES_CONDITION',{enrol_time:util.dateFormat(newValue,'yyyy/MM/dd')})
-          },
-          roleEndDate(newValue,oldValue){
-              if(!newValue || !oldValue || newValue == oldValue) return;
-              if(newValue == this.maxDate) return;
-              this.maxLimitDate = newValue;
-              this.$store.dispatch('interact/CHANGE_MATES_CONDITION',{graduate_time:util.dateFormat(newValue,'yyyy/MM/dd')})
-          }
       },
       methods:{
        	showPicker(pickerName){
@@ -341,10 +324,10 @@
                     this.showPlacePicker = true;
                     break;
                 case 'roleStart':
-                    this.$refs['startDatePicker'].open();
+                    this.showMajorStartPicker = true;
                     break;
                 case 'graduate':
-                    this.$refs['endDatePicker'].open();
+                    this.showMajorEndPicker = true;
                     break;
                 case 'industry':
                     this.showIndustryPicker = true;
@@ -354,12 +337,24 @@
                     break;
             }
         },
+          selectMajorStart(value){
+              this.hidePicker();
+//              this.info.enrol_time = value;
+              this.$store.dispatch('interact/CHANGE_MATES_CONDITION',{enrol_time:value})
+          },
+          selectMajorEnd(value){
+              this.hidePicker();
+//              this.info.graduate_time = value;
+              this.$store.dispatch('interact/CHANGE_MATES_CONDITION',{graduate_time:value})
+          },
           hidePicker(){
               this.showMajorPicker = false;
               this.showIndustryPicker = false;
               this.showIndustryDetailPicker = false;
               this.showPlacePicker =  false;
               this.showDepartmentPicker =  false;
+              this.showMajorStartPicker = false;
+              this.showMajorEndPicker = false;
           },
         selectPlace(picker,values){
           let bprovince,bcity;
@@ -464,7 +459,7 @@
         },
         searchMore(){
           this.showMore = false;
-//          this.$store.dispatch('interact/RESET_MATES_CONDITION');
+          this.$store.dispatch('interact/RESET_MATES_LIST');
           this.$parent.loadMore();
         }
       },

@@ -13,6 +13,9 @@
             <Item v-for="(item,index) in interact.list" :class="$style.item" :key="index" :dataInfo="item" @click.native="goEdit(item)"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
+        <div v-if="!loading && interact.list.length == 0" class="empty-data-item">
+            <span>数据为空</span>
+        </div>
     </div>
 </template>
 <script>

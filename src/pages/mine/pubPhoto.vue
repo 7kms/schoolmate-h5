@@ -13,6 +13,9 @@
             <Item v-for="(item,index) in photo.list" :class="$style.item" :key="index" :dataInfo="item" @click="goEdit(item)"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
+        <div v-if="!loading && photo.list.length == 0" class="empty-data-item">
+            <span>数据为空</span>
+        </div>
     </div>
 </template>
 <script>

@@ -17,6 +17,9 @@
             <Item v-for="(item,index) in mates.list" :class="$style.item" :key="index" :dataInfo="item"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
+        <div v-if="!loading && mates.list.length == 0" class="empty-data-item">
+            <span>数据为空</span>
+        </div>
     </div>
 </template>
 <script>
@@ -46,6 +49,7 @@
     },
     beforeRouteLeave (to, from, next) {
       this.$store.dispatch('interact/RESET_MATES_LIST');
+      this.$store.dispatch('interact/RESET_MATES_CONDITION');
       next();
     },
     methods:{
