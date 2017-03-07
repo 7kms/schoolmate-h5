@@ -264,7 +264,21 @@
           });
         },res=>{
           console.log(res);
-        })
+        });
+        let {rid} =  this.$route.query;
+        if(rid){
+            $api.get('/index.php/Help/getResList',{rid,start:0,pageSize:1})
+            .then(res=>{
+                console.log(res);
+                let data = res.result[0];
+                let keyArr = Object.keys(this.info);
+                keyArr.forEach(key=>{
+                    this.info[key] = data[key];
+                });
+            },err=>{
+                this.$toast({message: err});
+            });
+        }
     }
   }
 </script>

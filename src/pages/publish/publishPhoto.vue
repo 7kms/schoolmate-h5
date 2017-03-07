@@ -213,18 +213,30 @@
         }
       },
       created(){
-        $api.get('/index.php/Circle/getMyCircle')
+            $api.get('/index.php/Circle/getMyCircle')
                 .then(res=>{
-            res.forEach(circle => {
-                var obj = {
-                    label: circle.c_name,
-                    value: circle.cid,
-                };
-                this.rangeOptions.push(obj);
+                    res.forEach(circle => {
+                    var obj = {
+                        label: circle.c_name,
+                        value: circle.cid,
+                    };
+                    this.rangeOptions.push(obj);
+                });
+            },res=>{
+                console.log(res);
             });
-        },res=>{
-            console.log(res);
-        })
+          let {pid} =  this.$route.query;
+          if(pid){
+              $api.get('/index.php/Picture/getDetail',{pid})
+                .then(res =>{
+                    let keyArr = Object.keys(this.info);
+                    keyArr.forEach(key =>{
+                      this.info[key] = res[key];
+                    });
+                },err=>{
+                  this.$toast({message: err});
+                });
+          }
       }
     }
 </script>

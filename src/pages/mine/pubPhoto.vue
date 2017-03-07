@@ -10,7 +10,7 @@
             infinite-scroll-disabled="noScroll"
             infinite-scroll-immediate-check="false"
             infinite-scroll-distance="80">
-            <Item v-for="(item,index) in photo.list" :class="$style.item" :key="index" :dataInfo="item" @click="goDetail(item)"></Item>
+            <Item v-for="(item,index) in photo.list" :class="$style.item" :key="index" :dataInfo="item" @click="goEdit(item)"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
         <publishBtn text="传照片" @click="onPublish"></publishBtn>
@@ -55,9 +55,8 @@
           this.loading = false;
         });
       },
-      goDetail(item) {
-        item.hit = parseInt(item.hit) + 1;
-        this.$router.push(`/photo-detail/${item.pid}`);
+      goEdit(item) {
+        this.$router.push(`/publish/photo?pid=${item.pid}`);
       }
     },
     created(){

@@ -202,7 +202,18 @@
       }
     },
     created(){
-
+        let {cid} =  this.$route.query;
+        if(cid){
+            $api.get('/index.php/Circle/getCircle',{cid})
+            .then(res=>{
+                let keyArr = Object.keys(this.info);
+                keyArr.forEach(key=>{
+                    this.info[key] = res[key];
+                });
+            },err=>{
+                this.$toast({message: err});
+            });
+        }
     }
   }
 </script>

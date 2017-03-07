@@ -10,7 +10,7 @@
                 infinite-scroll-immediate-check="false"
                 infinite-scroll-disabled="noScroll"
                 infinite-scroll-distance="80">
-            <Item v-for="(item,index) in interact.list" :class="$style.item" :key="index" :dataInfo="item"></Item>
+            <Item v-for="(item,index) in interact.list" :class="$style.item" :key="index" :dataInfo="item" @click.native="goEdit(item)"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
     </div>
@@ -51,7 +51,10 @@
           this.loading = false;
           this.$toast({message: err});
         });
-      }
+      },
+        goEdit(item){
+            this.$router.push(`/publish/interact?rid=${item.rid}`);
+        }
     },
     created(){
       if(!this.interact.list.length){

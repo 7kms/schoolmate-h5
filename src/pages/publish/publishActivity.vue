@@ -422,7 +422,19 @@
                 });
             },res=>{
                 console.log(res);
-            })
+            });
+            let {aid} =  this.$route.query;
+            if(aid){
+                $api.get('/index.php/Activity/getDetail',{aid})
+                .then(res=>{
+                    let keyArr = Object.keys(this.info);
+                    keyArr.forEach(key=>{
+                       this.info[key] = res[key];
+                    });
+                },err=>{
+                    this.$toast({message: err});
+                });
+            }
         }
     }
 </script>

@@ -10,7 +10,7 @@
                 infinite-scroll-immediate-check="false"
                 infinite-scroll-disabled="noScroll"
                 infinite-scroll-distance="80">
-            <Item v-for="(item,index) in column.list" :class="$style.item" :key="index" :dataInfo="item" @click="goDetail(item)"></Item>
+            <Item v-for="(item,index) in column.list" :class="$style.item" :key="index" :dataInfo="item" @click="goEdit(item)"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
     </div>
@@ -45,9 +45,6 @@
       next();
     },
     methods:{
-      onPublish() {
-        this.$router.push(`/publish/activity`);
-      },
       loadMore() {
         this.loading = true;
         this.$store.dispatch('activity/LOAD_COLUMN_LIST',{uid:this.$parent.uid}).then(()=>{
@@ -57,8 +54,8 @@
           this.$toast({message: err});
         });
       },
-      goDetail(item) {
-        this.$router.push(`/column-detail/${item.aid}`);
+      goEdit(item) {
+        this.$router.push(`/publish/activity?aid=${item.aid}`);
       }
     },
     created(){
