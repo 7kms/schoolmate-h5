@@ -32,6 +32,14 @@ const ROUTER_SETTING = {
                     component: resolve => require(['./pages/activity/photoList.vue'], resolve)
                 },
                 {
+                    path: 'photos/:id',
+                    name: 'photos',
+                    meta: {
+                        title:'精彩活动秀'
+                    },
+                    component: resolve => require(['./pages/activity/columnPhotoList.vue'], resolve)
+                },
+                {
                     path: 'column-detail/:id',
                     name: 'column-detail',
                     meta: {

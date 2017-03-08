@@ -45,6 +45,13 @@
           }
         },
         methods: {
+            valid(){
+                if(!comment.length){
+                    this.$toast('评论不能为空');
+                    return false;
+                }
+                return true;
+            },
           publish(){
             const paramObj = {
               content: this.comment

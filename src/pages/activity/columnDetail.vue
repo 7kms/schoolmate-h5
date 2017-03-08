@@ -78,7 +78,7 @@
                         </div>
                     </div>
                     <div class="text-right">
-                        <span :class="[$style.showBtn,'inline-block']">精彩活动秀</span>
+                        <span :class="[$style.showBtn,'inline-block']" @click="showPhotos">精彩活动秀</span>
                     </div>
                 </div>
             </div>
@@ -174,6 +174,10 @@
                 });
             }
           },
+          showPhotos(){
+              const {id} = this.$route.params;
+            this.$router.push(`/activity/photos/${id}`);
+           },
           getData({id}){
             this.loading = true;
             $api.get('/index.php/Activity/getDetail',{aid:id })

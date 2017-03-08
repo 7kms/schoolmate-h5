@@ -59,6 +59,7 @@ const actions = {
       if(payload){
         payload.cid && (params.cid = payload.cid);
         payload.uid && (params.uid = payload.uid);
+        payload.aid && (params.aid = payload.aid);
       }
       return new Promise((resolve,reject) => {
         $api.get('/index.php/Picture/getList',params)
