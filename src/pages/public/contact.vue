@@ -11,6 +11,7 @@
         margin-right: 6px;
         .userText{
             margin-top: 6px;
+            width: 60px;
         }
     }
     .desc{
@@ -64,7 +65,7 @@
             <div :class="$style.pic">
                 <imgContain :imgUrl="dataInfo.photo" :onlyImage="true" style="width:40px ;height:40px"></imgContain>
             </div>
-            <div :class="[$style.userText,'color-topic']">{{dataInfo.name}}</div>
+            <div :class="[$style.userText,'color-topic','one-line']">{{dataInfo.name}}</div>
         </div>
         <div :class="$style.desc">
             <div :class="$style.text">{{dataInfo.company || '公司未填写'}}</div>
@@ -76,7 +77,7 @@
                 <span :class="[$style.agree,'inline-block']" @click="agree">同意</span>
             </div>
         </div>
-        <i :class="$style.iconArrow"></i>
+        <i :class="$style.iconArrow" v-if="showArrow"></i>
     </li>
 </template>
 <script>
@@ -85,6 +86,10 @@
       showBtn:{
         type: Boolean,
         default: false
+      },
+      showArrow:{
+          type: Boolean,
+          default: false
       },
       dataInfo:{
         type: Object,

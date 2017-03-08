@@ -7,7 +7,7 @@
 <template>
     <div>
         <ul :class="$style.list">
-            <contact @reject="reject" @agree="agree" v-for="contact in list" :dataInfo="contact"></contact>
+            <Item @reject="reject" @agree="agree" v-for="contact in list" :dataInfo="contact" :showBtn="true"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
         <div v-if="!loading && list.length == 0" class="empty-data-item">
@@ -35,9 +35,15 @@
       reject(contact){
         const {cid} = this.$route.params;
         const {uid} = contact;
-        $api.post('/index.php/Circle/passApply',{cid,uid})
+        $api.post('/index.php/Circle/cancelApply',{cid,uid})
           .then(res=>{
-
+                this.$toast(res.msg || '处理成功');
+              if(res.result){
+                  var index =  this.list.indexOf(contact);
+                  if(~index){
+                      this.list.splice(index,1);
+                  }
+              }
           },err=>{
             this.$toast('服务器异常')
           })
@@ -45,9 +51,15 @@
       agree(contact){
         const {cid} = this.$route.params;
         const {uid} = contact;
-        $api.post('/index.php/Circle/cancelApply',{cid,uid})
+        $api.post('/index.php/Circle/passApply',{cid,uid})
           .then(res=>{
-
+            this.$toast(res.msg || '处理成功');
+              if(res.result){
+                 var index =  this.list.indexOf(contact);
+                  if(~index){
+                      this.list.splice(index,1);
+                  }
+              }
           },err=>{
             this.$toast('服务器异常')
           })
@@ -55,10 +67,10 @@
     },
     created(){
       const {cid} = this.$route.params;
-      $api.post('/index.php/Circle/getUnpassedMembers',{cid})
-        .then(res=>{
+      $api.get('/index.php/Circle/getUnpassedMembers',{cid})
+        .then(data=>{
           this.loading = false;
-          this.list = [...res.data];
+          this.list = [...data];
         },error=>{
           this.$toast('服务器异常')
         });
