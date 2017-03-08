@@ -80,6 +80,11 @@ module.exports = {
             localIdentName: '[name]-[local]-[hash:base64:5]',
             camelCase: true
         },
+        postcss: [
+            require('autoprefixer')({
+                browsers: ['last 3 versions']
+            })
+        ],
         loaders: utils.cssLoaders({ sourceMap: true })
         // loaders: {
         //     css: ExtractTextPlugin.extract("css!autoprefixer?{ browsers: ['last 2 versions']}"),
