@@ -151,7 +151,7 @@
     },
     computed:{
       action(){
-        return serverUrl + '/index.php/Picture/multiPicUpload';
+        return serverUrl + '/Picture/multiPicUpload';
       },
       needsText(){
           var text = '';
@@ -255,7 +255,7 @@
       },
       publish(){
         if(!this.valid()) return false;
-        $api.post('/index.php/Help/createRes',this.info)
+        $api.post('/Help/createRes',this.info)
           .then(res=>{
             if(res.code == 200){
               this.$toast(res.msg);
@@ -267,7 +267,7 @@
       }
     },
     created(){
-      $api.get('/index.php/Circle/getMyCircle')
+      $api.get('/Circle/getMyCircle')
         .then(res=>{
           res.forEach(circle => {
             var obj = {
@@ -282,7 +282,7 @@
         let {rid} =  this.$route.query;
         if(rid){
             this.edit = true;
-            $api.get('/index.php/Help/getResList',{rid,start:0,pageSize:1})
+            $api.get('/Help/getResList',{rid,start:0,pageSize:1})
             .then(res=>{
                 console.log(res);
                 let data = res.result[0];

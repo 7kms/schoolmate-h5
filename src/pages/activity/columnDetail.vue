@@ -144,7 +144,7 @@
           operateBarClick(type){
             if(type == 'left'){
               if(this.dataInfo.attended) {
-                  $api.post('/index.php/Activity/cancelAttend',{aid:this.dataInfo.info.aid})
+                  $api.post('/Activity/cancelAttend',{aid:this.dataInfo.info.aid})
                   .then(res=>{
                       this.$toast(res.msg);
                       if(res.result){
@@ -155,7 +155,7 @@
                        this.$toast('服务器异常');
                    })
               }else{
-                  $api.post('/index.php/Activity/join',{aid:this.dataInfo.info.aid})
+                  $api.post('/Activity/join',{aid:this.dataInfo.info.aid})
                           .then(res=>{
                             this.$toast(res.msg);
                               if(res.result){
@@ -180,7 +180,7 @@
            },
           getData({id}){
             this.loading = true;
-            $api.get('/index.php/Activity/getDetail',{aid:id })
+            $api.get('/Activity/getDetail',{aid:id })
               .then(res=>{
                 this.dataInfo = res;
                 this.loading = false;
@@ -190,7 +190,7 @@
               })
           },
           removeComment(item){
-            $api.post('/index.php/Picture/deleteComment',{cid:item.cid})
+            $api.post('/Picture/deleteComment',{cid:item.cid})
               .then(res=>{
                 this.$toast(res.msg);
                 if(res.result) {

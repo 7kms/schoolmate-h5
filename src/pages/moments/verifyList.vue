@@ -35,7 +35,7 @@
       reject(contact){
         const {cid} = this.$route.params;
         const {uid} = contact;
-        $api.post('/index.php/Circle/cancelApply',{cid,uid})
+        $api.post('/Circle/cancelApply',{cid,uid})
           .then(res=>{
                 this.$toast(res.msg || '处理成功');
               if(res.result){
@@ -51,7 +51,7 @@
       agree(contact){
         const {cid} = this.$route.params;
         const {uid} = contact;
-        $api.post('/index.php/Circle/passApply',{cid,uid})
+        $api.post('/Circle/passApply',{cid,uid})
           .then(res=>{
             this.$toast(res.msg || '处理成功');
               if(res.result){
@@ -67,7 +67,7 @@
     },
     created(){
       const {cid} = this.$route.params;
-      $api.get('/index.php/Circle/getUnpassedMembers',{cid})
+      $api.get('/Circle/getUnpassedMembers',{cid})
         .then(data=>{
           this.loading = false;
           this.list = [...data];

@@ -82,7 +82,7 @@
     methods:{
       getData(item){
         if(item == 'basic'){
-          $api.get('/index.php/Circle/getCircle',{cid: this.$route.params.id})
+          $api.get('/Circle/getCircle',{cid: this.$route.params.id})
             .then(data=>{
                 this.basicInfo = {...data};
               this.loading = false;

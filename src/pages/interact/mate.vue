@@ -124,7 +124,7 @@
       exchange(type){
         var {uid} = this.dataInfo;
         if(type == 'exchange'){
-          $api.post('/index.php/Profile/requestExchange',{uid})
+          $api.post('/Profile/requestExchange',{uid})
             .then(res => {
             this.$toast(res.msg);
             if(res.result) {
@@ -134,7 +134,7 @@
             this.$toast('服务器异常')
           });
         }else if(type == 'cancel'){
-          $api.post('/index.php/Profile/cancelExchange',{uid})
+          $api.post('/Profile/cancelExchange',{uid})
             .then(res => {
             this.$toast(res.msg)
             if(res.result) {

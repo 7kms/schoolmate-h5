@@ -59,7 +59,7 @@
             this.$router.push(`/publish/interact?rid=${item.rid}`);
         },
         revoke(item){
-            $api.post('/index.php/Help/revoke',{ rid:item.rid})
+            $api.post('/Help/revoke',{ rid:item.rid})
             .then(res=>{
                 this.$toast(res.msg);
                 if(res.result){

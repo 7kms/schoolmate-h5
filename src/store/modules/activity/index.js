@@ -36,7 +36,7 @@ const actions = {
         payload.uid && (params.uid = payload.uid);
       }
       return new Promise((resolve,reject) => {
-        $api.get('/index.php/Activity/getList',params)
+        $api.get('/Activity/getList',params)
           .then(data =>{
             dispatch(types.APPEND_COLUMN_LIST, data.result);
             var noMore = (state.column.list.length >= data.total);
@@ -62,7 +62,7 @@ const actions = {
         payload.aid && (params.aid = payload.aid);
       }
       return new Promise((resolve,reject) => {
-        $api.get('/index.php/Picture/getList',params)
+        $api.get('/Picture/getList',params)
           .then(data =>{
             dispatch(types.APPEND_PHOTO_LIST, data.result);
             var noMore = (state.photo.list.length >= data.total);
@@ -90,7 +90,7 @@ const actions = {
       payload.uid && (params.uid = payload.uid);
     }
     return new Promise((resolve,reject) => {
-      $api.get('/index.php/Activity/getAttendList',params)
+      $api.get('/Activity/getAttendList',params)
         .then(data =>{
           dispatch(types.APPEND_ATTEND_LIST, data.result);
           var noMore = (state.attend.list.length >= data.total);

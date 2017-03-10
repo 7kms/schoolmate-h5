@@ -157,7 +157,7 @@
           });
       },
       collaborate(){
-        $api.post('/index.php/Help/apply',{rid:this.dataInfo.rid})
+        $api.post('/Help/apply',{rid:this.dataInfo.rid})
           .then(res => {
           this.$toast(res.msg);
           if(res.code == 200){
@@ -168,7 +168,7 @@
         });
       },
       revocation(){
-        $api.post('/index.php/Help/revokeCoApply',{rid:this.dataInfo.rid})
+        $api.post('/Help/revokeCoApply',{rid:this.dataInfo.rid})
           .then(res => {
           this.$toast(res.msg);
           if(res.code == 200){

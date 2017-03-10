@@ -210,7 +210,7 @@
       },
       attend(){
         this.$dialog.confirm('确认要加入?').then(data=>{
-          return $api.post('/index.php/Circle/attend',{cid:this.dataInfo.cid});
+          return $api.post('/Circle/attend',{cid:this.dataInfo.cid});
         },data=>{
           return false;
         }).then(res=>{
@@ -228,7 +228,7 @@
       },
       exit(){
         this.$dialog.confirm('确认要退出?').then(data=>{
-          return $api.post('/index.php/Circle/cancel',{cid:this.dataInfo.cid});
+          return $api.post('/Circle/cancel',{cid:this.dataInfo.cid});
         },data=>{
             return false;
         }).then(res=>{

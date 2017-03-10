@@ -98,7 +98,7 @@
       },
       computed:{
         action(){
-          return serverUrl + '/index.php/Picture/multiPicUpload';
+          return serverUrl + '/Picture/multiPicUpload';
         },
         events(){
           let _this = this;

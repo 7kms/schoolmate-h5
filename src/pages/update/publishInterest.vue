@@ -137,7 +137,7 @@
     },
     computed:{
       action(){
-        return serverUrl + '/index.php/Picture/multiPicUpload';
+        return serverUrl + '/Picture/multiPicUpload';
       },
       settingText(){
         let str;
@@ -186,7 +186,7 @@
       },
       publish(){
         var param = this.info;
-        $api.post('/index.php/Circle/upCircle',param)
+        $api.post('/Circle/upCircle',param)
           .then(res=>{
             this.$toast(res.msg);
             if(res.code == 200){

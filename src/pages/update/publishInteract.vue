@@ -143,7 +143,7 @@
     },
     computed:{
       action(){
-        return serverUrl + '/index.php/Picture/multiPicUpload';
+        return serverUrl + '/Picture/multiPicUpload';
       },
       uploadImageArr(){
         let arr = [...this.imgArr];
@@ -244,7 +244,7 @@
       publish(){
         if(!this.valid()) return false;
         let paramObj = this.getPubInfo();
-        $api.post('/index.php/Help/createRes',paramObj)
+        $api.post('/Help/createRes',paramObj)
           .then(res=>{
             if(res.code == 200){
               this.$toast(res.msg);
@@ -256,7 +256,7 @@
       }
     },
     created(){
-      $api.get('/index.php/Circle/getMyCircle')
+      $api.get('/Circle/getMyCircle')
         .then(res=>{
           res.forEach(circle => {
             var obj = {

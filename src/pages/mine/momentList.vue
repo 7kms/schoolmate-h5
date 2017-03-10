@@ -60,7 +60,7 @@
       }
     },
     created(){
-        $api.get('/index.php/Circle/getMyCircle')
+        $api.get('/Circle/getMyCircle')
         .then(data => {
             data.forEach(item =>{
                 if(!item.pictures)item.pictures=[];

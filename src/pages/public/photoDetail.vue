@@ -82,7 +82,7 @@
       },
       getData({id}){
         this.loading = true;
-        $api.get('/index.php/Picture/getDetail',{pid:id })
+        $api.get('/Picture/getDetail',{pid:id })
           .then(res=>{
             this.dataInfo = res;
             this.loading = false;

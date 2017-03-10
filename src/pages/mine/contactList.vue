@@ -58,7 +58,7 @@
     created(){
       const {channel,rid} = this.$route.query;
 //      if(channel == 'resource'){
-//        $api.post('/index.php/Help/getCoList',{rid})
+//        $api.post('/Help/getCoList',{rid})
 //          .then(res=>{
 //              this.loading = false;
 //              this.list = [...res.data];

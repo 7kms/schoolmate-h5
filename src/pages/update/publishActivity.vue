@@ -215,7 +215,7 @@
         },
         computed:{
             action(){
-                return serverUrl + '/index.php/Picture/multiPicUpload';
+                return serverUrl + '/Picture/multiPicUpload';
             },
             limitTime(){
                 return this.startDate + ' ' + this.startTime;
@@ -342,7 +342,7 @@
                     this.$toast('开始时间不能大于结束时间');
                     return false;
                 }
-                $api.post('/index.php/Activity/publish',paramObj)
+                $api.post('/Activity/publish',paramObj)
                 .then(res=>{
                     if(res.code == 200){
                         this.$toast('发布成功');

@@ -123,7 +123,7 @@
                 if(!this.waiting){
                     if(!this.valid('code'))return false;
                     this.waiting = true;
-                    $api.post('/index.php/Regverify/getCode',{phone:this.userInfo.phonenum})
+                    $api.post('/Regverify/getCode',{phone:this.userInfo.phonenum})
                     .then(res=>{
                         if(res.code == 200){
                             this.$toast('验证码已经发送');
@@ -158,7 +158,7 @@
                         this.$toast('请至少选择2位熟人');
                         reject(false);
                     }else{
-                        $api.post('/index.php/Regverify/verifyRandName',{role,'class':this.userInfo.class,namestr:nameArr.join(',')})
+                        $api.post('/Regverify/verifyRandName',{role,'class':this.userInfo.class,namestr:nameArr.join(',')})
                         .then(res=>{
                           if(res.code == 200 && res.result){
                                 resolve(true);
@@ -178,7 +178,7 @@
                 });
             },
             verifySMS(){
-                return $api.post('/index.php/Regverify/verify',{phone:this.userInfo.phonenum,code:this.verifyCode})
+                return $api.post('/Regverify/verify',{phone:this.userInfo.phonenum,code:this.verifyCode})
                         .then(res=>{
                             if(res.code == 200 && res.result){
                               return true;
@@ -195,7 +195,7 @@
             },
             getFriends(){
                 var {role} = this.userInfo;
-                $api.post('/index.php/Regverify/getRandomName',{role,'class':this.userInfo.class,department:this.userInfo.department})
+                $api.post('/Regverify/getRandomName',{role,'class':this.userInfo.class,department:this.userInfo.department})
                 .then((res)=>{
                     if(res.code == 200){
                         this.friendsArr = res.data.map(name=>{
@@ -212,7 +212,7 @@
                 });
             },
             register(){
-                $api.post('/index.php/Profile/upProfile',this.userInfo)
+                $api.post('/Profile/upProfile',this.userInfo)
                 .then(res => {
                     this.$toast(res.data.msg);
                     if(res.data.result){

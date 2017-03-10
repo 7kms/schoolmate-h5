@@ -34,7 +34,7 @@ const actions = {
   [types.LOAD_INTEREST_LIST] ({ commit, dispatch }) {
     let params = getParams('interest');
     return new Promise((resolve,reject) => {
-      $api.get('/index.php/Circle/getCircleList',params)
+      $api.get('/Circle/getCircleList',params)
         .then(data =>{
           dispatch(types.APPEND_INTEREST_LIST, data.result);
           var noMore = (state.interest.list.length >= data.total);
@@ -55,7 +55,7 @@ const actions = {
   [types.LOAD_INDUSTRY_LIST] ({ commit, dispatch }) {
     let params = getParams('industry');
     return new Promise((resolve,reject) => {
-      $api.get('/index.php/Circle/getCircleList',params)
+      $api.get('/Circle/getCircleList',params)
         .then(data =>{
           dispatch(types.APPEND_INDUSTRY_LIST, data.result);
           var noMore = (state.industry.list.length >= data.total);

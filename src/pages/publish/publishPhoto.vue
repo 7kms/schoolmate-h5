@@ -137,7 +137,7 @@
           return str;
         },
         action(){
-          return serverUrl + '/index.php/Picture/multiPicUpload';
+          return serverUrl + '/Picture/multiPicUpload';
         },
         events(){
           let _this = this;
@@ -202,7 +202,7 @@
             },
         publish(){
             if(this.valid()){
-                $api.post('/index.php/Picture/upPicture',this.info)
+                $api.post('/Picture/upPicture',this.info)
                         .then(res=>{
                     this.$toast(res.msg);
                 if(res.result){
@@ -215,7 +215,7 @@
         }
       },
       created(){
-            $api.get('/index.php/Circle/getMyCircle')
+            $api.get('/Circle/getMyCircle')
                 .then(res => {
                     res.forEach(circle => {
                         var obj = {
@@ -231,7 +231,7 @@
           let {pid} =  this.$route.query;
           if(pid){
               this.edit = true;
-              $api.get('/index.php/Picture/getDetail',{ pid })
+              $api.get('/Picture/getDetail',{ pid })
               .then(data => {
                     let keyArr = Object.keys(this.info);
                     keyArr.forEach(key =>{

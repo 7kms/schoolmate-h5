@@ -61,7 +61,7 @@
             }else if(this.column == 'picture'){
               paramObj.pid = this.pid;
             }
-            $api.post('/index.php/Picture/postComment',paramObj)
+            $api.post('/Picture/postComment',paramObj)
               .then(res=>{
                 this.$toast(res.msg);
                 if(res.result){

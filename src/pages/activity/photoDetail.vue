@@ -100,7 +100,7 @@
           });
         }else{
           if(!this.dataInfo.is_liked){
-            $api.post('/index.php/Picture/like',{pid:this.dataInfo.pid})
+            $api.post('/Picture/like',{pid:this.dataInfo.pid})
               .then(res=>{
                 this.$toast(res.msg);
                 if(res.result){
@@ -115,7 +115,7 @@
       },
       getData({id}){
         this.loading = true;
-        $api.get('/index.php/Picture/getDetail',{pid:id })
+        $api.get('/Picture/getDetail',{pid:id })
           .then(res=>{
             this.dataInfo = res;
             this.loading = false;
@@ -125,7 +125,7 @@
           })
       },
       removeComment(item){
-        $api.post('/index.php/Picture/deleteComment',{cid:item.cid})
+        $api.post('/Picture/deleteComment',{cid:item.cid})
           .then(res=>{
           this.$toast(res.msg);
           if(res.result) {

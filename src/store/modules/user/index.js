@@ -10,7 +10,7 @@ var state = {
 const actions  = {
 	[types.GET_ACCOUNT] ({ commit, dispatch}) {
 		return new Promise(( resolve, reject ) => {
-			$api.get('/index.php/Profile/getProfile')
+			$api.get('/Profile/getProfile')
 				.then( data => {
 					commit(types.GET_ACCOUNT, data.profile);
 					resolve(data.profile);

@@ -213,7 +213,7 @@
         }
       },
       created(){
-        $api.get('/index.php/Profile/getUserCard',{uid:this.$route.params.id})
+        $api.get('/Profile/getUserCard',{uid:this.$route.params.id})
           .then(data=>{
             this.userInfo = data;
           },err=>{

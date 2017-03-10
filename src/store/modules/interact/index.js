@@ -41,7 +41,7 @@ const actions = {
       payload.uid && (params.uid = payload.uid);
     }
     return new Promise((resolve,reject) => {
-      $api.get('/index.php/Help/getResList',params)
+      $api.get('/Help/getResList',params)
         .then(data =>{
           dispatch(types.APPEND_INTERACT_LIST, data.result);
           var noMore = (state.interact.list.length >= data.total);
@@ -64,7 +64,7 @@ const actions = {
   [types.LOAD_MATES_LIST] ({ commit, dispatch }) {
     let params = getParams('mates');
     return new Promise((resolve,reject) => {
-      $api.get('/index.php/Help/getMateList',params)
+      $api.get('/Help/getMateList',params)
         .then(data =>{
           dispatch(types.APPEND_MATES_LIST, data.result);
           var noMore = (state.mates.list.length >= data.total);

@@ -122,7 +122,7 @@
             if(this.dataInfo.is_liked){
               this.$toast('已经点过赞了');
             }else{
-              $api.post('/index.php/Picture/like',{pid:this.dataInfo.pid})
+              $api.post('/Picture/like',{pid:this.dataInfo.pid})
                 .then(res=>{
                   this.$toast(res.msg);
                   if(res.result){

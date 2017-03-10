@@ -132,7 +132,7 @@
           },
           getData({id}){
             this.loading = true;
-            $api.get('/index.php/Activity/getDetail',{aid:id })
+            $api.get('/Activity/getDetail',{aid:id })
               .then(res=>{
                 this.dataInfo = res;
                 this.loading = false;

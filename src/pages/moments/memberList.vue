@@ -36,7 +36,7 @@
           attendedItem
         },
         created(){
-            $api.post('/index.php/Circle/getMembers',{cid:this.$route.params.id})
+            $api.post('/Circle/getMembers',{cid:this.$route.params.id})
                 .then(res=>{
                     this.loading = false;
                     this.list = [...res.data];

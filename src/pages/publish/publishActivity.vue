@@ -247,7 +247,7 @@
                 return str;
             },
             action(){
-                return serverUrl + '/index.php/Picture/multiPicUpload';
+                return serverUrl + '/Picture/multiPicUpload';
             },
             limitTime(){
                 return this.startDate + ' ' + this.startTime;
@@ -387,7 +387,7 @@
                     return false;
                 }
                 if(paramObj.aid){
-                    $api.post('/index.php/Activity/upActivity',paramObj)
+                    $api.post('/Activity/upActivity',paramObj)
                     .then(res=>{
                         this.$toast(res.msg);
                         if(res.result){
@@ -397,7 +397,7 @@
                         this.$toast('服务器异常');
                     })
                 }else{
-                    $api.post('/index.php/Activity/publish',paramObj)
+                    $api.post('/Activity/publish',paramObj)
                     .then(res=>{
 
                         if(res.code == 200){
@@ -414,7 +414,7 @@
             }
         },
         created(){
-            $api.get('/index.php/Circle/getMyCircle')
+            $api.get('/Circle/getMyCircle')
             .then(res=>{
                 res.forEach(circle => {
                     var obj = {
@@ -430,7 +430,7 @@
             let {aid} =  this.$route.query;
             if(aid){
                 this.edit = true;
-                $api.get('/index.php/Activity/getDetail',{aid})
+                $api.get('/Activity/getDetail',{aid})
                 .then(res=>{
                     let data = res.info;
                     let keyArr = Object.keys(this.info);

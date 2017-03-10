@@ -387,7 +387,7 @@
             return obj;
           },
           saveInfo() {
-            $api.post('/index.php/Profile/upProfile',this.getParams())
+            $api.post('/Profile/upProfile',this.getParams())
               .then(res=>{
                 if(res.code == 200){
                   this.$toast(res.data.msg);

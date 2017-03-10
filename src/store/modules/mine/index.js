@@ -20,7 +20,7 @@ const actions = {
   [types.LOAD_CONTACT_LIST] ({ commit, dispatch }) {
     let params = getParams('contact');
     return new Promise((resolve,reject) => {
-      $api.get('/index.php/Profile/getFriends',params)
+      $api.get('/Profile/getFriends',params)
         .then(data =>{
           dispatch(types.APPEND_CONTACT_LIST, data.result);
           var noMore = (state.contact.list.length >= data.total);
