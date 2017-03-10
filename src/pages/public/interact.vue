@@ -179,7 +179,7 @@
         });
       },
       remove(){
-        console.log(this.dataInfo);
+        this.$emit('revoke', this.dataInfo);
       },
       goContacts(){
         this.$router.push({path:'/interact/contacts',query:{rid:this.dataInfo.rid}})
