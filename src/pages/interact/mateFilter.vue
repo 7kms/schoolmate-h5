@@ -99,7 +99,7 @@
                         <span class="color-topic">姓名</span>
                     </div>
                     <div :class="$style.dInput">
-                        <input type="text">
+                        <input type="text" v-model="condition.name">
                     </div>
                 </li>
                 <li :class="$style.dfn">
@@ -439,8 +439,10 @@
             this.$store.dispatch('interact/RESET_MATES_CONDITION');
               switch (nav.name){
                   case '同城':
+//                      let province = this.profile.province;
+//                      let city =  /北京|天津|上海|重庆/.test(province) ? province :  this.profile.city;
                       this.$store.dispatch('interact/CHANGE_MATES_CONDITION', {
-                          city: this.profile.city
+                          city:this.profile.city
                       });
                       break;
                   case '同行':

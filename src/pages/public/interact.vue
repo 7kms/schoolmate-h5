@@ -64,6 +64,13 @@
         &.iconLocation{
              background-image: url('../../assets/images/icon-location.png');
         }
+         &.iconRemove{
+
+              background-image: url('../../assets/images/icon-remove.png');
+          }
+    }
+    .remove{
+        padding: 10px 0;
     }
 </style>
 <template>
@@ -112,6 +119,12 @@
                     <span :class="$style.infoBtn" @click.stop.prevent="goContacts">合作名单</span>
                 </template>
             </div>
+        </div>
+        <div class="text-right weak" v-if="isSelf">
+            <span :class="[$style.remove,'inline-block']" @click.stop.prevent="remove">
+                <i :class="['inline-block',$style.icon,$style.iconRemove]"></i>
+                <span class="inline-block">撤销发布</span>
+            </span>
         </div>
     </div>
 </template>
@@ -164,6 +177,9 @@
         },res=>{
           this.$toast('服务器异常')
         });
+      },
+      remove(){
+        console.log(this.dataInfo);
       },
       goContacts(){
         this.$router.push({path:'/interact/contacts',query:{rid:this.dataInfo.rid}})

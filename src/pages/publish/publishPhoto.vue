@@ -47,18 +47,21 @@
         <div :class="$style.picWrap">
             <ImgContain :class="[$style.imgItem,{[$style.margin]:index>2}]" v-for="(url,index) in imgArr" :imgUrl="url">
                 <i :class="$style.deleteImg" @click="deleteImage(index)" v-if="url"></i>
-                <div :class="[$style.imgAdd,'text-center']" v-if="index == imgArr.length-1 && !url">
-                    <file-upload class="file-upload"
-                         :drop="false"
-                         :post-action="action"
-                         :multiple="true"
-                         accept="image/*"
-                         :events="events"
-                         name="file0"
-                    ></file-upload>
-                    <i :class="$style.btnAdd"></i>
-                    <span>点击上传</span>
-                </div>
+                <template v-if="index == imgArr.length-1 && !url">
+                    <div :class="[$style.imgAdd,'text-center']" v-show="!uploading">
+                        <file-upload class="file-upload"
+                                     :drop="false"
+                                     :post-action="action"
+                                     :multiple="true"
+                                     accept="image/*"
+                                     :events="events"
+                                     name="file0"
+                        ></file-upload>
+                        <i :class="$style.btnAdd"></i>
+                        <span>点击上传</span>
+                    </div>
+                    <Loading text="上传中..." :class="$style.loading" v-show="uploading"></Loading>
+                </template>
             </ImgContain>
         </div>
         <div class="pub-info-content">
@@ -108,6 +111,8 @@
       },
       data(){
         return {
+          uploadCount:0,
+          uploading: false,
           showRange:false,
             loadingInfo: true,
             loadingCircle: true,
@@ -138,6 +143,8 @@
           let _this = this;
           return {
             add(file, component) {
+              _this.uploadCount ++;
+              _this.uploading = true;
               file.data.count = 1;
               component.active = true;
             },
@@ -152,7 +159,10 @@
                 }else{
                     _this.$toast(res.msg);
                 }
-
+              _this.uploadCount --;
+              if(!_this.uploadCount){
+                _this.uploading = false;
+              }
             },
             before(file, component) {
               console.log('before');
@@ -233,6 +243,8 @@
                },err=>{
                   this.$toast({message: err});
                })
+          }else {
+            this.loadingInfo = false;
           }
       }
     }
