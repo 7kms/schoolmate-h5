@@ -1,4 +1,4 @@
-let server = 'http://114.215.45.243/index.php';
+let server = 'http://www.chenfangli.com/index.php';
 module.exports = {
   serverUrl: server,
 };
