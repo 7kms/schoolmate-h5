@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueResource from 'vue-resource'
 import * as config from '../config'
+import { MessageBox } from 'mint-ui';
 Vue.use(VueResource);
 var configHttpOptions = () => {
     Vue.http.options.credentials = true;
@@ -26,7 +27,15 @@ get: (url, dataObj, opt = {}) => {
                 if (res.body.code == 200) {
 	                res.body.data ? resolve(res.body.data) : resolve(res.body);
                 } else {
-                    reject(res.body)
+                    if (res.body.code == -401) {
+                         MessageBox.alert('请在微信中打开此网页')
+                         .then(() => {
+                             window.location.href = 'http://www.chenfangli.com/Response/entrance';
+                         });
+                        // window.location.href = 'http://www.chenfangli.com/Response/entrance';
+                    } else {
+                        reject(res.body);
+                    }
                 }
             }, res => {
                 reject(res.body)
@@ -37,7 +46,6 @@ get: (url, dataObj, opt = {}) => {
         return new Promise((resolve, reject) => {
             var absoluteUrl = config.serverUrl + url;
             var options = Object.assign({}, baseConfig, opt);
-            console.log()
             Vue.http.post(absoluteUrl, {para:JSON.stringify(dataObj)}, options).then(res => {
                 resolve(res.body)
             }, res => {
