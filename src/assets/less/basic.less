@@ -233,7 +233,6 @@
         display: flex;
         justify-content: space-between;
         height: @item-header-height;
-        padding: 0 12px;
         color: @theme-color;
         font-size: @font-size-topic;
         line-height: @item-header-height;
@@ -241,6 +240,10 @@
             color: @theme-color;
             font-size: @font-size-topic;
             line-height: @item-header-height;
+        }
+        & > span {
+            padding: 0 12px;
+            text-align: center;
         }
     }
     .picker-slot{
@@ -253,14 +256,13 @@
 .pop-toolbar{
     display: flex;
     justify-content: space-between;
-    padding: 0 12px;
     height: 40px;
     line-height: 40px;
     text-align: center;
     font-size:@font-size-topic;
     & > span{
-        width: 40px;
         height: 40px;
+        padding: 0 12px;
         display: block;
     }
     .toolbar-ok{

@@ -121,7 +121,7 @@
                     <div class="pub-time-content">
                         <div class="pub-dfn-item" v-show="!free">
                             <div class="dfn-label">
-                                <span class="inline-block dfn-span"><span>单人收费：</span></span><input type="text" class="dfn-input l-input" v-model="info.fee">
+                                <span class="inline-block dfn-span"><span>单人收费：</span></span><input type="tel" class="dfn-input l-input" v-model="info.fee">
                             </div>
                         </div>
                         <div class="pub-dfn-item">
@@ -134,7 +134,7 @@
                 <div class="pub-item">
                     <h3 class="pub-title">限定人数</h3>
                     <div class="pub-text">
-                        <input type="text" class="pub-input" placeholder="填写参加的人数限制" v-model="info.amount">
+                        <input type="tel" class="pub-input" placeholder="填写参加的人数限制" v-model="info.amount">
                     </div>
                 </div>
                 <div class="pub-item">

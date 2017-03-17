@@ -56,7 +56,7 @@
           if(url && url.indexOf('/')==0){
             return url;
           }else if(url){
-            return `${serverUrl}/${url}`;
+            return `${serverUrl}/../${url}`;
           }
         },
         cancel(){

@@ -7,8 +7,8 @@
         width: 100%;
         position: fixed;
         height: 30px;
+        line-height: 30px;
         display: flex;
-        align-items: center;
         background-color:@body-color;
         .item{
             flex: 1;
