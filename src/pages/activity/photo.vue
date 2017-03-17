@@ -99,7 +99,6 @@
     </div>
 </template>
 <script>
-  import {serverUrl} from '../../config'
     export default {
       props: {
         dataInfo: {
@@ -110,12 +109,6 @@
       methods:{
         click(){
           this.$emit('click',this.dataInfo);
-        },
-        imageUrl(str){
-          if(str.indexOf('/')== 0){
-            return str;
-          }
-          return `${serverUrl}/${str}`;
         },
         like(){
 

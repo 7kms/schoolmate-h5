@@ -39,7 +39,7 @@
     <div>
         <div class="content">
             <div :class="$style.picWrap">
-                <div :class="$style.cover" v-if="showBgImage" :style="{backgroundImage:'url('+ imageUrl(info.cover_file) +')'}"></div>
+                <ImgContain :class="$style.cover" v-if="showBgImage" :imgUrl="info.cover_file"></ImgContain>
                 <Loading text="上传中..." :class="$style.loading" v-show="loading"></Loading>
                 <div :class="[$style.imgAdd,'text-center']" v-show="!loading">
                     <file-upload class="file-upload"

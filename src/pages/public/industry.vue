@@ -27,7 +27,7 @@
     <div :class="$style.content">
         <div :class="$style.moments">
             <div :class="$style.portrait">
-                <img :src="postUrl(dataInfo.c_cover_file)" alt="" width="40px" height="40px">
+                <imgContain :imgUrl="dataInfo.c_cover_file" :onlyImage="true" style="width:40px ;height:40px"></imgContain>
             </div>
             <div>
                 <span class="topic">{{ dataInfo.c_name }}</span><span>（<span class="color-hint">{{ dataInfo.count }}</span>人）</span>
@@ -39,7 +39,6 @@
     </div>
 </template>
 <script>
-  import {serverUrl} from '../../config'
   export default {
     props: {
       dataInfo: {
@@ -55,12 +54,6 @@
       }
     },
     methods:{
-      postUrl(url){
-        if(url){
-          url = `${serverUrl}/${url}`;
-        }
-        return url;
-      }
     }
   }
 </script>

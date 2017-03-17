@@ -21,7 +21,7 @@
         methods:{
           postUrl(url){
             if(url && url.indexOf('http') != 0){
-              url = `${serverUrl}/${url}`;
+              url = `${serverUrl+'/..'}/${url}`;
             }
             return url;
           },
@@ -30,7 +30,7 @@
             if(url && url.indexOf('http')==0){
               styleObj.backgroundImage = `url(${url})`;
             }else if(url){
-              styleObj.backgroundImage = `url(${serverUrl}/${url})`;
+              styleObj.backgroundImage = `url(${serverUrl+'/..'}/${url})`;
             }
             return styleObj;
           }
