@@ -48,7 +48,7 @@
     data(){
       return {
           list:[],
-        loading: false
+        loading: true
       }
     },
     components:{
@@ -62,11 +62,13 @@
     created(){
         $api.get('/Circle/getMyCircle')
         .then(data => {
+          this.loading = false;
             data.forEach(item =>{
                 if(!item.pictures)item.pictures=[];
                 this.list.push(item);
-            })
+            });
         },res=>{
+            this.loading = false;
             this.$toast('服务器异常');
         })
     }

@@ -85,7 +85,7 @@ module.exports = {
                 browsers: ['last 3 versions']
             })
         ],
-        loaders: utils.cssLoaders({ sourceMap: true })
+        loaders: utils.cssLoaders({ sourceMap: process.env.NODE_ENV == 'production' ? true : false })
         // loaders: {
         //     css: ExtractTextPlugin.extract("css!autoprefixer?{ browsers: ['last 2 versions']}"),
         //     // you can also include <style lang="less"> or other langauges

@@ -23,12 +23,7 @@
             }
         },
         created: function() {
-            this.$store.dispatch('user/GET_ACCOUNT')
-                .then( (profile) => {
-                	if(!profile.phonenum) {
-		                this.$router.replace('/entrance');
-                    }
-                } )
+            this.$store.dispatch('user/GET_ACCOUNT');
         },
         components:{
            AppNav 

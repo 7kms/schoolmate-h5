@@ -72,8 +72,14 @@
               })
           }
         },
+        beforeRouteLeave (to, from, next) {
+            this.$refs.area.blur();
+            next();
+        },
         mounted(){
-          this.$refs.area.focus();
+          this.$nextTick(()=>{
+            this.$refs.area.focus();
+          });
         },
         created(){
           let {column} = this.$route.params;

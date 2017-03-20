@@ -7,7 +7,7 @@
 <template>
     <div>
         <ul :class="$style.list">
-            <Item @reject="reject" @agree="agree" v-for="contact in list" :dataInfo="contact" :showBtn="true"></Item>
+            <Item @reject="reject" @agree="agree" v-for="contact in list"  :dataInfo="contact" :showBtn="true"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
         <div v-if="!loading && list.length == 0" class="empty-data-item">
@@ -67,10 +67,10 @@
     },
     created(){
       const {cid} = this.$route.params;
-      $api.get('/Circle/getUnpassedMembers',{cid})
-        .then(data=>{
+      $api.post('/Circle/getUnpassedMembers',{cid})
+        .then(res=>{
           this.loading = false;
-          this.list = [...data];
+          this.list = res.data;
         },error=>{
           this.$toast('服务器异常')
         });

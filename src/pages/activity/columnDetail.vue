@@ -81,6 +81,9 @@
                         <span :class="[$style.showBtn,'inline-block']" @click="showPhotos">精彩活动秀</span>
                     </div>
                 </div>
+                <div v-if="dataInfo.pictures && dataInfo.pictures.length > 0">
+                    <ImgContain :class="$style.cover" :imgUrl="url" v-for="(url,index) in dataInfo.pictures"></ImgContain>
+                </div>
             </div>
             <div :class="['list-content',$style.info,$style.attendedList]">
                 <h3 class="item-header">报名名单</h3>

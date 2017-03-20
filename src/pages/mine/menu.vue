@@ -81,17 +81,17 @@
                     <i :class="[$style.icon,$style.iconArrow]"></i>
                 </div>
             </router-link>
-            <router-link :class="$style.item" :to="{path:'/mine/contacts',query:{channel:'friends'}}" tag="li">
+            <router-link :class="$style.item" :to="{path:'/mine/contacts'}" tag="li">
                 <i :class="[$style.icon,$style.iconCon]"></i>
                 <div :class="$style.text">
-                    <span :class="$style.label">通信录</span>
+                    <span :class="$style.label">通信录<i v-if="hasNewFriends" :class="$style.dot"></i></span>
                     <i :class="[$style.icon,$style.iconArrow]"></i>
                 </div>
             </router-link>
             <router-link :class="$style.item" :to="{path:'/mine/publish'}" tag="li">
                 <i :class="[$style.icon,$style.iconPub]"></i>
                 <div :class="$style.text">
-                    <span :class="$style.label">我的发布<i :class="$style.dot"></i></span>
+                    <span :class="$style.label">我的发布</span>
                     <i :class="[$style.icon,$style.iconArrow]"></i>
                 </div>
             </router-link>
@@ -106,6 +106,7 @@
     </div>
 </template>
 <script>
+    import $api from 'api'
 	import  { mapState } from  'vuex'
   import {serverUrl} from '../../config'
   export default {
@@ -114,14 +115,19 @@
     },
     data(){
       return {
-        item: '',
-        testUrl:require('../../assets/moke/0.3.1.png')
+        hasNewFriends: false
       }
     },
     computed: {
         ...mapState({
         	profile: (state) => state.user.profile
         })
+    },
+    created(){
+      $api.get('/Profile/hasUnverified')
+        .then(res=>{
+            this.hasNewFriends = res.result;
+      })
     }
 
   }

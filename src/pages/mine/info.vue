@@ -72,190 +72,194 @@
     }
 </style>
 <template>
-    <div :class="$style.wrap">
-        <div :class="$style.content">
-            <div :class="[$style.bar,'size-topic']">
-                <span :class="[$style.title,'color-topic','inline-block']">我的信息</span>
-            </div>
-            <div :class="$style.item">
-                <div :class="$style.dfn">班级代码：</div>
-                <div :class="[$style.textInput,'color-topic']">
-                    <input type="text" :class="$style.input" v-model="info.class">
+    <div>
+        <Loading v-if="loading"></Loading>
+        <div v-if="!loading" :class="$style.wrap">
+            <div :class="$style.content">
+                <div :class="[$style.bar,'size-topic']">
+                    <span :class="[$style.title,'color-topic','inline-block']">我的信息</span>
+                </div>
+                <div :class="$style.item">
+                    <div :class="$style.dfn">班级代码：</div>
+                    <div :class="[$style.textInput,'color-topic']">
+                        <input type="text" :class="$style.input" v-model="info.class">
+                    </div>
+                </div>
+                <div :class="$style.item">
+                    <div :class="$style.dfn">姓 名：</div>
+                    <div :class="[$style.textInput,'color-topic']">
+                        <input type="text" :class="$style.input" v-model="info.name">
+                    </div>
+                </div>
+                <div :class="$style.item">
+                    <div :class="$style.dfn">性 别：</div>
+                    <div :class="[$style.textInput,'color-topic']" @click="showPicker('gender')">
+                        <span :class="$style.input">{{ info.gender }}</span>
+                    </div>
+                </div>
+                <div :class="$style.item">
+                    <div :class="$style.dfn">微 信 号 ：</div>
+                    <div :class="[$style.textInput,'color-topic']">
+                        <input type="text" :class="$style.input" v-model="info.wechat">
+                    </div>
+                </div>
+                <div :class="$style.item">
+                    <div :class="$style.dfn">手机号码：</div>
+                    <div :class="[$style.textInput,'color-topic']">
+                        <input type="text" :class="$style.input" v-model="info.phonenum">
+                    </div>
+                </div>
+                <div :class="$style.item">
+                    <div :class="$style.dfn">出生日期：</div>
+                    <div :class="[$style.textInput,'color-topic']" @click="showPicker('birthday')">
+                        <span :class="$style.input">{{ info.birthday }}</span>
+                    </div>
+                </div>
+                <div :class="$style.item">
+                    <div :class="$style.dfn">籍 贯：</div>
+                    <div :class="[$style.textInput,'color-topic']" @click="showPicker('place')">
+                        <span :class="$style.input">{{ info.bprovince + '-' + info.bcity }}</span>
+                    </div>
                 </div>
             </div>
-            <div :class="$style.item">
-                <div :class="$style.dfn">姓 名：</div>
-                <div :class="[$style.textInput,'color-topic']">
-                    <input type="text" :class="$style.input" v-model="info.name">
+            <div :class="$style.content">
+                <div :class="[$style.bar,'size-topic']">
+                    <span :class="[$style.title,'color-topic','inline-block']">工作信息</span>
+                </div>
+                <div :class="$style.item">
+                    <div :class="$style.dfn">专业名称：</div>
+                    <div :class="[$style.textInput,'color-topic']"  @click="showPicker('major')">
+                        <span :class="$style.input">{{ info.major }}</span>
+                    </div>
+                </div>
+                <div :class="$style.item">
+                    <div :class="$style.dfn">入学时间：</div>
+                    <div :class="[$style.textInput,'color-topic']"  @click="showPicker('majorStart')">
+                        <span :class="$style.input">{{ info.enrol_time }}</span>
+                    </div>
+                </div>
+                <div :class="$style.item">
+                    <div :class="$style.dfn">毕业时间：</div>
+                    <div :class="[$style.textInput,'color-topic']" @click="showPicker('majorEnd')">
+                        <span :class="$style.input">{{ info.graduate_time }}</span>
+                    </div>
                 </div>
             </div>
-            <div :class="$style.item">
-                <div :class="$style.dfn">性 别：</div>
-                <div :class="[$style.textInput,'color-topic']" @click="showPicker('gender')">
-                    <span :class="$style.input">{{ info.gender }}</span>
+            <div :class="$style.content">
+                <div :class="[$style.bar,'size-topic']">
+                    <span :class="[$style.title,'color-topic','inline-block']">基本信息</span>
+                </div>
+                <div :class="$style.item">
+                    <div :class="$style.dfn">工作单位：</div>
+                    <div :class="[$style.textInput,'color-topic']">
+                        <input type="text" :class="$style.input" v-model="info.company">
+                    </div>
+                </div>
+                <div :class="$style.item">
+                    <div :class="$style.dfn">所属行业：</div>
+                    <div :class="[$style.textInput,'color-topic']"  @click="showPicker('industry')">
+                        <span :class="$style.input">{{ info.industry }}</span>
+                    </div>
+                </div>
+                <div :class="$style.item">
+                    <div :class="$style.dfn">细分行业：</div>
+                    <div :class="[$style.textInput,'color-topic']"  @click="showPicker('industry_detail')">
+                        <span :class="$style.input">{{ info.job }}</span>
+                    </div>
+                </div>
+                <div :class="$style.item">
+                    <div :class="$style.dfn">所在部门：</div>
+                    <div :class="[$style.textInput,'color-topic']">
+                        <input type="text" :class="$style.input" v-model="info.department">
+                    </div>
+                </div>
+                <div :class="$style.item">
+                    <div :class="$style.dfn">担任职务：</div>
+                    <div :class="[$style.textInput,'color-topic']">
+                        <input type="text" :class="$style.input" v-model="info.detail_job">
+                    </div>
+                </div>
+                <div :class="$style.item">
+                    <div :class="$style.dfn">工作城市：</div>
+                    <div :class="[$style.textInput,'color-topic']" @click="showPicker('cPlace')">
+                        <span :class="$style.input">{{ info.province + '-' + info.city }}</span>
+                    </div>
+                </div>
+                <div :class="$style.itemText">
+                    <div :class="$style.dfn">岗位描述：</div>
+                    <div :class="[$style.textInput,$style.textArea,'color-topic']">
+                        <textarea class="color-topic" v-model="info.resource_description"></textarea>
+                    </div>
                 </div>
             </div>
-            <div :class="$style.item">
-                <div :class="$style.dfn">微 信 号 ：</div>
-                <div :class="[$style.textInput,'color-topic']">
-                    <input type="text" :class="$style.input" v-model="info.wechat">
-                </div>
+            <div :class="$style.save" @click="saveInfo">
+                <span>保存</span>
             </div>
-            <div :class="$style.item">
-                <div :class="$style.dfn">手机号码：</div>
-                <div :class="[$style.textInput,'color-topic']">
-                    <input type="text" :class="$style.input" v-model="info.phonenum">
-                </div>
-            </div>
-            <div :class="$style.item">
-                <div :class="$style.dfn">出生日期：</div>
-                <div :class="[$style.textInput,'color-topic']" @click="showPicker('birthday')">
-                    <span :class="$style.input">{{ info.birthday }}</span>
-                </div>
-            </div>
-            <div :class="$style.item">
-                <div :class="$style.dfn">籍 贯：</div>
-                <div :class="[$style.textInput,'color-topic']" @click="showPicker('place')">
-                    <span :class="$style.input">{{ info.bprovince + '-' + info.bcity }}</span>
-                </div>
-            </div>
+            <placePicker  v-if="!loading"
+                          :showPicker="showPlacePicker"
+                          :province="profile.bprovince"
+                          :city="profile.bcity"
+                          @selectEnd="selectPlace"
+                          @hide="hidePicker"
+            ></placePicker>
+            <placePicker  v-if="!loading"
+                          :showPicker="showCPlacePicker"
+                          :province="profile.province"
+                          :city="profile.city"
+                          @selectEnd="selectCPlace"
+                          @hide="hidePicker"
+            ></placePicker>
+            <singlePicker  v-if="!loading"
+                           :dataArr="genderArr"
+                           :text="info.gender"
+                           :showPicker="showGenderPicker"
+                           @selectEnd="selectGender"
+                           @hide="hidePicker"
+            ></singlePicker>
+            <singlePicker  v-if="!loading"
+                           :dataArr="majorArr"
+                           :text="info.major"
+                           :showPicker="showMajorPicker"
+                           @selectEnd="selectMajor"
+                           @hide="hidePicker"
+            ></singlePicker>
+            <singlePicker  v-if="!loading"
+                           :dataArr="industryArr"
+                           :text="info.industry"
+                           :showPicker="showIndustryPicker"
+                           @selectEnd="selectIndustry"
+                           @hide="hidePicker"
+            ></singlePicker>
+            <singlePicker  v-if="!loading"
+                           :dataArr="industryDetailArr"
+                           :text="info.job"
+                           :showPicker="showIndustryDetailPicker"
+                           @selectEnd="selectIndustryDetail"
+                           @hide="hidePicker"
+            ></singlePicker>
+            <timePicker
+                    :showPicker="showBirthdayPicker"
+                    :initDate="profile.birthday"
+                    pickerRef="birthDatePicker"
+                    @selectEnd="selectBirthday"
+            ></timePicker>
+            <timePicker
+                    :showPicker="showMajorStartPicker"
+                    :initDate="profile.enrol_time"
+                    :endDate="info.graduate_time"
+                    pickerRef="majorStartDatePicker"
+                    @selectEnd="selectMajorStart"
+            ></timePicker>
+            <timePicker
+                    :showPicker="showMajorEndPicker"
+                    :initDate="profile.graduate_time"
+                    :startDate="info.enrol_time"
+                    pickerRef="majorEndDatePicker"
+                    @selectEnd="selectMajorEnd"
+            ></timePicker>
         </div>
-        <div :class="$style.content">
-            <div :class="[$style.bar,'size-topic']">
-                <span :class="[$style.title,'color-topic','inline-block']">工作信息</span>
-            </div>
-            <div :class="$style.item">
-                <div :class="$style.dfn">专业名称：</div>
-                <div :class="[$style.textInput,'color-topic']"  @click="showPicker('major')">
-                    <span :class="$style.input">{{ info.major }}</span>
-                </div>
-            </div>
-            <div :class="$style.item">
-                <div :class="$style.dfn">入学时间：</div>
-                <div :class="[$style.textInput,'color-topic']"  @click="showPicker('majorStart')">
-                    <span :class="$style.input">{{ info.enrol_time }}</span>
-                </div>
-            </div>
-            <div :class="$style.item">
-                <div :class="$style.dfn">毕业时间：</div>
-                <div :class="[$style.textInput,'color-topic']" @click="showPicker('majorEnd')">
-                    <span :class="$style.input">{{ info.graduate_time }}</span>
-                </div>
-            </div>
-        </div>
-        <div :class="$style.content">
-            <div :class="[$style.bar,'size-topic']">
-                <span :class="[$style.title,'color-topic','inline-block']">基本信息</span>
-            </div>
-            <div :class="$style.item">
-                <div :class="$style.dfn">工作单位：</div>
-                <div :class="[$style.textInput,'color-topic']">
-                    <input type="text" :class="$style.input" v-model="info.company">
-                </div>
-            </div>
-            <div :class="$style.item">
-                <div :class="$style.dfn">所属行业：</div>
-                <div :class="[$style.textInput,'color-topic']"  @click="showPicker('industry')">
-                    <span :class="$style.input">{{ info.industry }}</span>
-                </div>
-            </div>
-            <div :class="$style.item">
-                <div :class="$style.dfn">细分行业：</div>
-                <div :class="[$style.textInput,'color-topic']"  @click="showPicker('industry_detail')">
-                    <span :class="$style.input">{{ info.job }}</span>
-                </div>
-            </div>
-            <div :class="$style.item">
-                <div :class="$style.dfn">所在部门：</div>
-                <div :class="[$style.textInput,'color-topic']">
-                    <input type="text" :class="$style.input" v-model="info.department">
-                </div>
-            </div>
-            <div :class="$style.item">
-                <div :class="$style.dfn">担任职务：</div>
-                <div :class="[$style.textInput,'color-topic']">
-                    <input type="text" :class="$style.input" v-model="info.detail_job">
-                </div>
-            </div>
-            <div :class="$style.item">
-                <div :class="$style.dfn">工作城市：</div>
-                <div :class="[$style.textInput,'color-topic']" @click="showPicker('cPlace')">
-                    <span :class="$style.input">{{ info.province + '-' + info.city }}</span>
-                </div>
-            </div>
-            <div :class="$style.itemText">
-                <div :class="$style.dfn">岗位描述：</div>
-                <div :class="[$style.textInput,$style.textArea,'color-topic']">
-                    <textarea class="color-topic" v-model="info.resource_description"></textarea>
-                </div>
-            </div>
-        </div>
-        <div :class="$style.save" @click="saveInfo">
-            <span>保存</span>
-        </div>
-        <placePicker  v-if="!loading"
-             :showPicker="showPlacePicker"
-             :province="profile.bprovince"
-             :city="profile.bcity"
-             @selectEnd="selectPlace"
-             @hide="hidePicker"
-        ></placePicker>
-        <placePicker  v-if="!loading"
-              :showPicker="showCPlacePicker"
-              :province="profile.province"
-              :city="profile.city"
-              @selectEnd="selectCPlace"
-              @hide="hidePicker"
-        ></placePicker>
-        <singlePicker  v-if="!loading"
-               :dataArr="genderArr"
-               :text="info.gender"
-               :showPicker="showGenderPicker"
-               @selectEnd="selectGender"
-               @hide="hidePicker"
-        ></singlePicker>
-        <singlePicker  v-if="!loading"
-               :dataArr="majorArr"
-               :text="info.major"
-               :showPicker="showMajorPicker"
-               @selectEnd="selectMajor"
-               @hide="hidePicker"
-        ></singlePicker>
-        <singlePicker  v-if="!loading"
-               :dataArr="industryArr"
-               :text="info.industry"
-               :showPicker="showIndustryPicker"
-               @selectEnd="selectIndustry"
-               @hide="hidePicker"
-        ></singlePicker>
-        <singlePicker  v-if="!loading"
-               :dataArr="industryDetailArr"
-               :text="info.job"
-               :showPicker="showIndustryDetailPicker"
-               @selectEnd="selectIndustryDetail"
-               @hide="hidePicker"
-        ></singlePicker>
-        <timePicker
-                :showPicker="showBirthdayPicker"
-                :initDate="profile.birthday"
-                pickerRef="birthDatePicker"
-                @selectEnd="selectBirthday"
-        ></timePicker>
-        <timePicker
-                :showPicker="showMajorStartPicker"
-                :initDate="profile.enrol_time"
-                :endDate="info.graduate_time"
-                pickerRef="majorStartDatePicker"
-                @selectEnd="selectMajorStart"
-        ></timePicker>
-        <timePicker
-                :showPicker="showMajorEndPicker"
-                :initDate="profile.graduate_time"
-                :startDate="info.enrol_time"
-                pickerRef="majorEndDatePicker"
-                @selectEnd="selectMajorEnd"
-        ></timePicker>
     </div>
+
 </template>
 <script>
     import { singlePicker, placePicker,timePicker } from '../../components/popPicker';

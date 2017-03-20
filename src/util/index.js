@@ -1,3 +1,5 @@
+import $api from 'api';
+import store from '../store';
 export default {
     isEmail (str) {
         const reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
@@ -33,7 +35,11 @@ export default {
         if( timestamp instanceof Date){
           d = timestamp;
         }else{
-          timestamp = parseInt(timestamp);
+          if(String(timestamp).length < 13){
+            timestamp = parseInt(timestamp) * 1000;
+          }else{
+            timestamp = parseInt(timestamp);
+          }
           d = new Date(timestamp);
         }
         var zeroize = function(value, length) {
@@ -133,5 +139,23 @@ export default {
     isIOS(){
       let ua = navigator.userAgent.toLowerCase();
       return /iphone|ipad|ipod/.test(ua);
+    },
+    isAuthored() {
+      return new Promise(( resolve, reject ) => {
+        if(!store.state.user.profile.first_logined){
+          $api.get('/Profile/getProfile')
+            .then( data => {
+              if(data.profile.first_logined == '0'){
+                resolve()
+              }else {
+                reject();
+              }
+            }, data => {
+              reject();
+            });
+        }else{
+          store.state.user.profile.first_logined == '0' ?  resolve() : reject();
+        }
+      });
     }
 }

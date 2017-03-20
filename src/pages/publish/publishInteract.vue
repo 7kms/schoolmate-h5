@@ -151,7 +151,7 @@
     },
     computed:{
       action(){
-        return serverUrl + '/Picture/multiPicUpload';
+        return serverUrl + '/Response/multiPicUpload';
       },
       needsText(){
           var text = '';

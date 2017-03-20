@@ -27,6 +27,7 @@
             &.gray{
                 color: #fff;
                 background-color: #C7CED2;
+                border-color:  #C7CED2;
              }
         }
         & > div {
@@ -47,8 +48,11 @@
             <div :class="[$style.userText]" v-if="isAuthor">(发布者)</div>
         </div>
         <div :class="$style.desc">
-           <span :class="[$style.exchange,'text-center']" v-if="true">交换联系方式</span>
-           <span :class="[$style.exchange,$style.gray,'text-center']" v-else>撤销</span>
+            <template v-if="!isSelf">
+                <span :class="[$style.exchange,'text-center']" v-if="dataInfo.exchange_status == 0" @click="exchange('exchange')">交换联系方式</span>
+                <span :class="[$style.exchange,$style.gray,'text-center']" v-if="dataInfo.exchange_status == 1" @click="exchange('cancel')">撤销</span>
+                <span :class="[$style.exchange,'text-center']" v-if="dataInfo.exchange_status == 2" @click="exchange('contact')">查看联系方式</span>
+            </template>
            <div>{{dataInfo.company || '公司未填写'}}</div>
            <div>{{dataInfo.department || '部门未填写'}}</div>
            <div>{{dataInfo.detail_job || '职位未填写'}}</div>
@@ -57,6 +61,8 @@
     </li>
 </template>
 <script>
+  import {mapState} from 'vuex';
+  import $api from  'api';
     export default{
       props:{
         isAuthor:{
@@ -66,6 +72,43 @@
         dataInfo:{
           type:Object,
           require: true
+        }
+      },
+      computed:{
+        ...mapState({
+          profile:(state)=>state.user.profile
+        }),
+
+        isSelf(){
+          return this.profile.uid == this.dataInfo.uid
+        }
+      },
+      methods:{
+        exchange(type){
+          var {uid} = this.dataInfo;
+          if(type == 'exchange'){
+            $api.post('/Profile/requestExchange',{uid})
+              .then(res => {
+                this.$toast(res.msg);
+                if(res.result) {
+                  this.dataInfo.exchange_status = 1;
+                }
+              },res=>{
+                this.$toast('服务器异常')
+              });
+          }else if(type == 'cancel'){
+            $api.post('/Profile/cancelExchange',{uid})
+              .then(res => {
+                this.$toast(res.msg)
+                if(res.result) {
+                  this.dataInfo.exchange_status = 0;
+                }
+              },res=>{
+                this.$toast('服务器异常')
+              })
+          }else{
+            this.$router.push(`/mine/contacts`);
+          }
         }
       }
     }

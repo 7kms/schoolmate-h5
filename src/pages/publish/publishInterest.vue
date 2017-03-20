@@ -138,7 +138,7 @@
     },
     computed:{
       action(){
-        return serverUrl + '/Picture/multiPicUpload';
+        return serverUrl + '/Response/multiPicUpload';
       },
       settingText(){
         let str;

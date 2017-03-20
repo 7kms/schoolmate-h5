@@ -73,8 +73,8 @@
             <div>{{dataInfo.detail_job || '职位未填写'}}</div>
             <div :class="$style.desText">我的资源：<span>{{dataInfo.resource_description}}</span></div>
             <div :class="[$style.operate,'text-center']" v-if="showBtn">
-                <span :class="[$style.reject,'inline-block']" @click="reject">拒绝</span>
-                <span :class="[$style.agree,'inline-block']" @click="agree">同意</span>
+                <span :class="[$style.reject,'inline-block']" @click.prevent.stop="reject">拒绝</span>
+                <span :class="[$style.agree,'inline-block']" @click.prevent.stop="agree">同意</span>
             </div>
         </div>
         <i :class="$style.iconArrow" v-if="showArrow"></i>

@@ -34,12 +34,54 @@
         right: 12px;
         bottom: 12px;
     }
+    .pictureContent{
+        margin-top: 4px;
+        &::after{
+             content: '';
+             display: block;
+             height: 0;  clear:both;
+         }
+        .picItem{
+            position: relative;
+            float: left;
+            width: 60px;
+            height: 60px;
+            overflow: hidden;
+            background-color: #EFF0F3;
+            margin-bottom: 12px;
+            margin-right: ~"calc((100% - 300px)/4)";
+            &:nth-child(5n){
+                 margin-right: 0;
+             }
+            &:last-child{
+                 background-color: #fff;
+             }
+            .img{
+                margin-bottom: 6px;
+            }
+            .deletePic{
+                position: absolute;
+                top: 1px;
+                right: 1px;
+                width: 20px;
+                height: 20px;
+                background-size: contain;
+                background-image: url("../../assets/images/icon-delete.png");
+            }
+        }
+        .picAdd{
+            margin-top: 20px;
+            padding: 4px 0;
+            border-radius: 2px;
+            border: 1px solid @theme-color;
+        }
+    }
 </style>
 <template>
     <div>
         <div class="content">
             <div :class="$style.picWrap">
-                <div :class="$style.cover" v-if="showBgImage" :style="{backgroundImage:'url('+ imageUrl(info.cover_file) +')'}"></div>
+                <ImgContain :class="$style.cover"  v-if="showBgImage" :imgUrl="info.cover_file"></ImgContain>
                 <Loading text="上传中..." :class="$style.loading" v-show="loading"></Loading>
                 <div :class="[$style.imgAdd,'text-center']" v-show="!loading">
                     <file-upload class="file-upload"
@@ -143,6 +185,30 @@
                         <textarea class="pub-area" placeholder="填写活动的具体注意事项、详细信息等" v-model="info.description"></textarea>
                     </div>
                 </div>
+                <div class="pub-item">
+                    <h3 class="pub-title">活动宣传图片</h3>
+                    <div class="pub-text">
+                        <div :class="$style.pictureContent">
+                            <ImgContain :class="[$style.picItem]" v-for="(url,index) in uploadImageArr" :imgUrl="url">
+                                <i :class="$style.deletePic" @click="deletePic(url)" v-if="url"></i>
+                                <template v-if="index == uploadImageArr.length-1 && !url">
+                                    <div :class="[$style.picAdd,'text-center']" v-show="!picUploading">
+                                        <file-upload class="file-upload"
+                                                     :drop="false"
+                                                     :post-action="action"
+                                                     :multiple="true"
+                                                     accept="image/*"
+                                                     :events="events2"
+                                                     name="file0"
+                                        ></file-upload>
+                                        <span>点击上传</span>
+                                    </div>
+                                    <Loading text="上传中" :class="$style.loading" v-show="picUploading"></Loading>
+                                </template>
+                            </ImgContain>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="pubBar" @click="publish"><span v-if="edit">重新发布</span><span v-else>发布</span></div>
         </div>
@@ -210,6 +276,7 @@
                 showRange: false,
                 rangeOptions: [{name:'所有人可见',value:'0'}],
                 edit:false,
+                uploadCount: 0,
                 info:{
                     theme:'',
                     time:'',
@@ -220,9 +287,12 @@
                     amount:'',
                     fee:'',
                     contact: '',
-                    cid: '0'
+                    cid: '0',
+                    pictures:[]
                 },
                 loading: false,
+                loading2: false,
+                picUploading: false,
                 loadingCircle: true,
                 loadingInfo: true,
                 showBgImage: false,
@@ -247,7 +317,12 @@
                 return str;
             },
             action(){
-                return serverUrl + '/Picture/multiPicUpload';
+                return serverUrl + '/Response/multiPicUpload';
+            },
+            uploadImageArr(){
+                let arr = [...this.info.pictures];
+                arr.length = 10;
+                return arr;
             },
             limitTime(){
                 return this.startDate + ' ' + this.startTime;
@@ -278,7 +353,38 @@
                         console.log('before');
                     }
                 }
+            },
+            events2(){
+            var _this = this;
+            return {
+              add(file, component) {
+                file.headers['withCredentials'] = true;
+                file.data.count = 1;
+                component.active = true;
+                _this.picUploading = true;
+                _this.uploadCount ++;
+              },
+              progress(file, component) {
+                console.log('progress ' + file.progress);
+              },
+              after(file, component) {
+                let res = util.parseJSON(file.response);
+                let url = res[0];
+                _this.uploadCount --;
+                if(url){
+                  _this.info.pictures.push(url);
+                }else{
+                  _this.$toast(res.msg);
+                }
+                if(!_this.uploadCount){
+                  _this.picUploading = false;
+                }
+              },
+              before(file, component) {
+                console.log('before');
+              }
             }
+          }
         },
         methods:{
             selectStartDate(val){
@@ -330,6 +436,12 @@
             },
             switchFee(){
                 this.free = !this.free;
+            },
+            deletePic(img){
+              let index = this.info.pictures.indexOf(img);
+              if(~index){
+                this.info.pictures.splice(index,1);
+              }
             },
             valid(){
                 if(!this.info.theme){
@@ -397,9 +509,8 @@
                         this.$toast('服务器异常');
                     })
                 }else{
-                    $api.post('/Activity/publish',paramObj)
+                    $api.post('/Activity/upActivity',paramObj)
                     .then(res=>{
-
                         if(res.code == 200){
                             this.$router.back();
                           this.$toast('发布成功');
@@ -408,9 +519,6 @@
                         this.$toast('服务器异常');
                     })
                 }
-            },
-            imageUrl(str){
-                return `${serverUrl}/${str}`;
             }
         },
         created(){
@@ -438,6 +546,7 @@
                        this.info[key] = data[key];
                     });
                     this.info.aid = data.aid;
+                    this.info.pictures = res.pictures;
                     this.showBgImage = true;
                     if(this.info.time == '0' || this.info.end_time == '0'){
                         this.info.time = '';

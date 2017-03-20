@@ -105,7 +105,7 @@
               this.$toast('服务器异常')
             })
           }else{
-
+            this.$router.push(`/mine/contacts`);
           }
         }
       }

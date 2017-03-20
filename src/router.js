@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import util from './util/index'
-Vue.use(VueRouter)
+import { MessageBox } from 'mint-ui';
+
+Vue.use(VueRouter);
 const ROUTER_SETTING = {
 	mode: 'history', // default value 'hash'
     base: '/',
@@ -85,7 +87,8 @@ const ROUTER_SETTING = {
                     path: 'contacts',
                     name: 'interact-contacts',
                     meta: {
-                      title:'联系人'
+                      title:'联系人',
+                      needAuthor: true
                     },
                     component: resolve => require(['./pages/interact/contactList.vue'], resolve)
                 }
@@ -109,7 +112,8 @@ const ROUTER_SETTING = {
                     path: 'interest/:id',
                     name: 'interest-detail',
                     meta: {
-                      title:'兴趣圈'
+                      title:'兴趣圈',
+                      needAuthor: true
                     },
                     component: resolve => require(['./pages/moments/interestDetail.vue'], resolve)
                 },
@@ -117,7 +121,8 @@ const ROUTER_SETTING = {
                   path: 'interest/:cid/verify',
                   name: 'interest-verify',
                   meta: {
-                    title:'兴趣圈'
+                    title:'兴趣圈',
+                    needAuthor: true
                   },
                   component: resolve => require(['./pages/moments/verifyList.vue'], resolve)
                 },
@@ -125,7 +130,8 @@ const ROUTER_SETTING = {
                     path: 'interest/:id/member',
                     name: 'interest-member',
                     meta: {
-                      title:'兴趣圈'
+                      title:'兴趣圈',
+                      needAuthor: true
                     },
                     component: resolve => require(['./pages/moments/memberList.vue'], resolve)
                 },
@@ -143,6 +149,9 @@ const ROUTER_SETTING = {
         },
         {
             path: '/mine',
+            meta:{
+              needAuthor: true
+            },
             component: resolve => require(['./pages/mine/index.vue'], resolve),
                 children:[
                   {
@@ -204,12 +213,16 @@ const ROUTER_SETTING = {
           path: '/comment/:column',
           name: 'comment',
           meta: {
-            meta:'评论'
+            meta:'评论',
+            needAuthor: true
           },
           component: resolve => require(['./pages/comment/index.vue'], resolve)
         },
         {
           path: '/publish',
+          meta: {
+            needAuthor: true
+          },
           component: resolve => require(['./pages/publish/index.vue'], resolve),
           redirect: '/publish/activity',
           children:[
@@ -256,23 +269,43 @@ const ROUTER_SETTING = {
         }
     }
 };
-const router = new VueRouter(ROUTER_SETTING)
+const router = new VueRouter(ROUTER_SETTING);
 const title = '校友云';
 router.beforeEach((to, from, next) => {
-    let titleStr = ''
-    // 倒序遍历数组获取匹配到的路由节点，拼接各部分title
+    let needAuthor = false;
     for (let i = to.matched.length - 1; i >= 0; i--) {
-        titleStr += `${to.matched[i].meta.title ? to.matched[i].meta.title : ''}`
+      if(to.matched[i].meta.needAuthor){
+        needAuthor = true;
+        break;
+      }
     }
-    if (titleStr) {
-        titleStr += `-${title}`
-    } else {
-        titleStr += title;
+    if(needAuthor){
+      util.isAuthored().then(()=>{
+        changeTitle(to);
+        next();
+      },()=>{
+        MessageBox.confirm('此操作需要完善个人信息').then(data=>{
+          next('/entrance');
+        },data=>{
+          next(false);
+        });
+      });
+    }else{
+      changeTitle(to);
+      next();
     }
-    changeTitle(titleStr);
-    next();
 });
-function changeTitle(titleStr) {
+function changeTitle(to) {
+  let titleStr = '';
+  // 倒序遍历数组获取匹配到的路由节点，拼接各部分title
+  for (let i = to.matched.length - 1; i >= 0; i--) {
+    titleStr += `${to.matched[i].meta.title ? to.matched[i].meta.title : ''}`
+  }
+  if (titleStr) {
+    titleStr += `-${title}`
+  } else {
+    titleStr += title;
+  }
   document.title = titleStr;
   if(util.isIOS()){
     let iframe = document.createElement('iframe');
@@ -288,4 +321,5 @@ function changeTitle(titleStr) {
     iframe.addEventListener('load',refreshFn, false);
   }
 }
+
 export default router;

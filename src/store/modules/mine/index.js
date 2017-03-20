@@ -36,6 +36,9 @@ const actions = {
   },
   [types.RESET_CONTACT_LIST] ({ commit }) {
     commit(types.RESET_CONTACT_LIST);
+  },
+  [types.REMOVE_CONTACT] ({ commit },contact) {
+    commit(types.REMOVE_CONTACT,contact);
   }
 };
 
@@ -50,6 +53,11 @@ const mutations = {
   },
   [types.CHANGE_CONTACT_STATUS] (state, status) {
     state.contact = Object.assign(state.contact, status);
+  },
+  [types.REMOVE_CONTACT] (state, fid) {
+    state.contact.list = state.contact.list.filter(contact=>{
+      return contact.fid != fid;
+    });
   }
 }
 

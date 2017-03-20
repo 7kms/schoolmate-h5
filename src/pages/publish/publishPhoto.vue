@@ -137,7 +137,7 @@
           return str;
         },
         action(){
-          return serverUrl + '/Picture/multiPicUpload';
+          return serverUrl + '/Response/multiPicUpload';
         },
         events(){
           let _this = this;
