@@ -1,5 +1,7 @@
 import $api from 'api';
 import store from '../store';
+import { MessageBox } from 'mint-ui';
+import router from '../router'
 export default {
     isEmail (str) {
         const reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
@@ -142,20 +144,24 @@ export default {
     },
     isAuthored() {
       return new Promise(( resolve, reject ) => {
-        if(!store.state.user.profile.first_logined){
-          $api.get('/Profile/getProfile')
-            .then( data => {
-              if(data.profile.first_logined == '0'){
-                resolve()
-              }else {
-                reject();
-              }
-            }, data => {
-              reject();
-            });
-        }else{
-          store.state.user.profile.first_logined == '0' ?  resolve() : reject();
-        }
+        MessageBox.confirm('此操作需要完善个人信息').then(data=>{
+          router.push('/entrance');
+        },data=>{});
+        reject();
+        // if(!store.state.user.profile.first_logined){
+        //   $api.get('/Profile/getProfile')
+        //     .then( data => {
+        //       if(data.profile.first_logined == '0'){
+        //         resolve()
+        //       }else {
+        //         reject();
+        //       }
+        //     }, data => {
+        //       reject();
+        //     });
+        // }else{
+        //   store.state.user.profile.first_logined == '0' ?  resolve() : reject();
+        // }
       });
     }
 }

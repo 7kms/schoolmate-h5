@@ -20,6 +20,7 @@
   import { mapState } from 'vuex';
   import Item from '../public/interest.vue';
   import $api from 'api';
+  import Util from '../../util'
   import publishBtn from '../../components/publish';
   export default {
     data(){
@@ -45,7 +46,9 @@
     },
     methods:{
       onPublish() {
-        this.$router.push(`/publish/interest`);
+        Util.isAuthored().then(() => {
+          this.$router.push(`/publish/interest`);
+        },()=>{});
       },
       loadMore() {
         this.loading = true;

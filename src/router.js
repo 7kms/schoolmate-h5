@@ -11,7 +11,6 @@ const ROUTER_SETTING = {
         {
             path: '/activity',
             component: resolve => require(['./pages/activity/index.vue'], resolve),
-            alias: '/',
             children: [
                 {
                     path: '',
@@ -61,10 +60,21 @@ const ROUTER_SETTING = {
         },
         {
             path: '/interact',
+            alias: '/',
             component: resolve => require(['./pages/interact/index.vue'], resolve),
             children: [
                 {
-                    path: '',
+                  path: '',
+                  name: 'interact-mates',
+                  meta: {
+                    showHeader: true,
+                    showNav: true,
+                    title:'校友录'
+                  },
+                  component: resolve => require(['./pages/interact/mateList.vue'], resolve)
+                },
+                {
+                    path: 'resource',
                     name: 'interact-list',
                     meta: {
                         showHeader: true,
@@ -72,16 +82,6 @@ const ROUTER_SETTING = {
                         title:'互助'
                     },
                     component: resolve => require(['./pages/interact/interactList.vue'], resolve)
-                },
-                {
-                    path: 'mates',
-                    name: 'interact-mates',
-                    meta: {
-                        showHeader: true,
-                        showNav: true,
-                        title:'校友录'
-                    },
-                    component: resolve => require(['./pages/interact/mateList.vue'], resolve)
                 },
                 {
                     path: 'contacts',
@@ -301,13 +301,12 @@ function changeTitle(to) {
   for (let i = to.matched.length - 1; i >= 0; i--) {
     titleStr += `${to.matched[i].meta.title ? to.matched[i].meta.title : ''}`
   }
-  if (titleStr) {
-    titleStr += `-${title}`
-  } else {
+  if (!titleStr) {
     titleStr += title;
   }
-  document.title = titleStr;
+
   if(util.isIOS()){
+    document.title = title;
     let iframe = document.createElement('iframe');
     iframe.src= require('./assets/images/favicon.ico');
     iframe.style.display = 'none';
@@ -319,6 +318,8 @@ function changeTitle(to) {
       }, 0);
     };
     iframe.addEventListener('load',refreshFn, false);
+  }else{
+    document.title = titleStr;
   }
 }
 

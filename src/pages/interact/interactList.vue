@@ -24,6 +24,7 @@
   import swiper from  '../../components/swiper';
   import Item from '../public/interact.vue';
   import $api from 'api';
+  import Util from '../../util'
   import publishBtn from '../../components/publish';
   export default {
     data(){
@@ -55,9 +56,11 @@
         showSwiper(info){
             this.swiperInstance = swiper(info);
         },
-      onPublish() {
-        this.$router.push(`/publish/interact`);
-      },
+        onPublish() {
+            Util.isAuthored().then(() => {
+                this.$router.push(`/publish/interact`);
+            },()=>{});
+        },
       loadMore() {
         this.loading = true;
         this.$store.dispatch('interact/LOAD_INTERACT_LIST').then(()=>{

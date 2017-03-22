@@ -101,6 +101,7 @@
 <script>
   import {serverUrl} from '../../config'
   import $api from 'api';
+  import Util from '../../util'
     export default {
       props: {
         dataInfo: {
@@ -122,23 +123,29 @@
             if(this.dataInfo.is_liked){
               this.$toast('已经点过赞了');
             }else{
-              $api.post('/Picture/like',{pid:this.dataInfo.pid})
-                .then(res=>{
-                  this.$toast(res.msg);
-                  if(res.result){
-                    this.dataInfo.is_liked = true;
-                    this.dataInfo.liked = this.dataInfo.liked * 1 + 1;
-                  }
-              },err=>{
-                this.$toast('服务器异常');
-              })
+              Util.isAuthored().then(() => {
+                $api.post('/Picture/like',{pid:this.dataInfo.pid})
+                  .then(res=>{
+                    this.$toast(res.msg);
+                    if(res.result){
+                      this.dataInfo.is_liked = true;
+                      this.dataInfo.liked = this.dataInfo.liked * 1 + 1;
+                    }
+                  },err=>{
+                    this.$toast('服务器异常');
+                  })
+              },()=>{});
+
             }
         },
         comment(){
-          this.$router.push({
-            path: '/comment/picture',
-            query:{pid: this.dataInfo.pid}
-          });
+          Util.isAuthored().then(() => {
+            this.$router.push({
+              path: '/comment/picture',
+              query:{pid: this.dataInfo.pid}
+            });
+          },()=>{});
+
         }
       }
     }

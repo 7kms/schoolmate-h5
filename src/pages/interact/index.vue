@@ -19,8 +19,8 @@
         data(){
             return {
                 tabList:[
-                    { title:'互助区', path:'/interact', name: 'interact-list'},
-                    { title:'校友录', path:'/interact/mates', name: 'interact-mates' }
+                    { title:'互助区', path:'/interact/resource', name: 'interact-list'},
+                    { title:'校友录', path:'/interact', name: 'interact-mates' }
                 ]
             }
         }

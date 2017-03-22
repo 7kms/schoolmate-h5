@@ -22,6 +22,7 @@
     import $api from 'api';
     import publishBtn from '../../components/publish';
     import Swiper from '../../components/swiper';
+    import Util from '../../util'
     export default {
         data(){
             return {
@@ -45,10 +46,12 @@
                 this.$store.dispatch('activity/RESET_COLUMN_LIST');
             }
             next();
-        }, 
+        },
         methods:{
             onPublish() {
-              this.$router.push(`/publish/activity`);
+              Util.isAuthored().then(()=>{
+                this.$router.push(`/publish/activity`);
+              },()=>{})
             },
             loadMore() {
                 this.loading = true;
@@ -60,7 +63,7 @@
                 });
             },
             goDetail(item) {
-                this.$router.push(`/column-detail/${item.aid}`);
+                this.$router.push(`/activity/column-detail/${item.aid}`);
             }
         },
         created(){

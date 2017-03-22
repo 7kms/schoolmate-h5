@@ -20,6 +20,7 @@
     import { mapState } from 'vuex';
     import Item from '../public/photo.vue';
     import $api from 'api';
+    import Util from '../../util'
     import publishBtn from '../../components/publish';
     export default {
         components:{
@@ -47,7 +48,9 @@
         },
         methods:{
           onPublish() {
-            this.$router.push(`/publish/photo`);
+            Util.isAuthored().then(()=>{
+              this.$router.push(`/publish/photo`);
+            },()=>{})
           },
           loadMore() {
             this.loading = true;
@@ -57,7 +60,7 @@
           },
           goDetail(item) {
             item.hit = parseInt(item.hit) + 1;
-            this.$router.push(`/photo-detail/${item.pid}`);
+            this.$router.push(`/activity/photo-detail/${item.pid}`);
           }
         },
         created(){
