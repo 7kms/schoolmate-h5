@@ -252,9 +252,11 @@
         selectDefaultIndustry(){
           this.hidePicker();
           if(!this.userInfo.industry){
+            let industry = this.industrySlots[0].values[0];
             this.$store.dispatch('entrance/CHANGE_USERINFO', {
-              industry: this.industrySlots[0].values[0]
+              industry
             });
+            this.industryDetailSlots[0].values = industryObj[industry]
           }
         },
         valid(){

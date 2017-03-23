@@ -68,7 +68,7 @@
             <div class="pub-item">
                 <h3 class="pub-title">照片主题</h3>
                 <div class="pub-text">
-                    <input type="text" class="pub-input" placeholder="填写28字以内活动主题" maxlength="28" v-model="info.theme">
+                    <input type="text" class="pub-input" placeholder="填写28字以内照片主题" maxlength="28" v-model="info.theme">
                 </div>
             </div>
             <div class="pub-item">
@@ -80,9 +80,9 @@
                 </div>
             </div>
             <div class="pub-item">
-                <h3 class="pub-title">活动描述</h3>
+                <h3 class="pub-title">照片描述</h3>
                 <div class="pub-text">
-                    <textarea class="pub-area" placeholder="填写活动的具体注意事项、详细信息等" v-model="info.description"></textarea>
+                    <textarea class="pub-area" placeholder="填写照片详细信息等" v-model="info.description"></textarea>
                 </div>
             </div>
         </div>
@@ -195,7 +195,7 @@
                 return false;
               }
               if(!this.info.description){
-                this.$toast('活动描述未填写');
+                this.$toast('照片描述未填写');
                 return false;
               }
               return true;

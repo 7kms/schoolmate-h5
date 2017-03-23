@@ -106,7 +106,7 @@
                     <div :class="$style.label">
                         <span class="color-topic">籍贯</span>
                     </div>
-                    <div :class="[$style.dInput,$style.dSelect,$style.special,{[$style.empty]:!condition.bprovince}]" @click="showPicker('place')">
+                    <div :class="[$style.dInput,$style.dSelect,{[$style.empty]:!condition.bprovince}]" @click="showPicker('place')">
                         <span  v-if="condition.bprovince && condition.bcity">{{condition.bprovince + '-' + condition.bcity}}</span>
                         <span class="color-theme" v-else>点击选择</span>
                     </div>
@@ -424,9 +424,11 @@
           selectDefaultIndustry(){
               this.hidePicker();
               if(!this.condition.industry){
+                  let industry = this.industrySlots[0].values[0];
                   this.$store.dispatch('interact/CHANGE_MATES_CONDITION', {
-                      industry: this.industrySlots[0].values[0]
+                      industry
                   });
+                this.industryDetailSlots[0].values = industryObj[industry]
               }
           },
         switchNav(nav){

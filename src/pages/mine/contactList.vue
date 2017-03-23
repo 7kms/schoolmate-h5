@@ -62,7 +62,7 @@
       },
       agree(contact){
         const {fid} = contact;
-         this.$dialog.confirm('同意交换联系方式后,双方可查看详细资料?').then(data=>{
+         this.$dialog.confirm('同意交换联系方式后,双方可查看详细资料').then(data=>{
             return $api.post('/Profile/handleExchange',{fid,status:1});
          },data=>{
             return false;

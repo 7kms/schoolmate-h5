@@ -40,7 +40,7 @@
                 <span :class="[$style.navItem,{[$style.active]:item=='basic'}]" @click="switchItem('basic')">简介</span>
                 <span :class="[$style.navItem,{[$style.active]:item=='activity'}]" @click="switchItem('activity')">活动</span>
                 <span :class="[$style.navItem,{[$style.active]:item=='photo'}]" @click="switchItem('photo')">照片</span>
-                <span :class="[$style.navItem,{[$style.active]:item=='interact'}]" @click="switchItem('interact')">互助</span>
+                <span :class="[$style.navItem,{[$style.active]:item=='interact'}]" @click="switchItem('interact')">需求</span>
             </div>
         </div>
         <div :class="$style.detail" v-if="!loading">

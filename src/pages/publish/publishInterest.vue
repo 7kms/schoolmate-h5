@@ -107,6 +107,7 @@
   import {serverUrl} from '../../config'
   import util from  '../../util';
   import $api from 'api';
+  import {mapState} from 'vuex';
   export default {
     components:{
       FileUpload,
@@ -121,7 +122,7 @@
           c_description:'',
           setting:'1',
           master:'',
-          tel:'',
+          tel: '',
           c_email:'',
           qq:'',
           c_wechat:''
@@ -137,6 +138,9 @@
       }
     },
     computed:{
+      ...mapState({
+        profile: (state) => state.user.profile
+      }),
       action(){
         return serverUrl + '/Response/multiPicUpload';
       },
@@ -218,6 +222,8 @@
                 this.$toast({message: err});
             });
         }else{
+            this.info.tel = this.profile.phonenum;
+            this.info.c_wechat = this.profile.wechat;
             this.loadingInfo = false;
         }
     }

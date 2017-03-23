@@ -87,9 +87,9 @@
                 </div>
             </div>
             <div class="pub-item">
-                <h3 class="pub-title">活动描述</h3>
+                <h3 class="pub-title">需求描述</h3>
                 <div class="pub-text">
-                    <textarea class="pub-area" placeholder="填写活动的具体注意事项、详细信息等" v-model="info.description"></textarea>
+                    <textarea class="pub-area" placeholder="填写需求的具体注意事项、详细信息等" v-model="info.description"></textarea>
                 </div>
             </div>
         </div>

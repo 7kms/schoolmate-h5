@@ -77,7 +77,7 @@
         <div v-if="!loading" :class="$style.wrap">
             <div :class="$style.content">
                 <div :class="[$style.bar,'size-topic']">
-                    <span :class="[$style.title,'color-topic','inline-block']">我的信息</span>
+                    <span :class="[$style.title,'color-topic','inline-block']">个人信息</span>
                 </div>
                 <div :class="$style.item">
                     <div :class="$style.dfn">班级代码：</div>
@@ -124,7 +124,7 @@
             </div>
             <div :class="$style.content">
                 <div :class="[$style.bar,'size-topic']">
-                    <span :class="[$style.title,'color-topic','inline-block']">工作信息</span>
+                    <span :class="[$style.title,'color-topic','inline-block']">专业信息</span>
                 </div>
                 <div :class="$style.item">
                     <div :class="$style.dfn">专业名称：</div>
@@ -147,7 +147,7 @@
             </div>
             <div :class="$style.content">
                 <div :class="[$style.bar,'size-topic']">
-                    <span :class="[$style.title,'color-topic','inline-block']">基本信息</span>
+                    <span :class="[$style.title,'color-topic','inline-block']">工作信息</span>
                 </div>
                 <div :class="$style.item">
                     <div :class="$style.dfn">工作单位：</div>

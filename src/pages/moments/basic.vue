@@ -116,11 +116,11 @@
 <template>
     <div :class="$style.content">
         <ul>
-            <li :class="$style.item" v-if="dataInfo.is_member">
+            <li :class="$style.item" v-if="dataInfo.created_by_me">
                 <div :class="$style.bar">
                     <span :class="[$style.title,'color-topic','inline-block']">我的信息</span>
                     <span class="inline-block">
-                        <i :class="['inline-block',$style.icon,$style.iconMember]"></i><span class="inline-block color-hint">成员</span>
+                        <i :class="['inline-block',$style.icon,$style.iconMember]"></i><span class="inline-block color-hint">圈主</span>
                     </span>
                 </div>
                 <div :class="$style.user">

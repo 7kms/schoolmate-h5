@@ -185,7 +185,7 @@
                 <div class="pub-item">
                     <h3 class="pub-title">限定人数</h3>
                     <div class="pub-text">
-                        <input type="tel" class="pub-input" placeholder="填写参加的人数限制" v-model="info.amount">
+                        <input type="tel" class="pub-input" placeholder="请填写参加活动的限制人数，填0为不限制人数" v-model="info.amount">
                     </div>
                 </div>
                 <div class="pub-item">
@@ -271,6 +271,7 @@
     import {serverUrl} from '../../config'
     import util from  '../../util';
     import $api from 'api';
+    import {mapState} from 'vuex';
     export default {
         components:{
             FileUpload,
@@ -317,6 +318,9 @@
             }
         },
         computed:{
+          ...mapState({
+            profile: (state) => state.user.profile
+          }),
             rangeStr(){
                 let str ;
                 this.rangeOptions.forEach(obj=>{
@@ -581,6 +585,7 @@
                     this.$toast({message: err});
                 });
             }else {
+              this.info.contact = this.profile.phonenum;
               this.loadingInfo = false;
             }
         }
