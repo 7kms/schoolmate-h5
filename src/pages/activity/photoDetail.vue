@@ -77,13 +77,13 @@
       }),
       operateBarData(){
         var obj = {
-          leftText:'评论',
-          leftImage:require('../../assets/images/icon-comment.png'),
-          rightText:'点赞',
-          rightImage: require('../../assets/images/icon-like.png')
+            leftText:'我来点赞',
+            leftImage: require('../../assets/images/icon-like.png'),
+            rightText:'评论',
+            rightImage:require('../../assets/images/icon-comment.png')
         };
         if(this.dataInfo.is_liked){
-          obj.rightText = '已赞';
+          obj.leftText = '我已点赞';
         }
         return obj;
       }
@@ -93,7 +93,7 @@
         return this.self.uid == this.dataInfo.uid || this.self.uid == comment.uid;
       },
       operateBarClick(type){
-        if(type == 'left'){
+        if(type == 'right'){
           this.$router.push({
             path: '/comment/picture',
             query:{pid: this.dataInfo.pid}

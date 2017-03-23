@@ -20,14 +20,14 @@
     }
     .imgAdd{
         position: relative;
-    .btnAdd{
-        display: block;
-        width: 93px;
-        height: 93px;
-        margin: 0 auto 12px;
-        background-size: contain;
-        background-image: url("../../assets/images/bg-add-plus.png");
-    }
+        .btnAdd{
+            display: block;
+            width: 93px;
+            height: 93px;
+            margin: 0 auto 12px;
+            background-size: contain;
+            background-image: url("../../assets/images/bg-add-plus.png");
+        }
     }
     .defaultImg{
         position: absolute;
@@ -70,10 +70,19 @@
             }
         }
         .picAdd{
-            margin-top: 20px;
-            padding: 4px 0;
-            border-radius: 2px;
-            border: 1px solid @theme-color;
+            position: relative;
+            height: 100%;
+            background-color: @theme-color-weak;
+            color: #fff;
+            padding-top: 5px;
+            .btnAdd{
+                display: block;
+                margin:0 auto 5px ;
+                width: 34px;
+                height: 34px;
+                background-size: contain;
+                background-image: url("../../assets/images/bg-add-plus.png");
+            }
         }
     }
 </style>
@@ -153,9 +162,9 @@
                     </div>
                 </div>
                 <div class="pub-item">
-                    <h3 class="pub-title">手机号码</h3>
+                    <h3 class="pub-title">联系方式</h3>
                     <div class="pub-text">
-                        <input type="tel" class="pub-input" placeholder="填写联系人号码" v-model="info.contact">
+                        <input type="text" class="pub-input" placeholder="填写联系人号码" v-model="info.contact">
                     </div>
                 </div>
                 <div class="pub-item">
@@ -201,6 +210,7 @@
                                                      :events="events2"
                                                      name="file0"
                                         ></file-upload>
+                                        <i :class="$style.btnAdd"></i>
                                         <span>点击上传</span>
                                     </div>
                                     <Loading text="上传中" :class="$style.loading" v-show="picUploading"></Loading>
@@ -452,8 +462,8 @@
                     this.$toast('活动地址不能为空');
                     return false;
                 }
-                if(!/^1[3-8]\d{9}$/.test(this.info.contact)){
-                    this.$toast('手机号码不正确');
+                if(!this.info.contact){
+                    this.$toast('联系方式不能为空');
                     return false;
                 }
 

@@ -22,6 +22,7 @@
     import { mapState } from 'vuex';
     import Item from '../public/photo.vue';
     import $api from 'api';
+    import Util from '../../util'
     export default {
         components:{
             Item
@@ -53,8 +54,10 @@
                 });
             },
             goDetail(item) {
-                item.hit = parseInt(item.hit) + 1;
-                this.$router.push(`/photo-detail/${item.pid}`);
+                Util.isAuthored().then(() => {
+                    item.hit = parseInt(item.hit) + 1;
+                    this.$router.push(`/activity/photo-detail/${item.pid}`);
+                },()=>{});
             }
         },
         created(){

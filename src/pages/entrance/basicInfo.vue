@@ -39,13 +39,13 @@
                 </div>
             </div>
             <div class="item type color-topic">
-                <div @click="changeChannel('student')">
-                    <i :class="['inline-block','iconType',{'checked':channel=='student'}]"></i>
-                    <span class="inline-block">在校学生</span>
-                </div>
                 <div @click="changeChannel('graduate')">
                     <i :class="['inline-block','iconType',{'checked':channel=='graduate'}]"></i>
                     <span class="inline-block">毕业校友</span>
+                </div>
+                <div @click="changeChannel('student')">
+                    <i :class="['inline-block','iconType',{'checked':channel=='student'}]"></i>
+                    <span class="inline-block">在校学生</span>
                 </div>
                 <div @click="changeChannel('teacher')">
                     <i :class="['inline-block','iconType',{'checked':channel=='teacher'}]"></i>

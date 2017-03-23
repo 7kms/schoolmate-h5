@@ -1,6 +1,6 @@
 import * as types from './mutation-types'
 var state = {
-  channel:'student',
+  channel:'graduate',
   step: 1,
   navInfo:{
     student:[

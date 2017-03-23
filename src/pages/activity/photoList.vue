@@ -13,7 +13,7 @@
             <Item v-for="(item,index) in photo.list" :class="$style.item" :key="index" :dataInfo="item" @click="goDetail(item)"></Item>
          </ul>
          <Loading v-if="loading"></Loading>
-        <publishBtn text="传照片" @click="onPublish"></publishBtn>
+        <publishBtn text="发照片" @click="onPublish"></publishBtn>
     </div>
 </template>
 <script>
@@ -59,8 +59,10 @@
             });
           },
           goDetail(item) {
-            item.hit = parseInt(item.hit) + 1;
-            this.$router.push(`/activity/photo-detail/${item.pid}`);
+              Util.isAuthored().then(() => {
+                item.hit = parseInt(item.hit) + 1;
+                this.$router.push(`/activity/photo-detail/${item.pid}`);
+              },()=>{});
           }
         },
         created(){

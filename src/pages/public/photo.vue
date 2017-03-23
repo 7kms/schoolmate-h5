@@ -48,6 +48,18 @@
             &.iconComment{
                  background-image: url('../../assets/images/icon-comment-small.png');
             }
+            &.iconView, &.iconGood{
+                 width: 10px;
+                 height: 10px;
+                 margin-left: 6px;
+            }
+            &.iconView{
+                vertical-align: bottom;
+                 background-image: url('../../assets/images/icon-view.png');
+            }
+            &.iconGood{
+                 background-image: url('../../assets/images/icon-good.png');
+            }
         }
 
     }
@@ -55,7 +67,7 @@
         margin: 0 4px;
     }
     .marginLeft{
-        margin-left: 12px;
+        margin-left: 27px;
     }
 </style>
 <template>
@@ -74,8 +86,8 @@
                     <span class="color-topic">{{dataInfo.user.name}}</span>
                 </div>
                 <div class="weak">
-                    <span>{{dataInfo.hit}}个浏览</span>
-                    <span :class="$style.marginLeft">{{dataInfo.liked}}个赞</span>
+                    <span class="inline-block"><span class="inline-block">{{dataInfo.hit}}</span><i :class="['inline-block',$style.icon,$style.iconView]"></i></span>
+                    <span :class="['inline-block',$style.marginLeft]"><span class="inline-block">{{dataInfo.liked}}</span><i :class="['inline-block',$style.icon,$style.iconGood]"></i></span>
                 </div>
             </div>
             <div :class="$style.descItem">

@@ -11,7 +11,7 @@
             <div class="item">
                 <div class="dfn"><span class="label inline-block">班级代码</span><span class="color-hint inline-block">*</span></div>
                 <div class="textInput color-topic">
-                    <input type="tel" class="input" placeholder="填写学校班级号" v-model="userInfo.class">
+                    <input type="text" class="input" placeholder="填写学校班级号" v-model="userInfo.class">
                 </div>
             </div>
             <div class="item">

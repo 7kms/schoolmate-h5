@@ -132,6 +132,7 @@
   import {serverUrl} from '../../config';
   import {mapState} from 'vuex'
   import $api from 'api';
+  import Util from '../../util'
   export default {
     props: {
       dataInfo: {
@@ -157,26 +158,30 @@
           });
       },
       collaborate(){
-        $api.post('/Help/apply',{rid:this.dataInfo.rid})
-          .then(res => {
-          this.$toast(res.msg);
-          if(res.code == 200){
-            this.dataInfo.applied = true;
-          }
-        },res=>{
-          this.$toast('服务器异常')
-        });
+          Util.isAuthored().then(() => {
+              $api.post('/Help/apply',{rid:this.dataInfo.rid})
+                      .then(res => {
+                          this.$toast(res.msg);
+                          if(res.code == 200){
+                              this.dataInfo.applied = true;
+                          }
+                      },res=>{
+                          this.$toast('服务器异常')
+                      });
+          },()=>{});
       },
       revocation(){
-        $api.post('/Help/revokeCoApply',{rid:this.dataInfo.rid})
-          .then(res => {
-          this.$toast(res.msg);
-          if(res.code == 200){
-            this.dataInfo.applied = false;
-          }
-        },res=>{
-          this.$toast('服务器异常')
-        });
+          Util.isAuthored().then(() => {
+              $api.post('/Help/revokeCoApply',{rid:this.dataInfo.rid})
+                      .then(res => {
+                          this.$toast(res.msg);
+                          if(res.code == 200){
+                              this.dataInfo.applied = false;
+                          }
+                      },res=>{
+                          this.$toast('服务器异常')
+                      });
+          },()=>{});
       },
       remove(){
         this.$emit('revoke', this.dataInfo);

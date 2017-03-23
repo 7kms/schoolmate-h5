@@ -130,7 +130,7 @@
           }),
           operateBarData(){
             var obj = {
-              leftText:'报名预定',
+              leftText:'马上报名',
               rightText:'评论',
               rightImage: require('../../assets/images/icon-comment.png')
             };

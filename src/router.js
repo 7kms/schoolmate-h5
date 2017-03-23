@@ -52,7 +52,8 @@ const ROUTER_SETTING = {
                     path: 'photo-detail/:id',
                     name: 'photo-detail',
                     meta: {
-                      title:'照片详情'
+                      title:'照片详情',
+                      needAuthor: true
                     },
                     component: resolve => require(['./pages/activity/photoDetail.vue'], resolve)
                 }
@@ -149,9 +150,6 @@ const ROUTER_SETTING = {
         },
         {
             path: '/mine',
-            meta:{
-              needAuthor: true
-            },
             component: resolve => require(['./pages/mine/index.vue'], resolve),
                 children:[
                   {

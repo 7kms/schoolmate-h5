@@ -144,24 +144,20 @@ export default {
     },
     isAuthored() {
       return new Promise(( resolve, reject ) => {
-        MessageBox.confirm('此操作需要完善个人信息').then(data=>{
-          router.push('/entrance');
-        },data=>{});
-        reject();
-        // if(!store.state.user.profile.first_logined){
-        //   $api.get('/Profile/getProfile')
-        //     .then( data => {
-        //       if(data.profile.first_logined == '0'){
-        //         resolve()
-        //       }else {
-        //         reject();
-        //       }
-        //     }, data => {
-        //       reject();
-        //     });
-        // }else{
-        //   store.state.user.profile.first_logined == '0' ?  resolve() : reject();
-        // }
+        if(!store.state.user.profile.first_logined){
+          $api.get('/Profile/getProfile')
+            .then( data => {
+              if(data.profile.first_logined == '0'){
+                resolve()
+              }else {
+                reject();
+              }
+            }, data => {
+              reject();
+            });
+        }else{
+          store.state.user.profile.first_logined == '0' ?  resolve() : reject();
+        }
       });
     }
 }
