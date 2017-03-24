@@ -78,7 +78,7 @@
         <div :class="$style.desc">
             <span v-if="dataInfo.type == 2" class="color-theme size-topic">拥有资源：</span>
             <span v-else　class="color-hint size-topic">寻求合作：</span>
-            {{ dataInfo.description }}
+            <div v-transform="dataInfo.description"></div>
         </div>
         <div class="text-right">
             <time class="weak">{{dataInfo.create_time | dateFormat('yyyy/MM/dd') }}</time>

@@ -151,7 +151,7 @@
                 <div :class="$style.bar">
                     <span :class="[$style.title,'color-topic','inline-block']">圈子介绍</span>
                 </div>
-                <div :class="$style.desc">{{ dataInfo.c_description }}</div>
+                <div :class="$style.desc" v-transform="dataInfo.c_description"></div>
             </li>
             <li :class="$style.item">
                 <div :class="$style.bar">

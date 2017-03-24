@@ -48,9 +48,7 @@
                         <span class="color-hint">待审核{{dataInfo.unverified}}人</span>
                     </div>
                 </div>
-                <div :class="$style.text">
-                    {{dataInfo.c_description}}
-                </div>
+                <div :class="$style.text" v-transform="dataInfo.c_description"></div>
             </div>
         </div>
         <div :class="$style.imgContent" v-if="dataInfo.pictures.length > 0">

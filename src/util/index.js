@@ -159,5 +159,18 @@ export default {
           store.state.user.profile.first_logined == '0' ?  resolve() : reject();
         }
       });
+    },
+    transformTextToHtml(str){
+        str = str || '';
+        str = str.replace(/(\<)|(\>)|(\n)/ig,function($0){
+            if($0 == '<'){
+                return '&lt;';
+            }else if($0 == '>'){
+                return '&gt;';
+            }else{
+                return '<br/>';
+            }
+        });
+        return str;
     }
 }

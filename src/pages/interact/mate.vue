@@ -49,6 +49,13 @@
     .desc{
         padding: 6px 12px 0 0;
         line-height: 1.4rem;
+        display: flex;
+        .dfn{
+            width: 60px;
+        }
+        .text{
+            flex: 1;
+        }
     }
     .icon{
         width: 12px;
@@ -96,8 +103,8 @@
             </div>
         </div>
         <div :class="$style.desc">
-            <span class="color-topic">岗位描述:</span>
-            {{dataInfo.resource_description}}
+            <!--<div :class="['color-topic',$style.dfn]">岗位描述:</div><div :class="$style.text" v-html="transform(dataInfo.resource_description)"></div>-->
+            <div :class="['color-topic',$style.dfn]">岗位描述:</div><div :class="$style.text" v-transform="dataInfo.resource_description"></div>
         </div>
     </div>
 </template>
