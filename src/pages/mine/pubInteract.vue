@@ -10,7 +10,7 @@
             infinite-scroll-immediate-check="false"
             infinite-scroll-disabled="noScroll"
             infinite-scroll-distance="80">
-            <Item v-for="(item,index) in interact.list" :class="$style.item" :key="index" :dataInfo="item" @click.native="goEdit(item)" @revoke="revoke"></Item>
+            <Item v-for="(item,index) in interact.list" :class="$style.item" :key="index" :dataInfo="item" @click.native="goEdit(item)"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
         <div v-if="!loading && interact.list.length == 0" class="empty-data-item">
@@ -57,17 +57,6 @@
       },
         goEdit(item){
             this.$router.push(`/publish/interact?rid=${item.rid}`);
-        },
-        revoke(item){
-            $api.post('/Help/revoke',{ rid:item.rid})
-            .then(res=>{
-                this.$toast(res.msg);
-                if(res.result){
-
-                }
-            },err=>{
-                this.$toast('服务器异常');
-            });
         }
     },
     created(){

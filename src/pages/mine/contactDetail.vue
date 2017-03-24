@@ -1,7 +1,7 @@
 <style lang="less" module>
     @import '../../assets/less/const.less';
     .wrap{
-        padding-bottom: 40px;
+        /*padding-bottom: 40px;*/
     }
     .content{
         background-color: #fff;
@@ -196,7 +196,7 @@
                 <div :class="$style.itemText">
                     <div :class="$style.dfn">岗位描述：</div>
                     <div :class="[$style.textInput,$style.textArea]">
-                        <textarea disabled :class="['color-topic',$style.textArea]">{{ userInfo.resource_description }}</textarea>
+                        <div  :class="['color-topic',$style.textArea]" v-transform="userInfo.resource_description"></div>
                     </div>
                 </div>
             </div>

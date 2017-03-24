@@ -184,7 +184,15 @@
           },()=>{});
       },
       remove(){
-        this.$emit('revoke', this.dataInfo);
+          $api.post('/Help/revoke',{ rid:this.dataInfo.rid})
+          .then(res=>{
+              this.$toast(res.msg);
+              if(res.result){
+
+              }
+          },err=>{
+              this.$toast('服务器异常');
+          });
       },
       goContacts(){
         this.$router.push({path:'/interact/contacts',query:{rid:this.dataInfo.rid}})

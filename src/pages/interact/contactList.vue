@@ -7,7 +7,7 @@
 <template>
     <div>
         <ul :class="$style.list">
-            <contact @click="goContactDetail" v-for="contact in list" :dataInfo="contact"></contact>
+            <Item @click="goDetail" v-for="contact in list" :dataInfo="contact"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
         <div v-if="!loading && list.length == 0" class="empty-data-item">
