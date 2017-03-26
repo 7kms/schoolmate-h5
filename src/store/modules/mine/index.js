@@ -54,7 +54,7 @@ const mutations = {
   [types.CHANGE_CONTACT_STATUS] (state, status) {
     state.contact = Object.assign(state.contact, status);
   },
-  [types.REMOVE_CONTACT] (state, fid) {
+  [types.REMOVE_CONTACT] (state, {fid}) {
     state.contact.list = state.contact.list.filter(contact=>{
       return contact.fid != fid;
     });

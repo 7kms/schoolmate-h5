@@ -69,7 +69,8 @@
     <div class="content">
         <div :class="$style.header">
             <div :class="$style.pic">
-                <img :src="profile.photo" alt="" width="60" height="60">
+                <imgContain :imgUrl="profile.photo" :onlyImage="true" style="width:60px ;height:60px"></imgContain>
+
             </div>
             <div class="size-topic text-center">{{profile.name}}</div>
         </div>
@@ -103,15 +104,17 @@
                 </div>
             </router-link>
         </ul>
+        <publishBtn text="问校友" type="feedback"></publishBtn>
     </div>
 </template>
 <script>
     import $api from 'api'
+    import publishBtn from '../../components/publish';
 	import  { mapState } from  'vuex'
   import {serverUrl} from '../../config'
   export default {
     components:{
-
+      publishBtn
     },
     data(){
       return {

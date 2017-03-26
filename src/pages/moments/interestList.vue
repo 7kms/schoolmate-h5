@@ -40,8 +40,10 @@
         interest: state => state.moments.interest
       })
     },
-    beforeRouteLeave (to, from, next) {
-      this.$store.dispatch('moments/RESET_INTEREST_LIST');
+    beforeRouteLeave(to,from,next){
+      if(to.name == 'interest-detail'){
+        this.$store.dispatch('moments/CHANGE_INTEREST_STATUS',{noRefresh:true});
+      }
       next();
     },
     methods:{
@@ -67,6 +69,7 @@
       }
     },
     created(){
+      this.$store.dispatch('moments/RESET_INTEREST_LIST');
       if(!this.interest.list.length){
         this.loadMore();
       }

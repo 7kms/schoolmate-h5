@@ -46,6 +46,9 @@
             color: #fff;
             background-color: @theme-color;
         }
+        .remove{
+            color: @theme-color;
+        }
     }
     .iconArrow{
         position: absolute;
@@ -76,6 +79,9 @@
                 <span :class="[$style.reject,'inline-block']" @click.prevent.stop="reject">拒绝</span>
                 <span :class="[$style.agree,'inline-block']" @click.prevent.stop="agree">同意</span>
             </div>
+            <div :class="[$style.operate,'text-center']" v-else-if="showRemove">
+                <span :class="[$style.remove,'inline-block']" @click.prevent.stop="remove">删除</span>
+            </div>
         </div>
         <i :class="$style.iconArrow" v-if="showArrow"></i>
     </li>
@@ -84,6 +90,10 @@
   export default{
     props:{
       showBtn:{
+        type: Boolean,
+        default: false
+      },
+      showRemove:{
         type: Boolean,
         default: false
       },
@@ -102,6 +112,9 @@
         },
         agree(){
             this.$emit('agree',this.dataInfo);
+        },
+        remove(){
+          this.$emit('remove',this.dataInfo);
         }
     }
   }

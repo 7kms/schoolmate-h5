@@ -5,14 +5,16 @@ var state = {
     list: [],
     noMore: false,
     pageSize: 10,
-    start: 0
+    start: 0,
+    noRefresh:false
   },
   industry: {
     list: [],
     keywords:'',
     noMore: false,
-    pageSize: 10,
-    start: 0
+    pageSize: 1000,
+    start: 0,
+    noRefresh:false
   }
 };
 
@@ -51,6 +53,13 @@ const actions = {
   [types.RESET_INTEREST_LIST] ({ commit }) {
     commit(types.RESET_INTEREST_LIST);
   },
+  [types.CHANGE_INTEREST_STATUS] ({commit}, status) {
+    commit(types.CHANGE_INTEREST_STATUS,status);
+  },
+
+
+
+
 
   [types.LOAD_INDUSTRY_LIST] ({ commit, dispatch }) {
     let params = getParams('industry');
@@ -83,9 +92,13 @@ const mutations = {
     });
   },
   [types.RESET_INTEREST_LIST] (state) {
-    state.interest.list = [];
-    state.interest.start = 0;
-    state.interest.noMore = false;
+    if(state.interest.noRefresh){
+      state.interest.noRefresh = false;
+    }else{
+      state.interest.list = [];
+      state.interest.start = 0;
+      state.interest.noMore = false;
+    }
   },
   [types.CHANGE_INTEREST_STATUS] (state, status) {
     state.interest = Object.assign(state.interest, status);
@@ -98,13 +111,16 @@ const mutations = {
       item.pictures.length = 3;
       state.industry.list.push(item);
     });
-    // state.industry.list = [...state.industry.list, ...dataList];
   },
   [types.RESET_INDUSTRY_LIST] (state) {
-    state.industry.list = [];
-    state.industry.keywords = '';
-    state.industry.start = 0;
-    state.industry.noMore = false;
+    if(state.industry.noRefresh){
+      state.industry.noRefresh = false;
+    }else{
+      state.industry.list = [];
+      state.industry.keywords = '';
+      state.industry.start = 0;
+      state.industry.noMore = false;
+    }
   },
   [types.CHANGE_INDUSTRY_STATUS] (state, status) {
     state.industry = Object.assign(state.industry, status);

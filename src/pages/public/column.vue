@@ -42,7 +42,7 @@
 </style>
 <template>
     <div :class="$style.content" @click="click">
-        <ImgContain :class="$style.pic" :imgUrl="dataInfo.cover_file"></ImgContain>
+        <ImgLazy :class="$style.pic" :imgUrl="dataInfo.cover_file"></ImgLazy>
         <div :class="$style.desc">
             <h3 :class="[$style.title,'topic','one-line']">{{dataInfo.theme}}</h3>
             <div :class="$style.info">

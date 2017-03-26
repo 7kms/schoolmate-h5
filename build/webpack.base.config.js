@@ -45,7 +45,7 @@ module.exports = {
                 exclude: '/nolimit/',                
                 loader: 'url-loader',
                 query: {
-                    limit: 20*1024,
+                    limit: 20,
                     name: utils.assetsPath('img/[name].[hash:6].[ext]')
                 }
             },

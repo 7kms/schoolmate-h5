@@ -65,7 +65,7 @@
             <span>我在的行业圈</span>
         </div>
         <ul>
-            <Item :class="$style.item" :dataInfo="{}"></Item>
+            <Item v-for="(item,index) in myList" :class="$style.item" :key="index" :dataInfo="item" @click.native="goDetail(item)"></Item>
         </ul>
         <div :class="[$style.bar,'size-topic','color-theme']">
             <span>其他行业圈子</span>
@@ -75,9 +75,10 @@
             infinite-scroll-immediate-check="false"
             infinite-scroll-disabled="noScroll"
             infinite-scroll-distance="80">
-            <Item v-for="(item,index) in industry.list" :class="$style.item" :key="index" :dataInfo="item"></Item>
+            <Item v-for="(item,index) in list" :class="$style.item" :key="index" :dataInfo="item" @click.native="goDetail(item)"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
+        <publishBtn text="问校友" type="feedback"></publishBtn>
     </div>
 </template>
 <script>
@@ -100,11 +101,15 @@
         return this.loading || this.industry.noMore;
       },
       ...mapState({
-        industry: state => state.moments.industry
+        industry:state => state.moments.industry,
+        list: state => state.moments.industry.list.filter(item=>!item.belongme),
+        myList: state => state.moments.industry.list.filter(item=>item.belongme)
       })
     },
     beforeRouteLeave (to, from, next) {
-      this.$store.dispatch('moments/RESET_INDUSTRY_LIST');
+      if(to.name == 'industry-detail'){
+        this.$store.dispatch('moments/RESET_INDUSTRY_LIST',{noRefresh:true});
+      }
       next();
     },
     methods:{
@@ -125,9 +130,17 @@
               this.loading = false;
               this.$toast({message: err});
           });
+      },
+      goDetail(item){
+        this.$router.push(`/moments/industry/${item.cid}`);
+//        $api.post('/Circle/getIndustryMembers',{cid:item.cid})
+//          .then(res=>{
+//            console.log(res);
+//        })
       }
     },
     created(){
+      this.$store.dispatch('moments/RESET_INDUSTRY_LIST');
       if(!this.industry.list.length){
         this.loadMore();
       }

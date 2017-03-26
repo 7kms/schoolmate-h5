@@ -5,19 +5,22 @@ var state = {
         list: [],
         noMore: false,
         pageSize: 10,
-        start: 0
+        start: 0,
+        noRefresh:false
     },
     photo: {
         list: [],
         noMore: false,
         pageSize: 10,
-        start: 0
+        start: 0,
+        noRefresh:false
     },
     attend: {
       list: [],
       noMore: false,
       pageSize: 10,
-      start: 0
+      start: 0,
+      noRefresh:false
     }
 };
 
@@ -53,6 +56,10 @@ const actions = {
     [types.RESET_COLUMN_LIST] ({ commit }) {
         commit(types.RESET_COLUMN_LIST);
     },
+    [types.CHANGE_COLUMN_STATUS] ({commit}, status) {
+      commit(types.CHANGE_COLUMN_STATUS,status);
+    },
+
 
     [types.LOAD_PHOTO_LIST] ({ commit, dispatch },payload) {
       let params = getParams('photo');
@@ -79,7 +86,9 @@ const actions = {
     [types.RESET_PHOTO_LIST] ({ commit }) {
         commit(types.RESET_PHOTO_LIST);
     },
-
+    [types.CHANGE_PHOTO_STATUS] ({commit}, status) {
+      commit(types.CHANGE_PHOTO_STATUS,status);
+    },
 
 
 
@@ -114,14 +123,17 @@ const mutations = {
         state.column.list = [...state.column.list, ...dataList];
     },
     [types.RESET_COLUMN_LIST] (state) {
-        state.column.list = [];
-        state.column.start = 0;
-        state.column.noMore = false;
+        if(state.column.noRefresh){
+          state.column.noRefresh = false;
+        }else{
+          state.column.list = [];
+          state.column.start = 0;
+          state.column.noMore = false;
+        }
     },
     [types.CHANGE_COLUMN_STATUS] (state, status) {
         state.column = Object.assign(state.column, status);
     },
-
 
     [types.APPEND_PHOTO_LIST] (state, dataList) {
       dataList.forEach(item=>{
@@ -133,9 +145,13 @@ const mutations = {
       });
     },
     [types.RESET_PHOTO_LIST] (state) {
+      if(state.photo.noRefresh){
+        state.photo.noRefresh = false;
+      }else{
         state.photo.list = [];
         state.photo.start = 0;
         state.photo.noMore = false;
+      }
     },
     [types.CHANGE_PHOTO_STATUS] (state, status) {
         state.photo = Object.assign(state.photo, status);

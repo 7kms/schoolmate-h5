@@ -51,7 +51,7 @@
       },
       goDetail(item) {
         item.hit = parseInt(item.hit) + 1;
-        this.$router.push(`/photo-detail/${item.pid}`);
+        this.$router.push(`/activity/photo-detail/${item.pid}`);
       }
     },
     created(){

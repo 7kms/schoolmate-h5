@@ -43,7 +43,8 @@
     <li :class="$style.content">
         <div :class="[$style.portrait,'text-center']">
             <div :class="$style.pic">
-                <img :src="dataInfo.photo" alt="" width="40" height="40">
+                <imgContain :imgUrl="dataInfo.photo" :onlyImage="true" style="width:40px ;height:40px"></imgContain>
+
             </div>
             <div :class="[$style.userText,'color-topic']">{{dataInfo.name}}</div>
             <div :class="[$style.userText]" v-if="isAuthor">(发布者)</div>
@@ -105,7 +106,7 @@
               this.$toast('服务器异常')
             })
           }else{
-            this.$router.push(`/mine/contacts`);
+            this.$router.push(`/mine/contacts/${this.dataInfo.uid}`);
           }
         }
       }

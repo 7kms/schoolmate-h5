@@ -34,11 +34,13 @@ get: (url, dataObj, opt = {}) => {
                         //  });
                         // window.location.href = 'http://www.chenfangli.com/Response/entrance';
                     } else {
+                      console.log(res);
                         reject(res.body);
                     }
                 }
             }, res => {
-                reject(res.body)
+                // console.log(res);
+                reject('服务器异常');
             })
         })
     },

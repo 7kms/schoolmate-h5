@@ -1,6 +1,7 @@
 import { Toast, Spinner, MessageBox, Popup, Picker, DatetimePicker, Checklist } from 'mint-ui';
 import Loading from './loading';
 import ImgContain from './imgContain';
+import ImgLazy from './imgLazy';
 
 const componentsObj = {
     Toast,
@@ -12,7 +13,8 @@ const componentsObj = {
 };
 const customComponent = {
     Loading,
-    ImgContain
+    ImgContain,
+    ImgLazy
 };
 const install = function (Vue) {
     Object.keys(componentsObj).forEach((val) => {

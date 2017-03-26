@@ -14,9 +14,11 @@
             <Item v-for="(item,index) in contact.list" :class="$style.item" :key="index"
                   :dataInfo="item"
                   :showBtn="item.verify_status"
+                  :showRemove="!item.verify_status"
                   @click.native="goDetail(item)"
                   @agree="agree"
                   @reject="reject"
+                  @remove="remove"
             ></Item>
         </ul>
         <Loading v-if="loading"></Loading>
@@ -82,6 +84,24 @@
         const {fid} = contact;
         this.$dialog.confirm('拒绝交换联系方式,并将其从列表中删除?').then(data=>{
           return $api.post('/Profile/handleExchange',{fid,status:0});
+        },data=>{
+          return false;
+        }).then(res=>{
+          if(!res)return false;
+          if(res.result){
+            this.$toast('操作成功');
+            this.$store.dispatch('contact/REMOVE_CONTACT',contact);
+          }else{
+            this.$toast(res.msg);
+          }
+        },error=>{
+          this.$toast('服务器异常')
+        });
+      },
+      remove(contact){
+        const {fid} = contact;
+        this.$dialog.confirm('移除通讯录?').then(data=>{
+          return $api.post('/Profile/delExchange',{fid});
         },data=>{
           return false;
         }).then(res=>{

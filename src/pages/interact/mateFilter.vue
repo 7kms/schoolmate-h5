@@ -106,8 +106,8 @@
                     <div :class="$style.label">
                         <span class="color-topic">籍贯</span>
                     </div>
-                    <div :class="[$style.dInput,$style.dSelect,{[$style.empty]:!condition.bprovince}]" @click="showPicker('place')">
-                        <span  v-if="condition.bprovince && condition.bcity">{{condition.bprovince + '-' + condition.bcity}}</span>
+                    <div :class="[$style.dInput,$style.dSelect,{[$style.empty]:!condition.birth_from}]" @click="showPicker('place')">
+                        <span  v-if="condition.birth_from">{{condition.birth_from}}</span>
                         <span class="color-theme" v-else>点击选择</span>
                     </div>
                 </li>
@@ -116,7 +116,7 @@
                         <span class="color-topic">工作单位</span>
                     </div>
                     <div :class="$style.dInput">
-                        <input type="text">
+                        <input type="text" v-model="condition.company">
                     </div>
                 </li>
                 <li :class="$style.dfn">
@@ -142,7 +142,7 @@
                         <span class="color-topic">所在部门</span>
                     </div>
                     <div :class="$style.dInput">
-                        <input type="text">
+                        <input type="text" v-model="condition.department">
                     </div>
                 </li>
                 <li :class="$style.dfn">
@@ -150,7 +150,7 @@
                         <span class="color-topic">具体职位</span>
                     </div>
                     <div :class="$style.dInput">
-                        <input type="text">
+                        <input type="text" v-model="condition.detail_job">
                     </div>
                 </li>
                 <li :class="$style.dfn">
@@ -185,7 +185,7 @@
                         <span class="color-topic">班级代码</span>
                     </div>
                     <div :class="$style.dInput">
-                        <input type="text">
+                        <input type="text" v-model="condition.class">
                     </div>
                 </li>
                 <li :class="$style.dfn">
@@ -193,58 +193,60 @@
                         <span class="color-topic">岗位描述</span>
                     </div>
                     <div :class="$style.dInput">
-                        <input type="text" placeholder="关键字用空格隔开，越准确越好">
+                        <input type="text" placeholder="关键字用空格隔开，越准确越好" v-model="condition.resource_description">
                     </div>
                 </li>
             </ul>
             <div :class="[$style.submit,'text-center']" @click="searchMore">搜索</div>
         </div>
-        <mt-popup
-                v-model="showMajorPicker"
-                position="bottom"
-                popup-transition="popup-fade">
-            <mt-picker :slots="majorSlots" :showToolbar="true" :rotateEffect="true" @change="selectMajor">
-                <span></span><span @click="setDefaultMajor">确定</span>
-            </mt-picker>
-        </mt-popup>
-        <mt-popup
-                v-model="showPlacePicker"
-                position="bottom"
-                popup-transition="popup-fade">
-            <mt-picker :slots="placeSlots" :showToolbar="true" :rotateEffect="true" @change="selectPlace">
-                <span></span><span @click="setDefaultPlace">确定</span>
-            </mt-picker>
-        </mt-popup>
-        <timePicker
-                :showPicker="showMajorStartPicker"
-                :initDate="roleStartDate"
-                :endDate="condition.graduate_time"
-                pickerRef="majorStartDatePicker"
-                @selectEnd="selectMajorStart"
-        ></timePicker>
-        <timePicker
-                :showPicker="showMajorEndPicker"
-                :initDate="roleEndDate"
-                :startDate="condition.enrol_time"
-                pickerRef="majorEndDatePicker"
-                @selectEnd="selectMajorEnd"
-        ></timePicker>
-        <mt-popup
-                v-model="showIndustryPicker"
-                position="bottom"
-                popup-transition="popup-fade">
-            <mt-picker :slots="industrySlots" :showToolbar="true" :rotateEffect="true" @change="selectIndustry">
-                <span></span><span @click="selectDefaultIndustry">确定</span>
-            </mt-picker>
-        </mt-popup>
-        <mt-popup
-                v-model="showIndustryDetailPicker"
-                position="bottom"
-                popup-transition="popup-fade">
-            <mt-picker :slots="industryDetailSlots" :showToolbar="true" :rotateEffect="true" @change="selectIndustryDetail">
-                <span></span><span @click="selectDefaultIndustryDetail">确定</span>
-            </mt-picker>
-        </mt-popup>
+        <template v-if="initFilters">
+            <mt-popup
+                    v-model="showMajorPicker"
+                    position="bottom"
+                    popup-transition="popup-fade">
+                <mt-picker :slots="majorSlots" :showToolbar="true" :rotateEffect="true" @change="selectMajor">
+                    <span></span><span @click="setDefaultMajor">确定</span>
+                </mt-picker>
+            </mt-popup>
+            <mt-popup
+                    v-model="showPlacePicker"
+                    position="bottom"
+                    popup-transition="popup-fade">
+                <mt-picker :slots="placeSlots" :showToolbar="true" :rotateEffect="true" @change="selectPlace">
+                    <span></span><span @click="setDefaultPlace">确定</span>
+                </mt-picker>
+            </mt-popup>
+            <timePicker
+                    :showPicker="showMajorStartPicker"
+                    :initDate="roleStartDate"
+                    :endDate="condition.graduate_time"
+                    pickerRef="majorStartDatePicker"
+                    @selectEnd="selectMajorStart"
+            ></timePicker>
+            <timePicker
+                    :showPicker="showMajorEndPicker"
+                    :initDate="roleEndDate"
+                    :startDate="condition.enrol_time"
+                    pickerRef="majorEndDatePicker"
+                    @selectEnd="selectMajorEnd"
+            ></timePicker>
+            <mt-popup
+                    v-model="showIndustryPicker"
+                    position="bottom"
+                    popup-transition="popup-fade">
+                <mt-picker :slots="industrySlots" :showToolbar="true" :rotateEffect="true" @change="selectIndustry">
+                    <span></span><span @click="selectDefaultIndustry">确定</span>
+                </mt-picker>
+            </mt-popup>
+            <mt-popup
+                    v-model="showIndustryDetailPicker"
+                    position="bottom"
+                    popup-transition="popup-fade">
+                <mt-picker :slots="industryDetailSlots" :showToolbar="true" :rotateEffect="true" @change="selectIndustryDetail">
+                    <span></span><span @click="selectDefaultIndustryDetail">确定</span>
+                </mt-picker>
+            </mt-popup>
+        </template>
     </div>
 </template>
 <script>
@@ -255,6 +257,7 @@
     export default {
        data(){
           return {
+              initFilters: false,
               showMore: false,
               showMajorPicker: false,
               showMajorStartPicker: false,
@@ -366,17 +369,15 @@
               bcity = values[1];
               picker.setSlotValues(1, placeObj[values[0]]);
               this.$store.dispatch('interact/CHANGE_MATES_CONDITION',{
-                  bprovince,
-                  bcity
+                  birth_from:`${bprovince}-${bcity}`
               });
           }else{
               this.showPlacePicker = false;
               if(!this.condition.bprovince){
                   bprovince = this.placeSlots[0].values[0];
                   bcity = this.placeSlots[2].values[0];
-                  this.$store.dispatch('entrance/CHANGE_USERINFO',{
-                      bprovince,
-                      bcity
+                  this.$store.dispatch('interact/CHANGE_MATES_CONDITION',{
+                      birth_from:`${bprovince}-${bcity}`
                   });
               }
           }
@@ -393,12 +394,11 @@
          setDefaultPlace(){
              let bprovince,bcity;
              this.showPlacePicker = false;
-             if(!this.condition.bprovince){
+             if(!this.condition.birth_from){
                  bprovince = this.placeSlots[0].values[0];
                  bcity = this.placeSlots[2].values[0];
                  this.$store.dispatch('interact/CHANGE_MATES_CONDITION',{
-                     bprovince,
-                     bcity
+                   birth_from:`${bprovince}-${bcity}`
                  });
              }
          },
@@ -434,25 +434,30 @@
         switchNav(nav){
           this.$store.dispatch('interact/SWITCH_MATES_NAV',nav);
           if(nav.more){
+            if(!this.initFilters)this.initFilters = true;
             if(this.showMore)nav.active = false;
             this.showMore = !this.showMore;
           }else{
             this.showMore = false;
+            this.$store.dispatch('interact/RESET_MATES_LIST');
             this.$store.dispatch('interact/RESET_MATES_CONDITION');
               switch (nav.name){
                   case '同城':
-//                      let province = this.profile.province;
-//                      let city =  /北京|天津|上海|重庆/.test(province) ? province :  this.profile.city;
-                      this.$store.dispatch('interact/CHANGE_MATES_CONDITION', {
-                          city:this.profile.city
-                      });
+                      let province = this.profile.province;
+                      let obj = {};
+                      if(/北京|天津|上海|重庆/.test(province)){
+                        obj.province = province;
+                      }else{
+                        obj.city = city;
+                      }
+                      this.$store.dispatch('interact/CHANGE_MATES_CONDITION', obj);
                       break;
                   case '同行':
                       this.$store.dispatch('interact/CHANGE_MATES_CONDITION', {
                           industry: this.profile.industry
                       });
                       break;
-                  case '同学':
+                  case '同班':
                       this.$store.dispatch('interact/CHANGE_MATES_CONDITION', {
                           'class': this.profile.class
                       });

@@ -41,12 +41,6 @@
         column: state => state.activity.column
       })
     },
-    beforeRouteLeave (to, from, next) {
-      if(to.name != 'column-detail'){
-        this.$store.dispatch('activity/RESET_COLUMN_LIST');
-      }
-      next();
-    },
     methods:{
       loadMore() {
         this.loading = true;

@@ -32,12 +32,12 @@
                 loading: false
             }
         },
-        beforeRouteLeave (to, from, next){
-            if(to.name != 'photo-detail' &&  to.name != 'comment'){
-                this.$store.dispatch('activity/RESET_PHOTO_LIST');
-            }
-            next();
-        }, 
+      beforeRouteLeave(to, from, next) {
+        if(to.name == 'photo-detail'){
+          this.$store.dispatch('activity/CHANGE_PHOTO_STATUS',{noRefresh:true});
+        }
+        next();
+      },
         computed:{
             noScroll(){
                 return this.loading || this.photo.noMore;
@@ -66,6 +66,7 @@
           }
         },
         created(){
+            this.$store.dispatch('activity/RESET_PHOTO_LIST');
             if(!this.photo.list.length){
               this.loadMore();
             }

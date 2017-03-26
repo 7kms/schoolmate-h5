@@ -44,6 +44,10 @@
                 background-color: @font-color-weak;
                  border: none;
              }
+             &.contact{
+                background-color: #fff;
+                border: none;
+              }
         }
     }
     .desc{
@@ -74,11 +78,11 @@
             <template v-if="!isSelf">
                 <span :class="[$style.infoBtn]" v-if="dataInfo.exchange_status == 0" @click.prevent="exchange('exchange')">交换联系方式</span>
                 <span :class="[$style.infoBtn,{[$style.exchanged]:true}]" v-if="dataInfo.exchange_status == 1" @click.prevent="exchange('cancel')">撤销</span>
-                <span :class="[$style.exchange,'text-center']" v-if="dataInfo.exchange_status == 2" @click.prevent="exchange('contact')">查看联系方式</span>
+                <span :class="[$style.infoBtn,$style.contact,'text-center']" v-if="dataInfo.exchange_status == 2" @click.prevent="exchange('contact')">查看联系方式</span>
             </template>
             <div :class="$style.info">
                 <div :class="$style.portrait">
-                    <img :src="dataInfo.photo" width="40" height="40">
+                    <imgContain :imgUrl="dataInfo.photo" :onlyImage="true" style="width:40px ;height:40px"></imgContain>
                 </div>
                 <div :class="[$style.text,$style.text1]">
                     <div>
@@ -151,7 +155,7 @@
             this.$toast('服务器异常')
           })
         }else{
-
+          this.$router.push(`/mine/contacts/${this.dataInfo.uid}`);
         }
       }
     }

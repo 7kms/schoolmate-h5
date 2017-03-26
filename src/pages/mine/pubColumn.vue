@@ -16,13 +16,6 @@
     import pubPhoto from './pubPhoto.vue'
     import pubActivity from './pubActivity.vue'
   export default{
-    beforeRouteLeave (to, from, next) {
-      this.$store.dispatch('interact/RESET_INTERACT_LIST');
-      this.$store.dispatch('activity/RESET_COLUMN_LIST');
-      this.$store.dispatch('activity/RESET_PHOTO_LIST');
-      this.$store.dispatch('activity/RESET_ATTEND_LIST');
-      next();
-    },
     components:{
       pubInteract,
       pubAttend,
@@ -45,6 +38,10 @@
       }
     },
     created(){
+      this.$store.dispatch('interact/RESET_INTERACT_LIST');
+      this.$store.dispatch('activity/RESET_COLUMN_LIST');
+      this.$store.dispatch('activity/RESET_PHOTO_LIST');
+      this.$store.dispatch('activity/RESET_ATTEND_LIST');
       this.currentItem = this.$route.params.column || 'interact';
     }
   }

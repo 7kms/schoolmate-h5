@@ -41,11 +41,11 @@
                 column: state => state.activity.column
             })
         },
-        beforeRouteLeave (to, from, next) {
-            if(to.name != 'column-detail'){
-                this.$store.dispatch('activity/RESET_COLUMN_LIST');
-            }
-            next();
+        beforeRouteLeave(to, from, next) {
+          if(to.name == 'column-detail'){
+            this.$store.dispatch('activity/CHANGE_COLUMN_STATUS',{noRefresh:true});
+          }
+          next();
         },
         methods:{
             onPublish() {
@@ -67,10 +67,10 @@
             }
         },
         created(){
+          this.$store.dispatch('activity/RESET_COLUMN_LIST');
           if(!this.column.list.length){
             this.loadMore();
           }
-//            Swiper()
         }
     }
 </script>

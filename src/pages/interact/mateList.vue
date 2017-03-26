@@ -20,18 +20,20 @@
         <div v-if="!loading && mates.list.length == 0" class="empty-data-item">
             <span>数据为空</span>
         </div>
+        <publishBtn text="问校友" type="feedback"></publishBtn>
     </div>
 </template>
 <script>
   import { mapState } from 'vuex';
-  import Item from './mate.vue';
+  import Item from '../public/mate.vue';
   import SearchFilter from './mateFilter.vue';
   import $api from 'api';
   import publishBtn from '../../components/publish';
   export default {
     data(){
       return {
-        loading: false
+        initFilter: false,
+        loading: true
       }
     },
     components:{
@@ -46,11 +48,6 @@
       ...mapState({
         mates: state => state.interact.mates
       })
-    },
-    beforeRouteLeave (to, from, next) {
-      this.$store.dispatch('interact/RESET_MATES_LIST');
-      this.$store.dispatch('interact/RESET_MATES_CONDITION');
-      next();
     },
     methods:{
       onPublish() {
@@ -67,6 +64,9 @@
       }
     },
     created(){
+      this.$store.dispatch('interact/RESET_MATES_LIST');
+      this.$store.dispatch('interact/RESET_MATES_NAV');
+      this.$store.dispatch('interact/RESET_MATES_CONDITION');
       if(!this.mates.list.length){
         this.loadMore();
       }

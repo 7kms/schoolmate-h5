@@ -13,6 +13,7 @@
             <Item v-for="(item,index) in interact.list"
                   :class="$style.item" :key="index"
                   :dataInfo="item"
+                  @remove="remove"
                   @showSwiper="showSwiper"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
@@ -70,6 +71,17 @@
           this.loading = false;
           this.$toast({message: err});
         });
+      },
+      remove(item){
+        $api.post('/Help/revoke',{ rid:item.rid})
+          .then(res=>{
+            this.$toast(res.msg);
+            if(res.result){
+              this.$store.dispatch('interact/REMOVE_INTERACT',item);
+            }
+          },err=>{
+            this.$toast('服务器异常');
+          });
       }
     },
     created(){

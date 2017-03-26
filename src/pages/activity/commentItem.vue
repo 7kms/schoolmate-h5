@@ -35,7 +35,7 @@
     <li :class="[$style.content,{[$style.onBorder]:isOwner}]">
         <div :class="[$style.portrait,'text-center']">
             <div :class="$style.pic">
-                <img :src="dataInfo.photo" alt="" width="40" height="40">
+                <imgContain :imgUrl="dataInfo.photo" :onlyImage="true" style="width:40px ;height:40px"></imgContain>
             </div>
         </div>
         <div :class="$style.desc">

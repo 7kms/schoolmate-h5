@@ -200,10 +200,10 @@
                     </div>
                 </div>
             </div>
-            <div :class="$style.operate" v-if="userInfo.verify_status">
+           <!-- <div :class="$style.operate" v-if="userInfo.verify_status">
                 <span :class="[$style.btn, $style.reject]" @click="reject(userInfo)">拒绝</span>
                 <span :class="[$style.btn, $style.agree]" @agree="agree(userInfo)">同意</span>
-            </div>
+            </div>-->
         </div>
     </div>
 

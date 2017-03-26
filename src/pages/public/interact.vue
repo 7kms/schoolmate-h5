@@ -13,11 +13,12 @@
     .imgContent{
         margin: 6px 0;
         display: flex;
-        justify-content: space-between;
     }
     .imgItem{
         width: 80px;
         height: 80px;
+        margin-right: ~"calc(25% - 80px)";
+        background-size: cover;
     }
     .user{
         display: flex;
@@ -84,11 +85,11 @@
             <time class="weak">{{dataInfo.create_time | dateFormat('yyyy/MM/dd') }}</time>
         </div>
         <div :class="$style.imgContent" v-if="!dataInfo.noPicture">
-            <ImgContain :imgUrl="url" :class="$style.imgItem" v-if="index < 4"  @click.native="showSwiper(index)" v-for="(url,index) in dataInfo.pictures"></ImgContain>
+            <ImgLazy :imgUrl="url" :class="$style.imgItem" v-if="index < 4 && url"  @click.native="showSwiper(index)" type="square" v-for="(url,index) in dataInfo.pictures"></ImgLazy>
         </div>
         <div :class="$style.user">
             <div>
-                <img :src="dataInfo.photo" width="40" height="40">
+                <imgContain :imgUrl="dataInfo.photo" :onlyImage="true" style="width:40px ;height:40px"></imgContain>
                 <div :class="[$style.name,'color-topic','one-line']">
                     {{dataInfo.creater.name}}
                 </div>
@@ -184,15 +185,7 @@
           },()=>{});
       },
       remove(){
-          $api.post('/Help/revoke',{ rid:this.dataInfo.rid})
-          .then(res=>{
-              this.$toast(res.msg);
-              if(res.result){
-
-              }
-          },err=>{
-              this.$toast('服务器异常');
-          });
+        this.$emit('remove',this.dataInfo);
       },
       goContacts(){
         this.$router.push({path:'/interact/contacts',query:{rid:this.dataInfo.rid}})

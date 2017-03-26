@@ -15,7 +15,7 @@ var state = {
     nav:[
       {name:'同城', active: false},
       {name:'同行', active: false},
-      {name:'同学', active: false},
+      {name:'同班', active: false},
       {name:'更多', active: false, more: true},
     ],
     condition:{}
@@ -58,6 +58,9 @@ const actions = {
   [types.RESET_INTERACT_LIST] ({ commit }) {
     commit(types.RESET_INTERACT_LIST);
   },
+  [types.REMOVE_INTERACT] ({ commit }, item) {
+    commit(types.REMOVE_INTERACT,item);
+  },
   [types.CHANGE_MATES_CONDITION] ({ commit }, status) {
   	commit(types.CHANGE_MATES_CONDITION, status);
   },
@@ -83,10 +86,12 @@ const actions = {
   },
   [types.RESET_MATES_CONDITION] ({ commit }) {
     commit(types.RESET_MATES_CONDITION);
-    commit(types.RESET_MATES_LIST);
   },
   [types.SWITCH_MATES_NAV] ({ commit },nav) {
     commit(types.SWITCH_MATES_NAV, nav);
+  },
+  [types.RESET_MATES_NAV] ({ commit }) {
+    commit(types.RESET_MATES_NAV);
   }
 };
 
@@ -110,8 +115,12 @@ const mutations = {
   [types.CHANGE_INTERACT_STATUS] (state, status) {
     state.interact = Object.assign(state.interact, status);
   },
-
-
+  [types.REMOVE_INTERACT] (state, item) {
+    let index = state.interact.list.indexOf(item);
+    if(~index){
+      state.interact.list = state.interact.list.filter(obj=>obj.rid != item.rid);
+    }
+  },
   [types.APPEND_MATES_LIST] (state, dataList) {
     state.mates.list = [...state.mates.list, ...dataList];
   },
@@ -138,6 +147,11 @@ const mutations = {
       }
     });
   },
+  [types.RESET_MATES_NAV] (state) {
+    state.mates.nav.forEach(nav => {
+      nav.active = false;
+    });
+  }
 };
 
 export default {

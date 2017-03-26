@@ -115,6 +115,7 @@
             </div>
             <mt-checklist
                     v-model="info.circle"
+                    class="check-list"
                     :options="rangeOptions">
             </mt-checklist>
         </mt-popup>
@@ -255,15 +256,30 @@
       },
       publish(){
         if(!this.valid()) return false;
-        $api.post('/Help/createRes',this.info)
-          .then(res=>{
-            if(res.code == 200){
-              this.$toast(res.msg);
-              this.$router.back();
-            }
-          },res=>{
-            this.$toast('服务器异常')
-          })
+        let {rid} =  this.$route.query;
+        if(rid){
+          let parm = this.info;
+          parm.rid = rid;
+          $api.post('/Help/createRes',parm)
+            .then(res=>{
+              if(res.code == 200){
+                this.$toast(res.msg);
+                this.$router.back();
+              }
+            },res=>{
+              this.$toast('服务器异常')
+            })
+        }else{
+          $api.post('/Help/createRes',this.info)
+            .then(res=>{
+              if(res.code == 200){
+                this.$toast(res.msg);
+                this.$router.back();
+              }
+            },res=>{
+              this.$toast('服务器异常')
+            })
+        }
       }
     },
     created(){

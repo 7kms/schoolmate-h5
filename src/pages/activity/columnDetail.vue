@@ -74,7 +74,7 @@
                     </div>
                     <div :class="$style.item">
                         <div :class="$style.text">
-                            <span>活动说明：</span><span>{{dataInfo.info.description}}</span>
+                            <span>活动说明：</span><span v-transform="dataInfo.info.description"></span>
                         </div>
                     </div>
                     <div class="text-right">

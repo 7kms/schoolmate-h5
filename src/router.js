@@ -128,7 +128,7 @@ const ROUTER_SETTING = {
                   component: resolve => require(['./pages/moments/verifyList.vue'], resolve)
                 },
                 {
-                    path: 'interest/:id/member',
+                    path: 'interest/:cid/member',
                     name: 'interest-member',
                     meta: {
                       title:'兴趣圈',
@@ -145,6 +145,15 @@ const ROUTER_SETTING = {
                         title:'行业圈'
                     },
                     component: resolve => require(['./pages/moments/industryList.vue'], resolve)
+                },
+                {
+                  path: 'industry/:cid',
+                  name: 'industry-detail',
+                  meta: {
+                    title:'圈子联系人',
+                    needAuthor: true
+                  },
+                  component: resolve => require(['./pages/moments/industryDetail.vue'], resolve)
                 }
             ]
         },
@@ -156,28 +165,28 @@ const ROUTER_SETTING = {
                     path:'',
                     meta: {
                       showNav: true,
-                      meta:'我的'
+                      title:'我的'
                     },
                     component: resolve => require(['./pages/mine/menu.vue'], resolve)
                   },
                   {
                     path:'info',
                     meta: {
-                      meta:'我的资料'
+                      title:'我的资料'
                     },
                     component: resolve => require(['./pages/mine/info.vue'], resolve)
                   },
                   {
                     path:'contacts',
                     meta: {
-                      meta:'通讯录'
+                      title:'通讯录'
                     },
                     component: resolve => require(['./pages/mine/contactList.vue'], resolve)
                   },
                   {
                     path:'contacts/:id',
                     meta: {
-                      meta:'联系人'
+                      title:'联系人'
                     },
                     component: resolve => require(['./pages/mine/contactDetail.vue'], resolve)
                   },
@@ -203,7 +212,7 @@ const ROUTER_SETTING = {
         {
             path: '/entrance',
             meta: {
-              meta:'注册'
+              title:'注册'
             },
             component: resolve => require(['./pages/entrance/index.vue'], resolve)
         },
@@ -211,7 +220,7 @@ const ROUTER_SETTING = {
           path: '/comment/:column',
           name: 'comment',
           meta: {
-            meta:'评论',
+            title:'评论',
             needAuthor: true
           },
           component: resolve => require(['./pages/comment/index.vue'], resolve)
@@ -227,33 +236,41 @@ const ROUTER_SETTING = {
             {
               path:'activity',
               meta: {
-                meta:'发布活动'
+                title:'发布活动'
               },
               component: resolve => require(['./pages/publish/publishActivity.vue'], resolve)
             },
             {
               path:'photo',
               meta: {
-                meta:'发布照片'
+                title:'发布照片'
               },
               component: resolve => require(['./pages/publish/publishPhoto.vue'], resolve)
             },
             {
               path:'interact',
               meta: {
-                meta:'发布需求'
+                title:'发布需求'
               },
               component: resolve => require(['./pages/publish/publishInteract.vue'], resolve)
             },
             {
               path:'interest',
               meta: {
-                meta:'发布圈子'
+                title:'发布圈子'
               },
               component: resolve => require(['./pages/publish/publishInterest.vue'], resolve)
             }
           ]
         },
+      {
+        path: '/feedback',
+        name: 'feedback',
+        meta: {
+          title:'问校友'
+        },
+        component: resolve => require(['./pages/feedback/index.vue'], resolve)
+      },
         {
             path: '*',
             redirect: '/'

@@ -5,7 +5,9 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<title><%= htmlWebpackPlugin.options.title %></title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
 	<!--是否启动webapp功能，会删除默认的苹果工具栏和菜单栏。-->
 	<meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
@@ -21,16 +23,11 @@
 	<div id="launch-view">
 		<transition name="fade" @after-leave="onLaunchEnd">
 			<div class="init-render-content text-center" v-if="launching">
-				<div>
-					<div class="logo">
-						<img src="<%= require('../assets/images/logo-xyy.png') %>" width="126" height="126" alt="校友云">
-					</div>
-					<div>
-						<img src="<%= require('../assets/images/solgan.png') %>" width="223" height="29" alt="校友云">
-					</div>
+				<div class="logo">
+					<img src="<%= require('../assets/images/logo-xyy.png') %>" width="126" height="126" alt="校友云">
 				</div>
-				<div class="organization">
-					<img src="<%= require('../assets/images/school.png') %>" width="136" height="38" alt="河北地貌大学">
+				<div>
+					<img src="<%= require('../assets/images/slogan.png') %>" width="163" height="15" alt="校友云">
 				</div>
 			</div>
 		</transition>

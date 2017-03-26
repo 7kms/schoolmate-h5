@@ -6,7 +6,7 @@
     }
     .compose{
         display: flex;
-        justify-content: space-between;
+        /*justify-content: space-between;*/
         align-items: center;
     }
     .header,.desc{
@@ -21,10 +21,9 @@
     .pic{
         height: 125px;
         .item{
-            flex: 1;
             height: 100%;
+            width: 33.3%;
             background-size: cover;
-            /*background-image: url("../../assets/moke/0.3.1.png");*/
         }
     }
     .desc{
@@ -77,7 +76,7 @@
             <time class="weak">{{dataInfo.time | dateFormat('yyyy/MM/dd')}}</time>
         </div>
         <div :class="[$style.pic,$style.compose]">
-            <ImgContain :class="$style.item" v-for="(url,index) in dataInfo.pictures" :imgUrl="url" :key="index"></ImgContain>
+            <ImgLazy :class="$style.item" v-for="(url,index) in dataInfo.pictures" type="square" :imgUrl="url" :key="index" v-if="url"></ImgLazy>
         </div>
         <div :class="[$style.desc,$style.compose]">
             <div :class="$style.descItem">
