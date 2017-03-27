@@ -145,10 +145,12 @@ export default {
     isAuthored() {
       console.log('author---------');
       return new Promise(( resolve, reject ) => {
+          console.log('promise---------');
+          console.log(store.state.user.profile.first_logined);
         if(!store.state.user.profile.first_logined){
           $api.get('/Profile/getProfile')
             .then( data => {
-              console.log('success',data.profile);
+              console.log('success',data.profile.first_logined);
               if(data.profile.first_logined == '0'){
                 resolve()
               }else {
