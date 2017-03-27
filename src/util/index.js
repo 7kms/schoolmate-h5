@@ -143,29 +143,39 @@ export default {
       return /iphone|ipad|ipod/.test(ua);
     },
     isAuthored() {
-      console.log('author---------');
       return new Promise(( resolve, reject ) => {
-          console.log('promise---------');
-          console.log(store.state.user.profile.first_logined);
         if(!store.state.user.profile.first_logined){
           $api.get('/Profile/getProfile')
             .then( data => {
-              console.log('success',data.profile.first_logined);
               if(data.profile.first_logined == '0'){
                 resolve()
               }else {
+                  MessageBox.confirm('此操作需要完善个人信息').then(data=>{
+                      router.push('/entrance');
+                  },data=>{
+
+                  });
                 reject();
               }
             }, data => {
-              console.log('error',data);
+                MessageBox.alert('服务器异常');
               reject();
             });
         }else{
-          console.log('store----------------',store.state.user);
-          store.state.user.profile.first_logined == '0' ?  resolve() : reject();
+            if(store.state.user.profile.first_logined == '0'){
+                resolve()
+            }else{
+                MessageBox.confirm('此操作需要完善个人信息').then(data=>{
+                    router.push('/entrance');
+                },data=>{
+
+                });
+                reject()
+            }
         }
       });
     },
+
     transformTextToHtml(str){
         str = str || '';
         str = str.replace(/(\<)|(\>)|(\n)/ig,function($0){

@@ -299,11 +299,7 @@ router.beforeEach((to, from, next) => {
         changeTitle(to);
         next();
       },()=>{
-        MessageBox.confirm('此操作需要完善个人信息').then(data=>{
-          next('/entrance');
-        },data=>{
           next(false);
-        });
       });
     }else{
       changeTitle(to);
@@ -337,5 +333,4 @@ function changeTitle(to) {
     document.title = titleStr;
   }
 }
-
 export default router;
