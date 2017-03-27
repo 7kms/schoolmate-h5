@@ -25,12 +25,12 @@
     }
     .imgContent{
         display: flex;
-        justify-content: space-between;
     }
     .imgItem{
-        width: 33%;
+        width: 33.3%;
         height: 125px;
-        flex: 1;
+        background-repeat: no-repeat;
+        background-size: cover;
     }
 </style>
 <template>
@@ -52,7 +52,7 @@
             </div>
         </div>
         <div :class="$style.imgContent" v-if="dataInfo.pictures.length > 0">
-            <ImgContain v-for="img in dataInfo.pictures" :imgUrl="img" :class="$style.imgItem"></ImgContain>
+            <ImgLazy v-for="(img,index) in dataInfo.pictures" v-if="index < 3" :imgUrl="img" :class="$style.imgItem" type="square"></ImgLazy>
         </div>
     </li>
 </template>

@@ -82,7 +82,7 @@
       },
       reject(contact){
         const {fid} = contact;
-        this.$dialog.confirm('拒绝交换联系方式,并将其从列表中删除?').then(data=>{
+        this.$dialog.confirm('拒绝交换联系方式,并将其从列表中删除').then(data=>{
           return $api.post('/Profile/handleExchange',{fid,status:0});
         },data=>{
           return false;
@@ -100,7 +100,7 @@
       },
       remove(contact){
         const {fid} = contact;
-        this.$dialog.confirm('移除通讯录?').then(data=>{
+        this.$dialog.confirm('移除通讯录').then(data=>{
           return $api.post('/Profile/delExchange',{fid});
         },data=>{
           return false;

@@ -248,7 +248,7 @@ const ROUTER_SETTING = {
               component: resolve => require(['./pages/publish/publishPhoto.vue'], resolve)
             },
             {
-              path:'interact',
+                path:'interact',
               meta: {
                 title:'发布需求'
               },

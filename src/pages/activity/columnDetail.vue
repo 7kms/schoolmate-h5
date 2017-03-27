@@ -89,7 +89,7 @@
                 <h3 class="item-header">报名名单</h3>
                 <ul>
                     <attendedItem :dataInfo="dataInfo.creator" :isAuthor="true" ></attendedItem>
-                    <attendedItem v-for="item in dataInfo.attendedCrowd" :key="item.uid" :dataInfo="item"></attendedItem>
+                    <attendedItem v-for="item in dataInfo.attendedCrowd" :key="item.uid" :dataInfo="item" :showInfo="isCreater"></attendedItem>
                 </ul>
             </div>
             <div :class="['list-content',$style.info,$style.commentList]">
@@ -128,6 +128,13 @@
           ...mapState({
             self:(state)=>state.user.profile
           }),
+          isCreater(){
+            if(this.loading){
+              return false;
+            }else{
+              return this.self.uid == this.dataInfo.creator.uid;
+            }
+          },
           operateBarData(){
             var obj = {
               leftText:'马上报名',

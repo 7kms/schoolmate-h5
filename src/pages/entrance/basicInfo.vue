@@ -191,6 +191,11 @@
           let role = channel == 'graduate' ? 'student' : channel;
           this.$store.dispatch('entrance/CHANGE_CHANNEL',channel);
           this.$store.dispatch('entrance/CHANGE_USERINFO',{role});
+          if(channel == 'teacher'){
+            this.$store.dispatch('entrance/CHANGE_USERINFO',{company:'河北地质大学'});
+          }else{
+            this.$store.dispatch('entrance/CHANGE_USERINFO',{company:''});
+          }
         },
         changeName(event){
           this.$store.dispatch('entrance/CHANGE_USERINFO',{name:event.target.value})

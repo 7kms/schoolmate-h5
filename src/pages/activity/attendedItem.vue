@@ -46,18 +46,29 @@
                 <imgContain :imgUrl="dataInfo.photo" :onlyImage="true" style="width:40px ;height:40px"></imgContain>
 
             </div>
-            <div :class="[$style.userText,'color-topic']">{{dataInfo.name}}</div>
+            <div :class="[$style.userText,'color-topic']">{{dataInfo.name || '姓名未填写'}}</div>
             <div :class="[$style.userText]" v-if="isAuthor">(发布者)</div>
         </div>
         <div :class="$style.desc">
-            <template v-if="!isSelf">
+            <template v-if="showInfo">
+                <span :class="[$style.exchange,'text-center']" @click="exchange('contact')">查看联系方式</span>
+            </template>
+            <template v-else-if="!isSelf">
                 <span :class="[$style.exchange,'text-center']" v-if="dataInfo.exchange_status == 0" @click="exchange('exchange')">交换联系方式</span>
                 <span :class="[$style.exchange,$style.gray,'text-center']" v-if="dataInfo.exchange_status == 1" @click="exchange('cancel')">撤销</span>
                 <span :class="[$style.exchange,'text-center']" v-if="dataInfo.exchange_status == 2" @click="exchange('contact')">查看联系方式</span>
             </template>
-           <div>{{dataInfo.company}}</div>
-           <div>{{dataInfo.department}}</div>
-           <div>{{dataInfo.detail_job}}</div>
+            <template v-if="dataInfo.role=='student'">
+                <div>{{dataInfo.company || '河北地质大学'}}</div>
+                <div>{{dataInfo.major || '专业未填写'}}</div>
+                <div>学生</div>
+            </template>
+            <template v-else>
+                <div>{{dataInfo.company || '公司未填写'}}</div>
+                <div>{{dataInfo.department || '部门未填写'}}</div>
+                <div>{{dataInfo.detail_job || '详细工作未填写'}}</div>
+            </template>
+
            <div :class="$style.desText">我的资源：<span>{{dataInfo.resource_description}}</span></div>
         </div>
     </li>
@@ -68,6 +79,7 @@
     export default{
       props:{
         isAuthor:Boolean,
+        showInfo:Boolean,
         dataInfo:{
           type:Object,
           required: true

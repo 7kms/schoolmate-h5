@@ -40,10 +40,10 @@
         </div>
         <div :class="$style.desc">
             <div>
-                <span class="color-topic">{{dataInfo.name}}</span>
-                <span>{{dataInfo.company}}</span>
+                <span class="color-topic">{{dataInfo.name || '姓名未填写'}}</span>
+                <span>{{dataInfo.company || '公司未填写'}}</span>
                 <span> | </span>
-                <span>{{dataInfo.detail_job}}</span>
+                <span>{{dataInfo.detail_job || '详细工作未填写'}}</span>
             </div>
             <div :class="[$style.desText,'color-topic']" v-transform="dataInfo.content"></div>
             <div class="text-right">

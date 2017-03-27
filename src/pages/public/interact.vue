@@ -22,8 +22,9 @@
     }
     .user{
         display: flex;
-        padding-top: 6px !important;
-        border-top: 1px solid @line-color-split;
+        padding-bottom: 6px !important;
+        margin-bottom: 6px !important;
+        border-bottom: 1px solid @line-color-split;
         .name{
             margin-top: 6px;
             width: 40px;
@@ -76,17 +77,6 @@
 </style>
 <template>
     <div :class="$style.content">
-        <div :class="$style.desc">
-            <span v-if="dataInfo.type == 2" class="color-theme size-topic">拥有资源：</span>
-            <span v-else　class="color-hint size-topic">寻求合作：</span>
-            <div v-transform="dataInfo.description"></div>
-        </div>
-        <div class="text-right">
-            <time class="weak">{{dataInfo.create_time | dateFormat('yyyy/MM/dd') }}</time>
-        </div>
-        <div :class="$style.imgContent" v-if="!dataInfo.noPicture">
-            <ImgLazy :imgUrl="url" :class="$style.imgItem" v-if="index < 4 && url"  @click.native="showSwiper(index)" type="square" v-for="(url,index) in dataInfo.pictures"></ImgLazy>
-        </div>
         <div :class="$style.user">
             <div>
                 <imgContain :imgUrl="dataInfo.photo" :onlyImage="true" style="width:40px ;height:40px"></imgContain>
@@ -120,6 +110,17 @@
                     <span :class="$style.infoBtn" @click.stop.prevent="goContacts">合作名单</span>
                 </template>
             </div>
+        </div>
+        <div :class="$style.desc">
+            <span v-if="dataInfo.type == 2" class="color-theme size-topic">拥有资源：</span>
+            <span v-else　class="color-hint size-topic">寻求合作：</span>
+            <div v-transform="dataInfo.description"></div>
+        </div>
+        <div class="text-right">
+            <time class="weak">{{dataInfo.create_time | dateFormat('yyyy/MM/dd') }}</time>
+        </div>
+        <div :class="$style.imgContent" v-if="!dataInfo.noPicture">
+            <ImgLazy :imgUrl="url" :class="$style.imgItem" v-if="index < 4 && url"  @click.native="showSwiper(index)" type="square" v-for="(url,index) in dataInfo.pictures"></ImgLazy>
         </div>
         <div class="text-right weak" v-if="isSelf">
             <span :class="[$style.remove,'inline-block']" @click.stop.prevent="remove">

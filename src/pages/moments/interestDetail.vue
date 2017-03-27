@@ -47,9 +47,9 @@
             </div>
             <div :class="$style.detail" v-if="!loading">
                 <Basic :dataInfo="basicInfo" v-if="item=='basic'"></Basic>
-                <Activity  v-if="item=='activity'"></Activity>
-                <Photo  v-if="item=='photo'"></Photo>
-                <Interact v-if="item=='interact'"></Interact>
+                <Activity  v-if="item=='activity'" :showPublish="basicInfo.created_by_me"></Activity>
+                <Photo  v-if="item=='photo'" :showPublish="basicInfo.created_by_me"></Photo>
+                <Interact v-if="item=='interact'" :showPublish="basicInfo.created_by_me"></Interact>
             </div>
         </div>
     </div>
@@ -73,7 +73,8 @@
       return {
         item: '',
         loading: true,
-        basicInfo:''
+        basicInfo:{},
+        isCreater:false
       }
     },
     beforeRouteLeave (to, from, next){
@@ -83,16 +84,14 @@
       next();
     },
     methods:{
-      getData(item){
-        if(item == 'basic'){
-          $api.get('/Circle/getCircle',{cid: this.$route.params.id})
-            .then(data=>{
+      getData(){
+        $api.get('/Circle/getCircle',{cid: this.$route.params.id})
+          .then(data=>{
                 this.basicInfo = {...data};
-              this.loading = false;
-            })
-        }else{
-          this.loading = false;
-        }
+                this.loading = false;
+            },()=>{
+                this.loading = false;
+            });
       },
       switchItem(item){
         var id = this.$route.params.id;
@@ -106,7 +105,7 @@
       var id = this.$route.params.id;
       var item = this.$route.query.item;
       this.item = item;
-      this.getData(this.item);
+      this.getData();
     },
     watch:{
       $route(to,from){

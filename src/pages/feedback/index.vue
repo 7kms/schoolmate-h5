@@ -28,21 +28,14 @@
     }
     .text{
         width: 270px;
-        height: 71px;
         margin-left: 10px;
+        border-radius: 10px;
         background: url("../../assets/images/feedback-dialog.png") no-repeat;
-        background-size: contain;
+        background-size: cover;
     }
     .info{
-        /*padding: 8px 5px 0 18px;*/
-        padding: 1px 1px 0 14px;
+        padding: 8px 5px 8px 20px;
         color: #fff;
-    }
-    @media screen and (min-width: 355px){
-        .info{
-            padding: 8px 5px 0 18px;
-            color: #fff;
-        }
     }
 </style>
 <template>
@@ -53,12 +46,12 @@
             </div>
             <div :class="$style.text">
                 <div :class="$style.info">
-                    您好，我是校友云产品经理—刘振远，2002级，广告
-                    学专业联系方式：<span class="color-hint">15910927347</span>（微信同号）。您有
-                    任何问题可写在下方或直接联系我，我们会及时处理
-                    您反馈的问题。谢谢！
+                    亲爱的校友:<br/>
+                    您好！我是校友云创始人刘振远，【2002级，广告学，<span class="color-hint">15910927347</span>（微信同号）】<br/>
+                    校友云的宗旨：情感互联，资源共享，困难互助！如果您有好的创业项目想找投资，生活中遇到了困难想寻求帮助请联系我，谢谢！
                 </div>
             </div>
+
         </div>
         <div>
             <textarea ref="area" :class="[$style.area,'size-topic']" placeholder="写下你的问题" maxlength="200" v-model="comment"></textarea>

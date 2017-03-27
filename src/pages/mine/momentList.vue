@@ -60,7 +60,7 @@
       }
     },
     created(){
-        $api.get('/Circle/getMyCircle')
+        $api.get('/Circle/getMyCreatedCircle')
         .then(data => {
           this.loading = false;
             data.forEach(item =>{

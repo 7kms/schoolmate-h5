@@ -16,11 +16,13 @@
         <div v-if="!loading && interact.noMore && interact.list.length == 0" class="empty-data-item">
             <span>数据为空</span>
         </div>
+        <publishBtn v-if="showPublish" text="发需求" @click="onPublish"></publishBtn>
     </div>
 </template>
 <script>
   import { mapState } from 'vuex';
   import Item from '../public/interact.vue';
+  import publishBtn from '../../components/publish';
   import $api from 'api';
   export default {
     data(){
@@ -28,8 +30,12 @@
         loading: false
       }
     },
+    props:{
+      showPublish:Boolean
+    },
     components:{
-      Item
+      Item,
+      publishBtn
     },
     computed:{
       noScroll () {
@@ -40,6 +46,9 @@
       })
     },
     methods:{
+      onPublish() {
+        this.$router.push(`/publish/interact`);
+      },
       loadMore() {
         this.loading = true;
         this.$store.dispatch('interact/LOAD_INTERACT_LIST',{cid: this.$route.params.id}).then(()=>{

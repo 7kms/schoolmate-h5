@@ -16,20 +16,27 @@
         <div v-if="!loading && photo.noMore && photo.list.length == 0" class="empty-data-item">
             <span>数据为空</span>
         </div>
+        <publishBtn v-if="showPublish" text="发照片" @click="onPublish"></publishBtn>
+
     </div>
 </template>
 <script>
   import { mapState } from 'vuex';
   import Item from '../public/photo.vue';
+  import publishBtn from '../../components/publish';
   import $api from 'api';
   export default {
-    components:{
-      Item
+    props:{
+      showPublish:Boolean
     },
     data(){
       return {
         loading: false
       }
+    },
+    components:{
+      Item,
+      publishBtn
     },
     computed:{
       noScroll(){
