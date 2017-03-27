@@ -10,7 +10,7 @@
             infinite-scroll-disabled="noScroll"
             infinite-scroll-immediate-check="false"
             infinite-scroll-distance="80">
-            <Item v-for="(item,index) in photo.list" :class="$style.item" :key="index" :dataInfo="item" @click="goDetail(item)"></Item>
+            <Item v-for="(item,index) in photo.list" :class="$style.item" :key="index" :dataInfo="item" @click.native.stop="goDetail(item)"></Item>
          </ul>
          <Loading v-if="loading"></Loading>
         <publishBtn text="发照片" @click="onPublish"></publishBtn>
