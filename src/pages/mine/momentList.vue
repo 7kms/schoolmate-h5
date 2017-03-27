@@ -32,7 +32,7 @@
             <span>我的兴趣圈</span>
         </div>-->
         <ul>
-            <Item v-for="(item,index) in list" :class="$style.item" :key="index" :dataInfo="item" @click.native="goEdit(item)"></Item>
+            <Item v-for="(item,index) in list" :class="$style.item" :key="index" :dataInfo="item" @click.native="goDetail(item)"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
         <div v-if="!loading && list.length == 0" class="empty-data-item">
@@ -55,8 +55,8 @@
       Item
     },
     methods:{
-      goEdit(item){
-          this.$router.push(`/publish/interest?cid=${item.cid}`);
+        goDetail(item){
+          this.$router.push(`/moments/interest/${item.cid}`);
       }
     },
     created(){

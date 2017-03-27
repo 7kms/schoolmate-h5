@@ -372,7 +372,7 @@
             var _this = this;
             return {
               add(file, component) {
-                file.headers['withCredentials'] = true;
+//                file.headers['withCredentials'] = true;
                 file.data.count = 1;
                 component.active = true;
                 _this.picUploading = true;

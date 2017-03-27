@@ -45,7 +45,7 @@
                 <span> | </span>
                 <span>{{dataInfo.detail_job}}</span>
             </div>
-            <div :class="[$style.desText,'color-topic']">{{dataInfo.content}}</div>
+            <div :class="[$style.desText,'color-topic']" v-transform="dataInfo.content"></div>
             <div class="text-right">
                 <span v-if="isOwner" class="weak">
                     <span>{{dataInfo.hit}}个浏览</span>
@@ -72,11 +72,6 @@
         default(){
           return {}
         }
-      }
-    },
-    data(){
-      return {
-        url: require('../../assets/moke/0.3.1.png')
       }
     },
     methods:{

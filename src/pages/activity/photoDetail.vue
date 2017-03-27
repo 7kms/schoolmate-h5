@@ -32,11 +32,9 @@
                 <div :class="$style.desc">
                     <h3 class="topic">{{dataInfo.theme}}</h3>
                     <ul :class="$style.photoList">
-                        <li v-for="url in dataInfo.pictures"><ImgContain :imgUrl="url" :onlyImage="true"></ImgContain></li>
+                        <li v-for="(url,index) in dataInfo.pictures" :key="index"><ImgContain :imgUrl="url" :onlyImage="true"></ImgContain></li>
                     </ul>
-                    <div :class="$style.text">
-                        {{dataInfo.description}}
-                    </div>
+                    <div :class="$style.text" v-transform="dataInfo.description"></div>
                 </div>
             </div>
             <div :class="['list-content',$style.info,$style.commentList]">
