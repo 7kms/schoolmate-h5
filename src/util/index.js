@@ -143,19 +143,23 @@ export default {
       return /iphone|ipad|ipod/.test(ua);
     },
     isAuthored() {
+      console.log('author---------');
       return new Promise(( resolve, reject ) => {
         if(!store.state.user.profile.first_logined){
           $api.get('/Profile/getProfile')
             .then( data => {
+              console.log('success',data.profile);
               if(data.profile.first_logined == '0'){
                 resolve()
               }else {
                 reject();
               }
             }, data => {
+              console.log('error',data);
               reject();
             });
         }else{
+          console.log('store----------------',store.state.user);
           store.state.user.profile.first_logined == '0' ?  resolve() : reject();
         }
       });
