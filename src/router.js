@@ -159,6 +159,9 @@ const ROUTER_SETTING = {
         },
         {
             path: '/mine',
+            meta:{
+              needAuthor: true
+            },
             component: resolve => require(['./pages/mine/index.vue'], resolve),
                 children:[
                   {

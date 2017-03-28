@@ -61,10 +61,10 @@
             </div>
             <span :class="[$style.btn,'size-topic','color-theme']" @click="search">搜索</span>
         </div>
-        <div :class="[$style.bar,'size-topic','color-theme']">
+        <div :class="[$style.bar,'size-topic','color-theme']" v-if="isRegistered">
             <span>我在的行业圈</span>
         </div>
-        <ul>
+        <ul v-if="isRegistered">
             <Item v-for="(item,index) in myList" :class="$style.item" :key="index" :dataInfo="item" @click.native="goDetail(item)"></Item>
         </ul>
         <div :class="[$style.bar,'size-topic','color-theme']">
@@ -85,6 +85,7 @@
   import { mapState } from 'vuex';
   import Item from '../public/industry.vue';
   import $api from 'api';
+  import Util from '../../util'
   import publishBtn from '../../components/publish';
   export default {
     data(){
@@ -101,10 +102,14 @@
         return this.loading || this.industry.noMore;
       },
       ...mapState({
+        profile:state =>state.user.profile,
         industry:state => state.moments.industry,
         list: state => state.moments.industry.list.filter(item=>!item.belongme),
         myList: state => state.moments.industry.list.filter(item=>item.belongme)
-      })
+      }),
+      isRegistered(){
+        return this.profile.first_logined == '0';
+      }
     },
     beforeRouteLeave (to, from, next) {
       if(to.name == 'industry-detail'){
@@ -132,11 +137,9 @@
           });
       },
       goDetail(item){
-        this.$router.push(`/moments/industry/${item.cid}`);
-//        $api.post('/Circle/getIndustryMembers',{cid:item.cid})
-//          .then(res=>{
-//            console.log(res);
-//        })
+        Util.isAuthored('请到“我的”里注册后操作').then(() => {
+          this.$router.push(`/moments/industry/${item.cid}`);
+        },()=>{});
       }
     },
     created(){

@@ -59,10 +59,16 @@
             });
           },
           goDetail(item) {
-              Util.isAuthored().then(() => {
-                item.hit = parseInt(item.hit) + 1;
+             /* Util.isAuthored().then(() => {
+
                 this.$router.push(`/activity/photo-detail/${item.pid}`);
-              },()=>{});
+              },()=>{});*/
+            if(item.view_detail){
+              item.hit = parseInt(item.hit) + 1;
+              this.$router.push(`/activity/photo-detail/${item.pid}`);
+            }else{
+              this.$toast('你没有权限查看详情');
+            }
           }
         },
         created(){

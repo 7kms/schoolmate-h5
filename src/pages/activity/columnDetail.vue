@@ -4,7 +4,7 @@
         padding-bottom: 40px;
     }
     .cover{
-        height: 225px;
+        width:100%;
     }
     .info{
         margin-bottom: 6px;
@@ -82,7 +82,7 @@
                     </div>
                 </div>
                 <div v-if="dataInfo.pictures && dataInfo.pictures.length > 0">
-                    <ImgContain :class="$style.cover" :imgUrl="url" v-for="(url,index) in dataInfo.pictures"></ImgContain>
+                    <ImgContain :class="$style.cover" :imgUrl="url" :onlyImage="true" v-for="(url,index) in dataInfo.pictures"></ImgContain>
                 </div>
             </div>
             <div :class="['list-content',$style.info,$style.attendedList]">

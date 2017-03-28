@@ -435,7 +435,11 @@
           this.$store.dispatch('interact/SWITCH_MATES_NAV',nav);
           if(nav.more){
             if(!this.initFilters)this.initFilters = true;
-            if(this.showMore)nav.active = false;
+            if(this.showMore){
+              nav.active = false;
+            }else{
+              this.$store.dispatch('interact/RESET_MATES_CONDITION');
+            }
             this.showMore = !this.showMore;
           }else{
             this.showMore = false;
@@ -448,13 +452,13 @@
                       if(/北京|天津|上海|重庆/.test(province)){
                         obj.province = province;
                       }else{
-                        obj.city = city;
+                        obj.city = this.profile.city;
                       }
                       this.$store.dispatch('interact/CHANGE_MATES_CONDITION', obj);
                       break;
                   case '同行':
                       this.$store.dispatch('interact/CHANGE_MATES_CONDITION', {
-                          industry: this.profile.industry
+                          job: this.profile.job
                       });
                       break;
                   case '同班':

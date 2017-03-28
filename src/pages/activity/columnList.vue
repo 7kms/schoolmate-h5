@@ -63,7 +63,11 @@
                 });
             },
             goDetail(item) {
-                this.$router.push(`/activity/column-detail/${item.aid}`);
+                if(item.view_detail){
+                  this.$router.push(`/activity/column-detail/${item.aid}`);
+                }else{
+                    this.$toast('你没有权限查看详情');
+                }
             }
         },
         created(){

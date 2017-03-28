@@ -69,7 +69,7 @@
     export default {
         data(){
           return {
-            testUrl:require('../../assets/moke/0.3.2.png'),
+            testUrl:require('../../assets/images/feedback.pic.jpg'),
             comment: ''
           }
         },

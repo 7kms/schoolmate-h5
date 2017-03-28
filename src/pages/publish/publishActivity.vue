@@ -103,7 +103,7 @@
                     <i :class="$style.btnAdd"></i>
                     <span>添加封面</span>
                 </div>
-                <span :class="$style.defaultImg" @click="selectDefaultImage">选用默认</span>
+                <!--<span :class="$style.defaultImg" @click="selectDefaultImage">选用默认</span>-->
             </div>
             <div class="pub-info-content">
                 <div class="pub-item">
@@ -294,7 +294,7 @@
                     end_time: '',
                     description:'',
                     place:'',
-                    cover_file:'image/default-activity-cover.jpg',
+                    cover_file:'',
                     amount:'',
                     fee:'',
                     contact: '',
@@ -438,10 +438,10 @@
                     this.showRange = true;
                 }
             },
-            selectDefaultImage(){
-                this.info.cover_file = 'image/default-activity-cover.jpg';
-                this.showBgImage = true;
-            },
+//            selectDefaultImage(){
+//                this.info.cover_file = 'image/default-activity-cover.jpg';
+//                this.showBgImage = true;
+//            },
             deleteImage(img){
                 console.log(img);
             },
@@ -458,6 +458,10 @@
               }
             },
             valid(){
+                  if(!this.info.cover_file){
+                    this.$toast('请上传活动封面');
+                    return false;
+                  }
                 if(!this.info.theme){
                     this.$toast('活动主题不能为空');
                     return false;

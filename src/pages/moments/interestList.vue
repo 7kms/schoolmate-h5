@@ -65,7 +65,9 @@
         this.$router.push({path:`/moments/interest/${item.cid}/verify`});
       },
       goDetail(item) {
-        this.$router.push({path:`/moments/interest/${item.cid}`,query:{item:'basic'}});
+        Util.isAuthored().then(() => {
+          this.$router.push({path:`/moments/interest/${item.cid}`,query:{item:'basic'}});
+        },()=>{});
       }
     },
     created(){
