@@ -98,7 +98,7 @@
                     </div>
                 </div>
                 <div :class="$style.item">
-                    <div :class="$style.dfn">微 信 号 ：</div>
+                    <div :class="$style.dfn">微信号 ：</div>
                     <div :class="[$style.textInput,'color-topic']">
                         <input type="text" :class="$style.input" v-model="info.wechat">
                     </div>

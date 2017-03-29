@@ -53,10 +53,11 @@
         margin-left: -25px;
     }
     .agreeText{
-        padding: 10px 0;
+        padding: 12px 0 10px;
+        margin-left: -10px;
     }
     .agreeSwitch{
-        transform: scale(.7);
+        transform: scale(.5);
     }
 </style>
 <template>

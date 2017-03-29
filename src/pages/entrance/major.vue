@@ -21,6 +21,7 @@
                     <span class="select color-weak" v-else>选择入专业名称</span>
                 </div>
             </div>
+
             <div class="item">
                 <div class="dfn"><span class="label inline-block">入学时间</span><span class="color-hint inline-block">*</span></div>
                 <div class="textInput color-topic" @click="showPicker('roleStart')">
@@ -47,7 +48,24 @@
                 <span></span><span @click="setDefaultMajor">确定</span>
             </mt-picker>
         </mt-popup>
-        <mt-datetime-picker
+
+
+        <timePicker
+                :showPicker="showMajorStartPicker"
+                :initDate="roleStartDate"
+                :endDate="userInfo.graduate_time"
+                pickerRef="majorStartDatePicker"
+                @selectEnd="selectMajorStart"
+        ></timePicker>
+        <timePicker
+                :showPicker="showMajorEndPicker"
+                :initDate="roleEndDate"
+                :startDate="userInfo.enrol_time"
+                pickerRef="majorEndDatePicker"
+                @selectEnd="selectMajorEnd"
+        ></timePicker>
+
+<!--        <mt-datetime-picker
             ref="startDatePicker"
             type="date"
             cancelText="关闭"
@@ -70,10 +88,11 @@
             :endDate="maxDate"
             v-model="roleEndDate"
         >
-        </mt-datetime-picker>
+        </mt-datetime-picker>-->
     </div>
 </template>
 <script>
+    import { singlePicker, placePicker,timePicker } from '../../components/popPicker';
   import { majorArr } from '../../data';
   import  { mapState } from  'vuex'
   import util from  '../../util'
@@ -84,27 +103,24 @@
         maxDate:new Date('2050/07/01'),
         minLimitDate: new Date('2050/07/01'),
         maxLimitDate: new Date('1950/09/01'),
-        roleStartDate:'',
-        roleEndDate:'',
         showMajorPicker:false,
+          showMajorStartPicker: false,
+          showMajorEndPicker: false,
+          roleStartDate:'',
+          roleEndDate:'',
+          info:{
+              enrol_time: '',
+              graduate_time: ''
+          },
         majorSlots:[{
           flex: 1,
           values: majorArr
         }]
       }
     },
-    watch:{
-      roleStartDate(newValue,oldValue){
-        if(!oldValue) return;
-        this.minLimitDate = newValue;
-        this.$store.dispatch('entrance/CHANGE_USERINFO',{enrol_time:util.dateFormat(newValue,'yyyy/MM/dd')})
+      components:{
+          timePicker
       },
-      roleEndDate(newValue,oldValue){
-        if(!oldValue) return;
-        this.maxLimitDate = newValue;
-        this.$store.dispatch('entrance/CHANGE_USERINFO',{graduate_time:util.dateFormat(newValue,'yyyy/MM/dd')})
-      }
-    },
     computed:{
       ...mapState({
         channel:(state) => state.entrance.channel,
@@ -117,14 +133,19 @@
           case 'major':
             this.showMajorPicker = true;
             break;
-          case 'roleStart':
-            this.$refs['startDatePicker'].open();
-            break;
-          case 'graduate':
-            this.$refs['endDatePicker'].open();
-            break;
+            case 'roleStart':
+                this.showMajorStartPicker = true;
+                break;
+            case 'graduate':
+                this.showMajorEndPicker = true;
+                break;
         }
       },
+        hidePicker(){
+            this.showMajorPicker = false;
+            this.showMajorStartPicker = false;
+            this.showMajorEndPicker = false;
+        },
       selectMajor(picker,values){
         this.$store.dispatch('entrance/CHANGE_USERINFO',{major:values[0]})
       },
@@ -134,6 +155,14 @@
           this.$store.dispatch('entrance/CHANGE_USERINFO',{major:this.majorSlots[0].values[0]})
         }
       },
+        selectMajorStart(value){
+            this.hidePicker();
+            this.$store.dispatch('entrance/CHANGE_USERINFO',{enrol_time:value})
+        },
+        selectMajorEnd(value){
+            this.hidePicker();
+            this.$store.dispatch('entrance/CHANGE_USERINFO',{graduate_time:value})
+        },
       valid(){
         if(!this.userInfo.class){
           this.$toast('班级代码不能为空');
