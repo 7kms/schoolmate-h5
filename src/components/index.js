@@ -1,4 +1,5 @@
-import { Toast, Spinner, MessageBox, Popup, Picker, DatetimePicker, Checklist } from 'mint-ui';
+import { Toast, Spinner, Switch, MessageBox, Popup, Picker, DatetimePicker, Checklist } from 'mint-ui';
+
 import Loading from './loading';
 import ImgContain from './imgContain';
 import ImgLazy from './imgLazy';
@@ -6,6 +7,7 @@ import ImgLazy from './imgLazy';
 const componentsObj = {
     Toast,
     Spinner,
+    Switch,
     Popup,
     Picker,
     Checklist,

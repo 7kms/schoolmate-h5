@@ -44,6 +44,20 @@
             color: #fff;
         }
     }
+    .agreement{
+        display: flex;
+        justify-content: flex-end;
+        position: relative;
+        margin-top: 10px;
+        padding: 0 24px;
+        margin-left: -25px;
+    }
+    .agreeText{
+        padding: 10px 0;
+    }
+    .agreeSwitch{
+        transform: scale(.7);
+    }
 </style>
 <template>
     <div>
@@ -80,10 +94,13 @@
         <div class="entrance-next-step text-center" @click="submit">
             <span>完成</span>
         </div>
+        <div class="text-center" :class="[$style.agreement,'text-right']">
+            <mt-switch v-model="agree" :class="$style.agreeSwitch"></mt-switch><span :class="[$style.agreeText,'inline-block',{'color-theme':agree}]" @click="goAgreement">同意用户协议</span>
+        </div>
     </div>
 </template>
 <script>
-    import  { mapState } from  'vuex'
+    import { mapState } from  'vuex';
     import $api from 'api';
     export default {
         data(){
@@ -92,7 +109,8 @@
                 count: 6,
                 verifyCode:'',
                 friendsArr:[],
-                nameErrorTimes:0
+                nameErrorTimes:0,
+                agree: true
             }
         },
         computed:{
@@ -102,7 +120,14 @@
             })
         },
         methods:{
+            goAgreement(){
+                this.$router.push('/agreement');
+            },
             valid(code){
+               if(!this.agree){
+                   this.$toast('请同意用户协议');
+                   return false;
+               }
               if(!/^1[3-8]\d{9}$/.test(this.userInfo.phonenum)){
                 this.$toast('手机号码不正确');
                 return false;

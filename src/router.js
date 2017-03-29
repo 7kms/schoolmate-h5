@@ -267,6 +267,14 @@ const ROUTER_SETTING = {
           ]
         },
       {
+          path: '/agreement',
+          name: 'agreement',
+          meta: {
+              title:'用户协议'
+          },
+          component: resolve => require(['./pages/agreement/index.vue'], resolve)
+      },
+      {
         path: '/feedback',
         name: 'feedback',
         meta: {
