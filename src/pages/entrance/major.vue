@@ -167,7 +167,7 @@
     },
     mounted(){
       if(this.channel == 'student' || this.channel == 'teacher'){
-        this.$store.dispatch('entrance/CHANGE_USERINFO',{province:'河北省',city:'石家庄'})
+        this.$store.dispatch('entrance/CHANGE_USERINFO',{province:'河北省',city:'石家庄',job:'学生'})
       }
     }
   }

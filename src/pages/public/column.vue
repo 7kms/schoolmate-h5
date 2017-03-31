@@ -52,7 +52,8 @@
                 </div>
                 <div class="color-weak">
                     <i :class="['inline-block',$style.icon,$style.iconTime]"></i>
-                    <span class="inline-block">{{dataInfo.time | dateFormat('M月d日')}}</span>
+                    <span class="inline-block" v-if="dataInfo.time == '0'">不限</span>
+                    <span class="inline-block" v-else>{{dataInfo.time | dateFormat('M月d日')}}</span>
                 </div>
             </div>
         </div>

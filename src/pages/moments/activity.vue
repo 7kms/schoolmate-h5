@@ -59,7 +59,14 @@
         });
       },
       goDetail(item) {
-        this.$router.push(`/activity/column-detail/${item.aid}`);
+          if(this.$parent.basicInfo.is_member){
+              this.$router.push(`/activity/column-detail/${item.aid}`);
+          }else{
+               this.$dialog.confirm('请到【简介】中点击【申请加入】')
+               .then(()=>{
+                    this.$parent.switchItem('basic');
+               },()=>{});
+          }
       }
     },
     created(){

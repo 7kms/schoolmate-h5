@@ -57,8 +57,13 @@
         });
       },
       goDetail(item) {
-        item.hit = parseInt(item.hit) + 1;
-        this.$router.push(`/activity/photo-detail/${item.pid}`);
+          if(this.$parent.basicInfo.is_member){
+              item.hit = parseInt(item.hit) + 1;
+              this.$router.push(`/activity/photo-detail/${item.pid}`);
+          }else{
+              this.$dialog.confirm('请到【简介】中点击【申请加入】')
+                      .then(()=>{this.$parent.switchItem('basic');},()=>{});
+          }
       }
     },
     created(){

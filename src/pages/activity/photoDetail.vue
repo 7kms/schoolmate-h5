@@ -26,7 +26,7 @@
     <div v-if="!loading">
         <div :class="$style.content">
             <div :class="[$style.info,$style.owner]">
-                <commentItem :isOwner="true" :dataInfo="dataInfo"></commentItem>
+                <createrItem :dataInfo="dataInfo"></createrItem>
             </div>
             <div :class="$style.info">
                 <div :class="$style.desc">
@@ -37,7 +37,7 @@
                     <div :class="$style.text" v-transform="dataInfo.description"></div>
                 </div>
             </div>
-            <div :class="['list-content',$style.info,$style.commentList]">
+            <div :class="['list-content',$style.info,$style.commentList]" v-if="dataInfo.comments.length">
                 <h3 class="item-header">校友评论</h3>
                 <ul>
                     <commentItem v-for="(comment,index) in dataInfo.comments" :dataInfo="comment" :key="index" :showRemove="showRemove(comment)" @removeComment="removeComment"></commentItem>
@@ -54,6 +54,7 @@
   import {mapState} from 'vuex';
   import operateBar from  '../public/operateBar.vue'
   import commentItem from './commentItem.vue'
+  import createrItem from './createrItem.vue'
   export default {
     created(){
       this.getData(this.$route.params);
@@ -67,7 +68,8 @@
     },
     components:{
       commentItem,
-      operateBar
+      operateBar,
+        createrItem
     },
     computed:{
       ...mapState({

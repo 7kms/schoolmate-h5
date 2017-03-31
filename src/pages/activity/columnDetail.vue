@@ -30,6 +30,7 @@
             margin-top: 6px;
             .text{
                 line-height: 1.5rem;
+                display: flex;
             }
         }
         .showBtn{
@@ -54,7 +55,8 @@
                     <h3 class="topic">{{dataInfo.info.theme}}</h3>
                     <div :class="$style.item">
                         <div class="itemDfn"><span>活动时间：</span></div>
-                        <div class="itemTxt"><span>{{dataInfo.info.time | dateFormat('M月dd日 hh:mm')}} - {{dataInfo.info.end_time | dateFormat('M月dd日 hh:mm')}}</span></div>
+                        <div class="itemTxt" v-if="dataInfo.info.time != '0'"><span>{{dataInfo.info.time | dateFormat('M月dd日 hh:mm')}} - {{dataInfo.info.end_time | dateFormat('M月dd日 hh:mm')}}</span></div>
+                        <div class="itemTxt" v-else><span>不限制</span></div>
                     </div>
                     <div :class="$style.item">
                         <div class="itemDfn"><span>活动地址：</span></div>
@@ -70,7 +72,7 @@
                     </div>
                     <div :class="$style.item">
                         <div class="itemDfn"><span>限定人数：</span></div>
-                        <div class="itemTxt"><span>{{dataInfo.info.amount}}</span></div>
+                        <div class="itemTxt"><span>{{dataInfo.info.amount == '0' ? '不限制' : dataInfo.info.amount}}</span></div>
                     </div>
                     <div :class="$style.item">
                         <div :class="$style.text">
@@ -92,7 +94,7 @@
                     <attendedItem v-for="item in dataInfo.attendedCrowd" :key="item.uid" :dataInfo="item" :showInfo="isCreater"></attendedItem>
                 </ul>
             </div>
-            <div :class="['list-content',$style.info,$style.commentList]">
+            <div :class="['list-content',$style.info,$style.commentList]" v-if="dataInfo.comments.length">
                 <h3 class="item-header">校友评论</h3>
                 <ul>
                     <commentItem v-for="(comment ,index) in dataInfo.comments" :dataInfo="comment" :key="index" :showRemove="showRemove(comment)" @removeComment="removeComment"></commentItem>

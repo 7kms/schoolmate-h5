@@ -56,7 +56,7 @@
     },
     methods:{
         goDetail(item){
-          this.$router.push(`/moments/interest/${item.cid}`);
+            this.$router.push({path:`/publish/interest`,query:{cid:item.cid}});
       }
     },
     created(){

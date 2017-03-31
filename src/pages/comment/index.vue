@@ -26,7 +26,7 @@
 <template>
     <div :class="$style.content">
         <div>
-            <textarea ref="area" :class="[$style.area,'size-topic']" v-focus placeholder="我有话要说..." maxlength="140" v-model="comment"></textarea>
+            <textarea ref="area" :class="[$style.area,'size-topic']" placeholder="我有话要说..." maxlength="140" v-model="comment"></textarea>
         </div>
         <div>
             <span>{{comment.length}}/140字</span>
@@ -44,13 +44,6 @@
             comment: ''
           }
         },
-      directives:{
-        focus:{
-          inserted: function (el) {
-            el.focus()
-          }
-        }
-      },
         methods: {
             valid(){
                 if(!this.comment.length){

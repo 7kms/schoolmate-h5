@@ -166,7 +166,7 @@ export default {
             if(store.state.user.profile.first_logined == '0'){
                 resolve()
             }else{
-                MessageBox.confirm('此操作需要完善个人信息').then(data=>{
+                MessageBox.confirm('请到菜单【我的】里注册后操作').then(data=>{
                     router.push('/entrance');
                 },data=>{
 

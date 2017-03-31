@@ -41,7 +41,6 @@
           major
        },
        computed:{
-
             ...mapGetters({
               navInfo:'entrance/GET_NAV'
             }),

@@ -61,13 +61,13 @@
             </div>
             <span :class="[$style.btn,'size-topic','color-theme']" @click="search">搜索</span>
         </div>
-        <div :class="[$style.bar,'size-topic','color-theme']" v-if="isRegistered">
+        <div :class="[$style.bar,'size-topic','color-theme']" v-if="isRegistered && myList.length">
             <span>我在的行业圈</span>
         </div>
         <ul v-if="isRegistered">
             <Item v-for="(item,index) in myList" :class="$style.item" :key="index" :dataInfo="item" @click.native="goDetail(item)"></Item>
         </ul>
-        <div :class="[$style.bar,'size-topic','color-theme']">
+        <div :class="[$style.bar,'size-topic','color-theme']" v-if="list.length">
             <span>其他行业圈子</span>
         </div>
         <ul

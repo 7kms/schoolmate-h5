@@ -1,8 +1,10 @@
 <style lang="less" module>
     @import '../../assets/less/const.less';
     .content{
-        height: 205px;
         background-color: #fff;
+    }
+    .user{
+        padding: 10px 12px 6px;
     }
     .compose{
         display: flex;
@@ -27,7 +29,6 @@
         }
     }
     .desc{
-        height: 50px;
         padding-top: 6px;
         padding-bottom: 6px;
         flex-direction: column;
@@ -35,32 +36,29 @@
     }
     .descItem{
         display: flex;
-        justify-content: space-between;
+        align-items:center;
+        height: 36px;
+        & > div{
+            margin-right: 44px;
+            }
         .icon{
             width: 12px;
             height: 12px;
+            margin-right: 6px;
             background-size: contain;
             background-repeat:no-repeat;
             &.iconLike{
-                 background-image: url('../../assets/images/icon-like-small.png');
+               margin-top: -3px;
+               background-image: url('../../assets/images/photo-like.png');
             }
             &.iconComment{
-                 background-image: url('../../assets/images/icon-comment-small.png');
-            }
-            &.iconView, &.iconGood{
-                 width: 10px;
-                 height: 10px;
-                 margin-left: 6px;
+                 background-image: url('../../assets/images/photo-comment.png');
             }
             &.iconView{
                 vertical-align: bottom;
-                 background-image: url('../../assets/images/icon-view.png');
-            }
-            &.iconGood{
-                 background-image: url('../../assets/images/icon-good.png');
+                 background-image: url('../../assets/images/photo-view.png');
             }
         }
-
     }
     .split{
         margin: 0 4px;
@@ -71,40 +69,29 @@
 </style>
 <template>
     <div :class="$style.content" @click.stop="click">
+        <UserCard :dataInfo="dataInfo.user" :class="$style.user"></UserCard>
         <div :class="[$style.header,$style.compose]">
             <h3 class="topic one-line">{{dataInfo.theme}}</h3>
-            <time class="weak">{{dataInfo.time | dateFormat('yyyy/MM/dd')}}</time>
+            <time class="weak" v-if="dataInfo.time == '0'">不限</time>
+            <time class="weak" v-else>{{dataInfo.time | dateFormat('yyyy/MM/dd')}}</time>
         </div>
         <div :class="[$style.pic,$style.compose]">
             <ImgLazy :class="$style.item" v-for="(url,index) in dataInfo.pictures" type="square" :imgUrl="url" :key="index" v-if="url"></ImgLazy>
         </div>
         <div :class="[$style.desc,$style.compose]">
-            <div :class="$style.descItem">
-                <div class="color-weak">
-                    <span>上传者：</span>
-                    <span class="color-topic">{{dataInfo.user.name}}</span>
-                </div>
-                <div class="weak">
-                    <span class="inline-block"><span class="inline-block">{{dataInfo.hit}}</span><i :class="['inline-block',$style.icon,$style.iconView]"></i></span>
-                    <span :class="['inline-block',$style.marginLeft]"><span class="inline-block">{{dataInfo.liked}}</span><i :class="['inline-block',$style.icon,$style.iconGood]"></i></span>
-                </div>
-            </div>
-            <div :class="$style.descItem">
-                <div>
-                    <span>{{dataInfo.user.enrol_time.slice(0,4)}}级</span>
-                    <span :class="$style.split">|</span>
-                    <span>{{dataInfo.user.major}}</span>
-                </div>
-                <div class="color-topic">
-                    <span class="inline-block" @click.prevent.stop="like">
-                        <i :class="['inline-block',$style.icon,$style.iconLike]"></i>
-                        <span class="inline-block">{{dataInfo.is_liked == 1 ? '已赞' : '点赞'}}</span>
-                    </span>
-                    <span :class="[$style.marginLeft,'inline-block']" @click.prevent.stop="comment">
-                        <i :class="['inline-block',$style.icon,$style.iconComment]"></i>
-                        <span class="inline-block">评论</span>
-                    </span>
-                </div>
+            <div :class="[$style.descItem,'color-topic']">
+                  <div>
+                    <i :class="['inline-block',$style.icon,$style.iconView]"></i>
+                    <span class="inline-block">{{dataInfo.hit}}</span>
+                  </div>
+                  <div  @click.prevent.stop="like">
+                    <i :class="['inline-block',$style.icon,$style.iconLike]"></i>
+                    <span class="inline-block">{{dataInfo.liked}}</span>
+                  </div>
+                  <div  @click.prevent.stop="comment">
+                    <i :class="['inline-block',$style.icon,$style.iconComment]"></i>
+                    <span class="inline-block">{{dataInfo.comments}}</span>
+                  </div>
             </div>
         </div>
     </div>
@@ -113,12 +100,16 @@
   import {serverUrl} from '../../config'
   import $api from 'api';
   import Util from '../../util'
+  import UserCard from './userCard.vue'
     export default {
       props: {
         dataInfo: {
           type: Object,
           required: true
         }
+      },
+      components:{
+         UserCard
       },
       methods:{
         click(){

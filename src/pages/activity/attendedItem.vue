@@ -35,6 +35,7 @@
                 margin-bottom: 11px;
             }
         .desText{
+            display: flex;
             line-height: 1.3rem;
         }
     }
@@ -68,8 +69,7 @@
                 <div>{{dataInfo.department || '部门未填写'}}</div>
                 <div>{{dataInfo.detail_job || '详细工作未填写'}}</div>
             </template>
-
-           <div :class="$style.desText">我的资源：<span>{{dataInfo.resource_description}}</span></div>
+           <div :class="$style.desText"><span>我的资源：</span><span v-transform="dataInfo.resource_description"></span></div>
         </div>
     </li>
 </template>

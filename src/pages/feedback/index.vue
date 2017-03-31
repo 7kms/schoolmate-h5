@@ -73,11 +73,6 @@
             comment: ''
           }
         },
-          mounted(){
-              setTimeout(()=>{
-                this.$refs['area'].focus();
-              },500);
-          },
         methods: {
             valid(){
                 if(!this.comment.length){

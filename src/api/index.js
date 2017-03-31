@@ -40,7 +40,7 @@ get: (url, dataObj, opt = {}) => {
                 }
             }, res => {
                 // console.log(res);
-                reject('服务器异常');
+                reject('网络连接超时,请刷新');
             })
         })
     },
