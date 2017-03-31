@@ -6,11 +6,11 @@
 <template>
     <div>
         <ul
-                v-infinite-scroll="loadMore"
-                infinite-scroll-immediate-check="false"
-                infinite-scroll-disabled="noScroll"
-                infinite-scroll-distance="80">
-            <Item v-for="(item,index) in interact.list" :class="$style.item" :key="index" :dataInfo="item"></Item>
+            v-infinite-scroll="loadMore"
+            infinite-scroll-immediate-check="false"
+            infinite-scroll-disabled="noScroll"
+            infinite-scroll-distance="80">
+            <Item v-for="(item,index) in interact.list" :class="$style.item" :key="index" :dataInfo="item" @showSwiper="showSwiper"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
         <div v-if="!loading && interact.noMore && interact.list.length == 0" class="empty-data-item">
@@ -23,6 +23,7 @@
   import { mapState } from 'vuex';
   import Item from '../public/interact.vue';
   import publishBtn from '../../components/publish';
+  import swiper from  '../../components/swiper';
   import $api from 'api';
   export default {
     data(){
@@ -57,6 +58,9 @@
           this.loading = false;
           this.$toast({message: err});
         });
+      },
+      showSwiper(info){
+         this.$parent.swiperInstance = swiper(info);
       }
     },
     created(){

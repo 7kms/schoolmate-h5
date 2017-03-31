@@ -78,6 +78,10 @@
       }
     },
     beforeRouteLeave (to, from, next){
+        if(this.swiperInstance){
+            this.swiperInstance.close();
+            this.swiperInstance = null;
+        }
       this.$store.dispatch('activity/RESET_PHOTO_LIST');
       this.$store.dispatch('interact/RESET_INTERACT_LIST');
       this.$store.dispatch('activity/RESET_COLUMN_LIST');

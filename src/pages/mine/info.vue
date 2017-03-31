@@ -33,7 +33,7 @@
         overflow: hidden;
     }
     .dfn{
-        width: 60px;
+        width: 70px;
         text-align: justify;
     }
     .textInput{
