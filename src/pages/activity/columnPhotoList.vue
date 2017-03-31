@@ -61,8 +61,8 @@
             }
         },
         created(){
+            this.$store.dispatch('activity/RESET_PHOTO_LIST');
             this.aid = this.$route.params.id;
-            console.log( this.aid);
             if(!this.photo.list.length){
                 this.loadMore();
             }
