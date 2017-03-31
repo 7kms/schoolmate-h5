@@ -75,9 +75,9 @@
                 </div>
             </div>
             <div class="item itemArea">
-                <div class="dfn"><span class="label inline-block">岗位描述</span><span class="color-hint inline-block">*</span></div>
+                <div class="dfn"><span class="label inline-block">自我描述</span><span class="color-hint inline-block">*</span></div>
                 <div class="textInput color-topic">
-                    <textarea  class="textArea" placeholder="填写具体工作岗位描述" v-model="userInfo.resource_description"></textarea>
+                    <textarea  class="textArea" placeholder="填写关于自己的描述" v-model="userInfo.resource_description"></textarea>
                 </div>
             </div>
         </div>
@@ -273,7 +273,7 @@
             return false;
           }
           if(!this.userInfo.resource_description){
-            this.$toast('岗位描述不能为空');
+            this.$toast('自我描述不能为空');
             return false;
           }
         if(this.channel == 'teacher'){

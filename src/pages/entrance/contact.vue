@@ -238,11 +238,15 @@
                 });
             },
             register(){
+              if(!this.userInfo.graduate_fromother){
+                this.userInfo.graduate_fromother = '0';
+              }
                 $api.post('/Profile/upProfile',this.userInfo)
                 .then(res => {
                     this.$toast(res.data.msg);
                     if(res.data.result){
-                        this.$router.replace('/');
+                        window.location.href = '/';
+//                        this.$router.replace('/');
                     }
                 },res => {
                     this.$toast(res.msg);

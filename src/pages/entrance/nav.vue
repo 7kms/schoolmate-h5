@@ -58,7 +58,7 @@
                 <span :class="[$style.circle,{[$style.active]:nav.active}]"></span>
                 <span>{{nav.text}}</span>
             </div>
-            <span :class="[$style.line,{[$style.special]:channel=='graduate'}]"></span>
+            <span :class="[$style.line,{[$style.special]:channel=='graduate' || graduate_fromother}]"></span>
         </div>
         <img :class="$style.bg" src="../../assets/images/bg-entrance.png">
     </div>
@@ -68,7 +68,8 @@
   export default {
     computed:{
       ...mapState({
-        channel: state => state.entrance.channel
+        channel: state => state.entrance.channel,
+        graduate_fromother:(state)=> state.entrance.userInfo.graduate_fromother == '1'
       }),
       ...mapGetters({
         navArr:'entrance/GET_NAV'

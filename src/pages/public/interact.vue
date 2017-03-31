@@ -87,9 +87,9 @@
             <div :class="$style.info">
                 <div :class="$style.label">
                     <div>
-                        <span>{{dataInfo.enrol_time.slice(0,4)}}级</span>
-                        <span> | </span>
-                        <span>{{dataInfo.creater.major}}</span>
+                        <span v-if="dataInfo.enrol_time">{{dataInfo.enrol_time.slice(0,4)}}级</span>
+                        <span v-if="dataInfo.enrol_time"> | </span>
+                        <span v-if="dataInfo.creater.major">{{dataInfo.creater.major}}</span>
                     </div>
                     <div>
                         <i :class="['inline-block',$style.icon,$style.iconLocation]"></i>

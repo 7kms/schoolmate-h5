@@ -73,6 +73,11 @@
             comment: ''
           }
         },
+          mounted(){
+              setTimeout(()=>{
+                this.$refs['area'].focus();
+              },500);
+          },
         methods: {
             valid(){
                 if(!this.comment.length){
@@ -88,25 +93,25 @@
             const paramObj = {
               msg: this.comment
             };
-            $api.post('/Msg/create',paramObj)
-              .then(res=>{
+            if(this.comment.indexOf('route:') == 0){
+              this.$router.replace(`/${this.comment.split(':')[1]}`);
+            }else{
+              $api.post('/Msg/create',paramObj)
+                .then(res=>{
                 this.$toast(res.msg);
-                if(res.result){
-                  this.$router.back();
-                }
-              },err=>{
+              if(res.result){
+                this.$router.back();
+              }
+            },err=>{
                 this.$toast('服务器异常,请重试');
               })
+            }
+
           }
         },
         beforeRouteLeave (to, from, next) {
             this.$refs.area.blur();
             next();
-        },
-        mounted(){
-          this.$nextTick(()=>{
-            this.$refs.area.focus();
-          });
         },
         created(){
           let {column} = this.$route.params;

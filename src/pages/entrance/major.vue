@@ -36,6 +36,12 @@
                     <span class="select color-weak" v-else>选择毕业时间</span>
                 </div>
             </div>
+            <div class="item itemArea" v-if="channel == 'student'">
+                <div class="dfn"><span class="label inline-block">自我描述</span><!--<span class="color-hint inline-block">*</span>--></div>
+                <div class="textInput color-topic">
+                    <textarea  class="textArea" placeholder="填写关于自己的描述" v-model="userInfo.resource_description"></textarea>
+                </div>
+            </div>
         </div>
         <div class="entrance-next-step text-center" @click="stepNext">
             <span>下一步</span>
@@ -64,31 +70,6 @@
                 pickerRef="majorEndDatePicker"
                 @selectEnd="selectMajorEnd"
         ></timePicker>
-
-<!--        <mt-datetime-picker
-            ref="startDatePicker"
-            type="date"
-            cancelText="关闭"
-            year-format="{value} 年"
-            month-format="{value} 月"
-            date-format="{value} 日"
-            :startDate="minDate"
-            :endDate="maxLimitDate"
-            v-model="roleStartDate"
-        >
-        </mt-datetime-picker>
-        <mt-datetime-picker
-            ref="endDatePicker"
-            type="date"
-            cancelText="关闭"
-            year-format="{value} 年"
-            month-format="{value} 月"
-            date-format="{value} 日"
-            :startDate="minLimitDate"
-            :endDate="maxDate"
-            v-model="roleEndDate"
-        >
-        </mt-datetime-picker>-->
     </div>
 </template>
 <script>
@@ -99,15 +80,11 @@
   export default {
     data(){
       return {
-        minDate:new Date('1950/09/01'),
-        maxDate:new Date('2050/07/01'),
-        minLimitDate: new Date('2050/07/01'),
-        maxLimitDate: new Date('1950/09/01'),
         showMajorPicker:false,
           showMajorStartPicker: false,
           showMajorEndPicker: false,
-          roleStartDate:'',
-          roleEndDate:'',
+          roleStartDate:'1953/01/01',
+          roleEndDate:'1953/01/01',
           info:{
               enrol_time: '',
               graduate_time: ''
@@ -186,6 +163,11 @@
         if(this.valid()){
           this.$store.dispatch('entrance/STEP_NEXT');
         }
+      }
+    },
+    mounted(){
+      if(this.channel == 'student' || this.channel == 'teacher'){
+        this.$store.dispatch('entrance/CHANGE_USERINFO',{province:'河北省',city:'石家庄'})
       }
     }
   }

@@ -58,6 +58,7 @@ var state = {
     bprovince:'',
     bcity:'',
     role:'',
+    graduate_fromother:'',
     company:'',
     industry:'',
     job:'',
@@ -92,6 +93,9 @@ const actions = {
 
 const getters = {
   [types.GET_NAV](state){
+    if(state.userInfo.role == 'teacher' && state.userInfo.graduate_fromother == '0'){
+      return state.navInfo['graduate'];
+    }
     return state.navInfo[state.channel];
   }
 };
@@ -106,7 +110,11 @@ const mutations = {
   },
   [types.STEP_NEXT](state){
     state.step = state.step + 1;
-    state.navInfo[state.channel][state.step-1].active = true;
+    let channel = state.channel;
+    if(state.userInfo.role == 'teacher' && state.userInfo.graduate_fromother == '0'){
+      channel  = 'graduate';
+    }
+    state.navInfo[channel][state.step-1].active = true;
   }
 };
 

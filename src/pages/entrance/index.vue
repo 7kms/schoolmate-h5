@@ -10,7 +10,12 @@
             <resource v-if="step == 3"></resource>
             <contact v-if="step == 4"></contact>
         </template>
-        <template v-if="channel == 'teacher'">
+        <template v-if="channel=='teacher' && !graduate_fromother">
+            <major v-if="step == 2"></major>
+            <resource v-if="step == 3"></resource>
+            <contact v-if="step == 4"></contact>
+        </template>
+        <template v-if="channel == 'teacher' && graduate_fromother">
             <resource v-if="step == 2"></resource>
             <contact v-if="step == 3"></contact>
         </template>
@@ -36,12 +41,14 @@
           major
        },
        computed:{
+
             ...mapGetters({
               navInfo:'entrance/GET_NAV'
             }),
             ...mapState({
                 channel:(state)=> state.entrance.channel,
                 step:(state)=> state.entrance.step,
+              graduate_fromother:(state)=> state.entrance.userInfo.graduate_fromother == '1'
             })
         },
         methods:{

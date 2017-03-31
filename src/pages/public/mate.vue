@@ -86,7 +86,7 @@
                 </div>
                 <div :class="[$style.text,$style.text1]">
                     <div>
-                        <span>{{dataInfo.enrol_time.slice(0,4)}}级</span><span> | </span><span>{{dataInfo.major}}</span>
+                        <span v-if="dataInfo.enrol_time">{{dataInfo.enrol_time.slice(0,4)}}级</span><span v-if="dataInfo.enrol_time"> | </span><span>{{dataInfo.major}}</span>
                     </div>
                     <div>
                         <span>{{dataInfo.company}}</span>
@@ -108,7 +108,7 @@
         </div>
         <div :class="$style.desc">
             <!--<div :class="['color-topic',$style.dfn]">岗位描述:</div><div :class="$style.text" v-html="transform(dataInfo.resource_description)"></div>-->
-            <div :class="['color-topic',$style.dfn]">岗位描述:</div><div :class="$style.text" v-transform="dataInfo.resource_description"></div>
+            <div :class="['color-topic',$style.dfn]">自我描述:</div><div :class="$style.text" v-transform="dataInfo.resource_description"></div>
         </div>
     </div>
 </template>

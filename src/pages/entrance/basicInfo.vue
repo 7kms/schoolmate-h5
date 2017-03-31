@@ -38,6 +38,13 @@
                     <span class="select color-weak" v-else>请选择</span>
                 </div>
             </div>
+            <div class="item" v-if="channel=='teacher'">
+                <div class="dfn"><span class="label inline-block">本校毕业</span><span class="color-hint inline-block">*</span></div>
+                <div class="textInput color-topic" @click="showPicker('school')">
+                    <span class="select" v-if="userInfo.graduate_fromother">{{ userInfo.graduate_fromother == 1 ? '否' : '是' }}</span>
+                    <span class="select color-weak" v-else>请选择</span>
+                </div>
+            </div>
             <div class="item type color-topic">
                 <div @click="changeChannel('graduate')">
                     <i :class="['inline-block','iconType',{'checked':channel=='graduate'}]"></i>
@@ -77,6 +84,14 @@
             </mt-picker>
         </mt-popup>
         <mt-popup
+                v-model="showSchoolPicker"
+                position="bottom"
+                popup-transition="popup-fade">
+            <mt-picker :slots="schoolSlots" valueKey="name" :showToolbar="true" :rotateEffect="true" @change="selectSchool">
+                <span></span><span @click="selectSchool">确定</span>
+            </mt-picker>
+        </mt-popup>
+        <mt-popup
                 v-model="showPlacePicker"
                 position="bottom"
                 popup-transition="popup-fade">
@@ -98,6 +113,7 @@
             birthDateStart: new Date(Date.now() - 86400000 * 365 * 80),
             birthDateEnd: new Date(),
             showGenderPicker: false,
+           showSchoolPicker: false,
             showPlacePicker: false,
             gender:{},
             place:{},
@@ -105,6 +121,10 @@
                 flex: 1,
                 values: [{code: 1, name: '男'},{code: 2, name: '女'}]
             }],
+           schoolSlots:[{
+             flex: 1,
+             values: [{code: '0', name: '是'},{code: '1', name: '否'}]
+           }],
             placeSlots: [
                  {
                      flex: 1,
@@ -141,6 +161,9 @@
               case 'gender':
                   this.showGenderPicker = true;
                   break;
+              case 'school':
+                  this.showSchoolPicker = true;
+                  break;
               case 'birth':
                   this.$refs['birthDatePicker'].open();
                   break;
@@ -159,6 +182,19 @@
             if(!this.userInfo.gender){
               gender = this.genderSlots[0].values[0].name;
               this.$store.dispatch('entrance/CHANGE_USERINFO',{gender});
+            }
+          }
+        },
+        selectSchool(picker,values){
+          let graduate_fromother = '';
+          if(values){
+            graduate_fromother = values[0].code;
+            this.$store.dispatch('entrance/CHANGE_USERINFO',{graduate_fromother});
+          }else{
+            this.showSchoolPicker = false;
+            if(!this.userInfo.graduate_fromother){
+              graduate_fromother = this.schoolSlots[0].values[0].code;
+              this.$store.dispatch('entrance/CHANGE_USERINFO',{graduate_fromother});
             }
           }
         },
