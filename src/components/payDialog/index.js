@@ -1,5 +1,5 @@
 import PayApply from './payApply';
-import PayCancel from './PayCancel';
+import PayCancel from './payCancel';
 
 
 export default {
