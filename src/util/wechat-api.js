@@ -11,6 +11,8 @@ let config = (config)=>{
     });
 };
 let register = (url)=>{
+    console.log(url)
+    console.log(encodeURIComponent(url))
     $api.get('/Pay/getJssdkpara',{url})
         .then(data=>{
             config(data);

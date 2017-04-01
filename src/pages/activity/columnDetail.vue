@@ -115,7 +115,8 @@
     import {register} from '../../util/wechat-api'
     export default {
         created(){
-            register(this.$route.fullPath);
+//            console.log(this.$route)
+            register(window.location.href);
             this.getData(this.$route.query);
         },
         components:{
