@@ -112,7 +112,7 @@
     import attendedItem from './attendedItem.vue'
     import commentItem from './commentItem.vue'
     import Pay from '../../components/payDialog'
-    import {register} from '../../util/wechat-api'
+    import {register,wechatPay} from '../../util/wechat-api'
     export default {
         created(){
 //            console.log(this.$route)
@@ -157,7 +157,27 @@
         },
         methods: {
             payApply(){
-
+                $api.get('/Pay/newOrder',{amount:this.dataInfo.info.fee * 100,product:this.dataInfo.info.theme})
+                        .then(data=>{
+                            wechatPay({
+                                data,
+                                callback:()=>{
+                                    this.$toast('支付成功');
+                                    $api.post('/Activity/cancelAttend',{aid:this.dataInfo.info.aid})
+                                            .then(res=>{
+                                                this.$toast(res.msg);
+                                                if(res.result){
+                                                    this.dataInfo.attended = false;
+                                                    this.dataInfo.attendedCrowd = this.dataInfo.attendedCrowd.filter(user => user.uid != this.self.uid);
+                                                }
+                                            },err=>{
+                                                this.$toast('服务器异常');
+                                            })
+                                }
+                            });
+                        },error=>{
+                            console.log(error);
+                        })
             },
             payCancel(){
                 this.showPayDialog = false;
@@ -165,8 +185,19 @@
           showRemove(comment){
             return this.self.uid == this.dataInfo.creator.uid || this.self.uid == comment.uid;
           },
+           // http://www.chenfangli.com/index.php/Pay/newOrder?para={"amount":1,"product":"abc"}
           operateBarClick(type){
             if(type == 'left'){
+                Pay.showApply({
+                    money: this.dataInfo.info.fee,
+                    ok:()=>{
+//                        console.log('ok')
+                        this.payApply();
+                    },
+                    cancel:()=>{
+                        console.log('cancel')
+                    }
+                })
                /* Pay.showCancel({
                     ok:()=>{
                         console.log('ok')
@@ -199,7 +230,7 @@
 
 
 
-              if(this.dataInfo.attended) {
+             /* if(this.dataInfo.attended) {
                   $api.post('/Activity/cancelAttend',{aid:this.dataInfo.info.aid})
                   .then(res=>{
                       this.$toast(res.msg);
@@ -221,7 +252,7 @@
                     },err=>{
                       this.$toast('服务器异常');
                   })
-              }
+              }*/
             }else{
                 this.$router.push({
                   path: '/comment/activity',
