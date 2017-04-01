@@ -112,8 +112,10 @@
     import attendedItem from './attendedItem.vue'
     import commentItem from './commentItem.vue'
     import Pay from '../../components/payDialog'
+    import {register} from '../../util/wechat-api'
     export default {
         created(){
+            register(this.$route.fullPath);
             this.getData(this.$route.query);
         },
         components:{
