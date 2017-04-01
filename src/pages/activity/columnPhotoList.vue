@@ -16,6 +16,7 @@
         <div v-if="!loading && photo.list.length == 0" class="empty-data-item">
             <span>数据为空</span>
         </div>
+        <publishBtn text="发照片" @click="onPublish"></publishBtn>
     </div>
 </template>
 <script>
@@ -23,9 +24,11 @@
     import Item from '../public/photo.vue';
     import $api from 'api';
     import Util from '../../util'
+    import publishBtn from '../../components/publish';
     export default {
         components:{
-            Item
+            Item,
+          publishBtn
         },
         data(){
             return {
@@ -58,7 +61,12 @@
                     item.hit = parseInt(item.hit) + 1;
                     this.$router.push(`/activity/photo-detail/${item.pid}`);
                 },()=>{});
-            }
+            },
+             onPublish(){
+               Util.isAuthored().then(()=>{
+                 this.$router.push(`/publish/photo-show/${this.$route.params.id}`);
+               },()=>{})
+             }
         },
         created(){
             this.$store.dispatch('activity/RESET_PHOTO_LIST');

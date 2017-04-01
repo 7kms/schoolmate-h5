@@ -244,6 +244,13 @@ const ROUTER_SETTING = {
               component: resolve => require(['./pages/publish/publishActivity.vue'], resolve)
             },
             {
+              path:'photo-show/:id',
+              meta: {
+                title:'发布活动秀'
+              },
+              component: resolve => require(['./pages/publish/publishPhotoShow.vue'], resolve)
+            },
+            {
               path:'photo',
               meta: {
                 title:'发布照片'

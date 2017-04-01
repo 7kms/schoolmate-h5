@@ -60,9 +60,9 @@
 <template>
    <div :class="$style.user">
             <template v-if="!isSelf">
-                <span :class="[$style.infoBtn]" v-if="dataInfo.exchange_status == 0" @click.prevent="exchange('exchange')">交换联系方式</span>
-                <span :class="[$style.infoBtn,{[$style.exchanged]:true}]" v-if="dataInfo.exchange_status == 1" @click.prevent="exchange('cancel')">撤销</span>
-                <span :class="[$style.infoBtn,$style.contact,'text-center']" v-if="dataInfo.exchange_status == 2" @click.prevent="exchange('contact')">查看联系方式</span>
+                <span :class="[$style.infoBtn]" v-if="dataInfo.exchange_status == 0" @click.prevent.stop="exchange('exchange')">交换联系方式</span>
+                <span :class="[$style.infoBtn,{[$style.exchanged]:true}]" v-if="dataInfo.exchange_status == 1" @click.prevent.stop="exchange('cancel')">撤销</span>
+                <span :class="[$style.infoBtn,$style.contact,'text-center']" v-if="dataInfo.exchange_status == 2" @click.prevent.stop="exchange('contact')">查看联系方式</span>
             </template>
             <div :class="$style.info">
                 <div :class="$style.portrait">

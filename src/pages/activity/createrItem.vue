@@ -19,7 +19,7 @@
         position: absolute;
         display: block;
         right: 12px;
-        top: 6px;
+        top: 8px;
         width: 80px;
         height: 24px;
         line-height: 24px;
@@ -50,12 +50,12 @@
         </div>
         <div :class="$style.desc">
             <template v-if="showInfo">
-                <span :class="[$style.exchange,'text-center']" @click="exchange('contact')">查看联系方式</span>
+                <span :class="[$style.exchange,'text-center']" @click.stop.prevent="exchange('contact')">查看联系方式</span>
             </template>
             <template v-else-if="!isSelf">
-                <span :class="[$style.exchange,'text-center']" v-if="dataInfo.exchange_status == 0" @click="exchange('exchange')">交换联系方式</span>
-                <span :class="[$style.exchange,$style.gray,'text-center']" v-if="dataInfo.exchange_status == 1" @click="exchange('cancel')">撤销</span>
-                <span :class="[$style.exchange,'text-center']" v-if="dataInfo.exchange_status == 2" @click="exchange('contact')">查看联系方式</span>
+                <span :class="[$style.exchange,'text-center']" v-if="dataInfo.exchange_status == 0" @click.stop.prevent="exchange('exchange')">交换联系方式</span>
+                <span :class="[$style.exchange,$style.gray,'text-center']" v-if="dataInfo.exchange_status == 1" @click.stop.prevent="exchange('cancel')">撤销</span>
+                <span :class="[$style.exchange,'text-center']" v-if="dataInfo.exchange_status == 2" @click.stop.prevent="exchange('contact')">查看联系方式</span>
             </template>
             <template v-if="dataInfo.role=='student'">
                 <div>{{dataInfo.company || '河北地质大学'}}</div>
