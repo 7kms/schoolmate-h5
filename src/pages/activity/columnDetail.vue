@@ -188,16 +188,7 @@
            // http://www.chenfangli.com/index.php/Pay/newOrder?para={"amount":1,"product":"abc"}
           operateBarClick(type){
             if(type == 'left'){
-                Pay.showApply({
-                    money: this.dataInfo.info.fee,
-                    ok:()=>{
-//                        console.log('ok')
-                        this.payApply();
-                    },
-                    cancel:()=>{
-                        console.log('cancel')
-                    }
-                })
+
                /* Pay.showCancel({
                     ok:()=>{
                         console.log('ok')
@@ -230,18 +221,28 @@
 
 
 
-             /* if(this.dataInfo.attended) {
-                  $api.post('/Activity/cancelAttend',{aid:this.dataInfo.info.aid})
-                  .then(res=>{
-                      this.$toast(res.msg);
-                      if(res.result){
-                          this.dataInfo.attended = false;
-                          this.dataInfo.attendedCrowd = this.dataInfo.attendedCrowd.filter(user => user.uid != this.self.uid);
+              if(this.dataInfo.attended) {
+                  Pay.showApply({
+                      money: this.dataInfo.info.fee,
+                      ok:()=>{
+//                        console.log('ok')
+                          this.payApply();
+                      },
+                      cancel:()=>{
+                          console.log('cancel')
                       }
-                  },err=>{
-                       this.$toast('服务器异常');
-                   })
+                  })
               }else{
+                  Pay.showApply({
+                      money: this.dataInfo.info.fee,
+                      ok:()=>{
+//                        console.log('ok')
+                          this.payApply();
+                      },
+                      cancel:()=>{
+                          console.log('cancel')
+                      }
+                  })
                   $api.post('/Activity/join',{aid:this.dataInfo.info.aid})
                           .then(res=>{
                             this.$toast(res.msg);
@@ -252,7 +253,7 @@
                     },err=>{
                       this.$toast('服务器异常');
                   })
-              }*/
+              }
             }else{
                 this.$router.push({
                   path: '/comment/activity',
