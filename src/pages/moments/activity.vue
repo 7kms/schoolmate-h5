@@ -60,7 +60,7 @@
       },
       goDetail(item) {
           if(this.$parent.basicInfo.is_member){
-              this.$router.push(`/activity/column-detail/${item.aid}`);
+              this.$router.push(`/activity/column-detail?id=${item.aid}`);
           }else{
                this.$dialog.confirm('请到【简介】中点击【申请加入】')
                .then(()=>{

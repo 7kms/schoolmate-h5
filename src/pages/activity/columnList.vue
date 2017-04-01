@@ -64,7 +64,7 @@
             },
             goDetail(item) {
                 if(item.view_detail){
-                  this.$router.push(`/activity/column-detail/${item.aid}`);
+                  this.$router.push({path:'/activity/column-detail',query:{id:item.aid}});
                 }else{
                     this.$toast('你没有权限查看详情');
                 }

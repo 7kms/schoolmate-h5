@@ -55,7 +55,7 @@
                     <h3 class="topic">{{dataInfo.info.theme}}</h3>
                     <div :class="$style.item">
                         <div class="itemDfn"><span>活动时间：</span></div>
-                        <div class="itemTxt" v-if="dataInfo.info.time != '0'"><span>{{dataInfo.info.time | dateFormat('M月dd日 hh:mm')}} - {{dataInfo.info.end_time | dateFormat('M月dd日 hh:mm')}}</span></div>
+                        <div class="itemTxt" v-if="dataInfo.info.time != '0'"><span>{{dataInfo.info.time | dateFormat('M月dd日 HH:mm')}} - {{dataInfo.info.end_time | dateFormat('M月dd日 HH:mm')}}</span></div>
                         <div class="itemTxt" v-else><span>不限制</span></div>
                     </div>
                     <div :class="$style.item">
@@ -111,9 +111,10 @@
     import operateBar from  '../public/operateBar.vue'
     import attendedItem from './attendedItem.vue'
     import commentItem from './commentItem.vue'
+    import Pay from '../../components/payDialog'
     export default {
         created(){
-            this.getData(this.$route.params);
+            this.getData(this.$route.query);
         },
         components:{
           attendedItem,
@@ -123,6 +124,7 @@
         data(){
           return {
             loading: true,
+            showPayDialog: false,
             dataInfo:{}
           }
         },
@@ -144,17 +146,56 @@
               rightImage: require('../../assets/images/icon-comment.png')
             };
             if(this.dataInfo.attended){
-              obj.leftText = '取消报名'
+              obj.leftText = '取消报名';
+                obj.hint = true;
             }
             return obj;
           }
         },
         methods: {
+            payApply(){
+
+            },
+            payCancel(){
+                this.showPayDialog = false;
+            },
           showRemove(comment){
             return this.self.uid == this.dataInfo.creator.uid || this.self.uid == comment.uid;
           },
           operateBarClick(type){
             if(type == 'left'){
+               /* Pay.showCancel({
+                    ok:()=>{
+                        console.log('ok')
+
+                    },
+                    cancel:()=>{
+                        console.log('cancel')
+                    }
+                });*/
+                /*if(this.dataInfo.attended){
+
+                }else{
+                    /!*if(this.dataInfo.info.fee != '0.00'){
+
+                    }*!/
+                    Pay.showApply({
+                        money: this.dataInfo.info.fee,
+                        ok:()=>{
+                            console.log('ok')
+
+                        },
+                        cancel:()=>{
+                            console.log('cancel')
+                        }
+                    })
+
+                }*/
+
+
+
+
+
               if(this.dataInfo.attended) {
                   $api.post('/Activity/cancelAttend',{aid:this.dataInfo.info.aid})
                   .then(res=>{
@@ -178,7 +219,6 @@
                       this.$toast('服务器异常');
                   })
               }
-
             }else{
                 this.$router.push({
                   path: '/comment/activity',
@@ -187,8 +227,8 @@
             }
           },
           showPhotos(){
-              const {id} = this.$route.params;
-            this.$router.push(`/activity/photos/${id}`);
+              const {id} = this.$route.query;
+              this.$router.push(`/activity/photos/${id}`);
            },
           getData({id}){
             this.loading = true;

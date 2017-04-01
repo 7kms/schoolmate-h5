@@ -41,7 +41,7 @@ const ROUTER_SETTING = {
                     component: resolve => require(['./pages/activity/columnPhotoList.vue'], resolve)
                 },
                 {
-                    path: 'column-detail/:id',
+                    path: 'column-detail',
                     name: 'column-detail',
                     meta: {
                       title:'活动详情'

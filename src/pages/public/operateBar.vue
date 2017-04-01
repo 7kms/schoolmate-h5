@@ -25,7 +25,9 @@
         width: 94px;
         background-color: @theme-color-weak;
     }
-
+    .hint{
+        background-color: @hint-color;
+    }
     .icon {
         width: 20px;
         height: 20px;
@@ -37,7 +39,7 @@
 </style>
 <template>
     <div :class="[$style.operate,'size-header']">
-        <div :class="$style.oLeft" @click="click('left')">
+        <div :class="[$style.oLeft,{[$style.hint]:dataInfo.hint}]" @click="click('left')">
             <i
                     v-if="dataInfo.leftImage"
                     :class="['inline-block',$style.icon,$style.iconLeft]"
