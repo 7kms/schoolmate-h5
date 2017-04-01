@@ -163,12 +163,12 @@
                                 data,
                                 callback:()=>{
                                     this.$toast('支付成功');
-                                    $api.post('/Activity/cancelAttend',{aid:this.dataInfo.info.aid})
+                                    $api.post('/Activity/join',{aid:this.dataInfo.info.aid})
                                             .then(res=>{
                                                 this.$toast(res.msg);
                                                 if(res.result){
-                                                    this.dataInfo.attended = false;
-                                                    this.dataInfo.attendedCrowd = this.dataInfo.attendedCrowd.filter(user => user.uid != this.self.uid);
+                                                    this.dataInfo.attended = true;
+                                                    this.dataInfo.attendedCrowd.push(this.self);
                                                 }
                                             },err=>{
                                                 this.$toast('服务器异常');
@@ -185,73 +185,49 @@
           showRemove(comment){
             return this.self.uid == this.dataInfo.creator.uid || this.self.uid == comment.uid;
           },
-           // http://www.chenfangli.com/index.php/Pay/newOrder?para={"amount":1,"product":"abc"}
           operateBarClick(type){
             if(type == 'left'){
-
-               /* Pay.showCancel({
-                    ok:()=>{
-                        console.log('ok')
-
-                    },
-                    cancel:()=>{
-                        console.log('cancel')
-                    }
-                });*/
-                /*if(this.dataInfo.attended){
-
-                }else{
-                    /!*if(this.dataInfo.info.fee != '0.00'){
-
-                    }*!/
-                    Pay.showApply({
-                        money: this.dataInfo.info.fee,
-                        ok:()=>{
-                            console.log('ok')
-
-                        },
-                        cancel:()=>{
-                            console.log('cancel')
-                        }
-                    })
-
-                }*/
-
-
-
-
-
-              if(this.dataInfo.attended) {
-                  Pay.showApply({
-                      money: this.dataInfo.info.fee,
-                      ok:()=>{
-//                        console.log('ok')
-                          this.payApply();
-                      },
-                      cancel:()=>{
-                          console.log('cancel')
-                      }
-                  })
-              }else{
-                  Pay.showApply({
-                      money: this.dataInfo.info.fee,
-                      ok:()=>{
-//                        console.log('ok')
-                          this.payApply();
-                      },
-                      cancel:()=>{
-                          console.log('cancel')
-                      }
-                  })
-                  $api.post('/Activity/join',{aid:this.dataInfo.info.aid})
-                          .then(res=>{
-                            this.$toast(res.msg);
-                              if(res.result){
-                                  this.dataInfo.attended = true;
-                                  this.dataInfo.attendedCrowd.push(this.self);
+              if(!this.dataInfo.attended) {
+                  if(this.dataInfo.info.fee != '0.00'){
+                          Pay.showApply({
+                              money: this.dataInfo.info.fee,
+                              ok:()=>{
+                                  this.payApply();
+                              },
+                              cancel:()=>{
+                                  console.log('cancel')
                               }
-                    },err=>{
-                      this.$toast('服务器异常');
+                          })
+                      }else{
+                        $api.post('/Activity/join',{aid:this.dataInfo.info.aid})
+                              .then(res=>{
+                                  this.$toast(res.msg);
+                                  if(res.result){
+                                      this.dataInfo.attended = true;
+                                      this.dataInfo.attendedCrowd.push(this.self);
+                                  }
+                              },err=>{
+                                  this.$toast('服务器异常');
+                              })
+                  }
+              }else{
+                  Pay.showCancel({
+                      money: this.dataInfo.info.fee,
+                      ok:()=>{
+                        $api.post('/Activity/cancelAttend',{aid:this.dataInfo.info.aid})
+                          .then(res=>{
+                              this.$toast(res.msg);
+                              if(res.result){
+                                  this.dataInfo.attended = false;
+                                  this.dataInfo.attendedCrowd = this.dataInfo.attendedCrowd.filter(user => user.uid != this.self.uid);
+                              }
+                          },err=>{
+                              this.$toast('服务器异常');
+                          })
+                      },
+                      cancel:()=>{
+                          console.log('cancel')
+                      }
                   })
               }
             }else{
