@@ -21,12 +21,16 @@
                 flex-direction: column;
                 padding: 2px 0;
             }
+            .label{
+                display: flex;
+                justify-content: space-between;
+            }
         }
         .info2{
             margin-top: 6px;
         }
         .infoBtn{
-            position: absolute;
+            /*position: absolute;*/
             width: 80px;
             height: 24px;
             line-height: 24px;
@@ -59,18 +63,21 @@
 </style>
 <template>
    <div :class="$style.user">
-            <template v-if="!isSelf">
-                <span :class="[$style.infoBtn]" v-if="dataInfo.exchange_status == 0" @click.prevent.stop="exchange('exchange')">交换联系方式</span>
-                <span :class="[$style.infoBtn,{[$style.exchanged]:true}]" v-if="dataInfo.exchange_status == 1" @click.prevent.stop="exchange('cancel')">撤销</span>
-                <span :class="[$style.infoBtn,$style.contact,'text-center']" v-if="dataInfo.exchange_status == 2" @click.prevent.stop="exchange('contact')">查看联系方式</span>
-            </template>
             <div :class="$style.info">
                 <div :class="$style.portrait">
                     <imgContain :imgUrl="dataInfo.photo" :onlyImage="true" style="width:40px ;height:40px"></imgContain>
                 </div>
                 <div :class="[$style.text,$style.text1]">
-                    <div>
-                        <span v-if="dataInfo.enrol_time">{{dataInfo.enrol_time.slice(0,4)}}级</span><span v-if="dataInfo.enrol_time"> | </span><span>{{dataInfo.major}}</span>
+                    <div :class="$style.label">
+                        <div>
+                            <span v-if="dataInfo.enrol_time">{{dataInfo.enrol_time.slice(0,4)}}级</span><span v-if="dataInfo.major"> | </span><span>{{dataInfo.major}}</span>
+                        </div>
+                        <div>
+                            <i :class="['inline-block',$style.icon,$style.iconLocation]"></i>
+
+                            <span class="inline-block" v-if="dataInfo.role=='teacher'">河北省-石家庄</span>
+                            <span class="inline-block" v-else>{{dataInfo.province + '-' + dataInfo.city}}</span>
+                        </div>
                     </div>
                     <div>
                         <span>{{dataInfo.company}}</span>
@@ -83,10 +90,11 @@
                 </div>
                 <div :class="$style.text">
                     <div>{{dataInfo.detail_job}}</div>
-                    <div>
-                        <i :class="['inline-block',$style.icon,$style.iconLocation]"></i>
-                        <span class="inline-block">{{dataInfo.province + '-' + dataInfo.city}}</span>
-                    </div>
+                    <template v-if="!isSelf">
+                        <span :class="[$style.infoBtn]" v-if="dataInfo.exchange_status == 0" @click.prevent.stop="exchange('exchange')">交换联系方式</span>
+                        <span :class="[$style.infoBtn,{[$style.exchanged]:true}]" v-if="dataInfo.exchange_status == 1" @click.prevent.stop="exchange('cancel')">撤销</span>
+                        <span :class="[$style.infoBtn,$style.contact,'text-center']" v-if="dataInfo.exchange_status == 2" @click.prevent.stop="exchange('contact')">查看联系方式</span>
+                    </template>
                 </div>
             </div>
         </div>

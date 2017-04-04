@@ -1,4 +1,6 @@
-let server = 'http://www.chenfangli.com/index.php';
+let server = 'http://www.chenfangli.com';
+// let server = 'http://wechat.sweet3158.com';
 module.exports = {
-  serverUrl: server
+  server,
+  serverUrl: `${server}/index.php`
 };

@@ -59,9 +59,9 @@
     }
     .btn{
         width: 180px;
-        height: 24px;
-        margin: 4.2rem auto 0;
-        line-height: 24px;
+        height: 30px;
+        margin: 3.8rem auto 0;
+        line-height: 30px;
         color: #fff;
         background-color: @theme-color;
     }

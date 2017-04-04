@@ -55,7 +55,7 @@
     }
     .btn{
         width: 88px;
-        padding: 6px 0;
+        padding: 8px 0;
         color: #fff;
         &.cancel{
              background-color: #C8CCCE;
@@ -74,6 +74,7 @@
                 <div :class="[$style.text]">
                     <div :class="$style.emoji"></div>
                     <div>您是否确认取消报名？</div>
+                    <div>如需退款请联系活动主办方</div>
                 </div>
                 <div :class="$style.operate">
                     <div :class="[$style.btn,$style.cancel]" @click.stop="cancel">不取消报名</div>

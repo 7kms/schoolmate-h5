@@ -23,6 +23,7 @@
     import publishBtn from '../../components/publish';
     import Swiper from '../../components/swiper';
     import Util from '../../util'
+
     export default {
         data(){
             return {
@@ -62,9 +63,26 @@
                   this.$toast({message: err});
                 });
             },
+            needRefresh(item){
+              if(item.finished == '1' || item.attended){
+                return false;
+              }
+              if(item.fee && parseFloat(item.fee) > 0){
+                return true;
+              }else{
+                return false;
+              }
+            },
             goDetail(item) {
                 if(item.view_detail){
-                  this.$router.push({path:'/activity/column-detail',query:{id:item.aid}});
+                  if(this.needRefresh(item)){
+                    window.location.href = `/activity/column-detail?id=${item.aid}`;
+                  }else{
+                    this.$router.push({path:'/activity/column-detail',query:{id:item.aid}});
+                  }
+
+//                  this.$router.push({path:'/activity/column-detail',query:{id:item.aid}});
+//                  this.$router.push(`/activity/column-detail/${item.aid}`);
                 }else{
                     this.$toast('你没有权限查看详情');
                 }

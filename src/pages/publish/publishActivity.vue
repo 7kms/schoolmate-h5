@@ -90,20 +90,12 @@
     <div>
         <div class="content">
             <div :class="$style.picWrap">
-                <ImgContain :class="$style.cover"  v-if="showBgImage" :imgUrl="info.cover_file"></ImgContain>
-                <Loading text="上传中..." :class="$style.loading" v-show="loading"></Loading>
-                <div :class="[$style.imgAdd,'text-center']" v-show="!loading">
-                    <file-upload class="file-upload"
-                                 :drop="false"
-                                 :post-action="action"
-                                 accept="image/*"
-                                 :events="events"
-                                 name="file0"
-                    ></file-upload>
+                <ImgContain :class="$style.cover" :imgUrl="info.cover_file"></ImgContain>
+                <Loading text="加载中..." :class="$style.loading" v-show="loading"></Loading>
+                <div :class="[$style.imgAdd,'text-center']" v-show="!loading"  @click="coverUpload">
                     <i :class="$style.btnAdd"></i>
                     <span>添加封面</span>
                 </div>
-                <!--<span :class="$style.defaultImg" @click="selectDefaultImage">选用默认</span>-->
             </div>
             <div class="pub-info-content">
                 <div class="pub-item">
@@ -201,19 +193,11 @@
                             <ImgContain :class="[$style.picItem]" v-for="(url,index) in uploadImageArr" :imgUrl="url">
                                 <i :class="$style.deletePic" @click="deletePic(url)" v-if="url"></i>
                                 <template v-if="index == uploadImageArr.length-1 && !url">
-                                    <div :class="[$style.picAdd,'text-center']" v-show="!picUploading">
-                                        <file-upload class="file-upload"
-                                                     :drop="false"
-                                                     :post-action="action"
-                                                     :multiple="true"
-                                                     accept="image/*"
-                                                     :events="events2"
-                                                     name="file0"
-                                        ></file-upload>
+                                    <div :class="[$style.picAdd,'text-center']" v-show="!picUploading" @click="aPicUpload">
                                         <i :class="$style.btnAdd"></i>
                                         <span>点击上传</span>
                                     </div>
-                                    <Loading text="上传中" :class="$style.loading" v-show="picUploading"></Loading>
+                                    <Loading text="加载中" :class="$style.loading" v-show="picUploading"></Loading>
                                 </template>
                             </ImgContain>
                         </div>
@@ -267,14 +251,13 @@
 </template>
 <script>
     import { timePicker,singlePicker } from '../../components/popPicker';
-    import FileUpload from 'vue-upload-component';
-    import {serverUrl} from '../../config'
     import util from  '../../util';
     import $api from 'api';
     import {mapState} from 'vuex';
+    import {chooseImage, uploadImage, register} from '../../util/wechat-api';
+
     export default {
         components:{
-            FileUpload,
             timePicker,
             singlePicker
         },
@@ -330,9 +313,6 @@
                 });
                 return str;
             },
-            action(){
-                return serverUrl + '/Response/multiPicUpload';
-            },
             uploadImageArr(){
                 let arr = [...this.info.pictures];
                 arr.length = 10;
@@ -340,65 +320,7 @@
             },
             limitTime(){
                 return this.startDate + ' ' + this.startTime;
-            },
-            events(){
-                var _this = this;
-                return {
-                    add(file, component) {
-                        file.data.count = 1;
-                        component.active = true;
-                        _this.loading = true;
-                    },
-                    progress(file, component) {
-                        console.log('progress ' + file.progress);
-                    },
-                    after(file, component) {
-                        let res = util.parseJSON(file.response);
-                        let url = res[0];
-                        if(url){
-                            _this.info.cover_file = url;
-                            _this.showBgImage = true;
-                        }else{
-                            _this.$toast(res.msg);
-                        }
-                        _this.loading = false;
-                    },
-                    before(file, component) {
-                        console.log('before');
-                    }
-                }
-            },
-            events2(){
-            var _this = this;
-            return {
-              add(file, component) {
-//                file.headers['withCredentials'] = true;
-                file.data.count = 1;
-                component.active = true;
-                _this.picUploading = true;
-                _this.uploadCount ++;
-              },
-              progress(file, component) {
-                console.log('progress ' + file.progress);
-              },
-              after(file, component) {
-                let res = util.parseJSON(file.response);
-                let url = res[0];
-                _this.uploadCount --;
-                if(url){
-                  _this.info.pictures.push(url);
-                }else{
-                  _this.$toast(res.msg);
-                }
-                if(!_this.uploadCount){
-                  _this.picUploading = false;
-                }
-              },
-              before(file, component) {
-                console.log('before');
-              }
             }
-          }
         },
         methods:{
             selectStartDate(val){
@@ -438,10 +360,6 @@
                     this.showRange = true;
                 }
             },
-//            selectDefaultImage(){
-//                this.info.cover_file = 'image/default-activity-cover.jpg';
-//                this.showBgImage = true;
-//            },
             deleteImage(img){
                 console.log(img);
             },
@@ -451,11 +369,56 @@
             switchFee(){
                 this.free = !this.free;
             },
+
             deletePic(img){
               let index = this.info.pictures.indexOf(img);
               if(~index){
                 this.info.pictures.splice(index,1);
               }
+            },
+            getPathByIds(ids){
+              util.getPathByIds(ids)
+                .then(res=>{
+                 res.path.forEach( (path) =>{
+                   this.info.cover_file = path;
+                 });
+                },error=>{
+                  console.log(error);
+                });
+            },
+            coverUpload(){
+                 util.wxUpload({count:1,onSelectEnd:()=>this.loading = true})
+                   .then(wxIds=>{
+                     util.getPathByIds(wxIds)
+                       .then(res=>{
+                         this.loading = false;
+                         if(res.path[0]){
+                           this.info.cover_file = res.path[0];
+                         }else{
+                           this.$toast('上传图片失败');
+                         }
+                       },err=>{
+                         console.log(err);
+                       })
+                 })
+            },
+            aPicUpload(){
+                let count = 10 - this.info.pictures.length ;
+                count = count > 9 ? 9 : count;
+                util.wxUpload({count,onSelectEnd:()=>this.picUploading = true})
+                  .then(wxIds=>{
+                    util.getPathByIds(wxIds)
+                      .then(res=>{
+                        this.picUploading = false;
+                        if(res.path[0]){
+                          this.info.pictures = [...this.info.pictures,...res.path];
+                        }else{
+                          this.$toast('上传图片失败');
+                        }
+                      },err=>{
+                        console.log(err);
+                      })
+                  });
             },
             valid(){
                   if(!this.info.cover_file){
@@ -540,6 +503,7 @@
             }
         },
         created(){
+          register(window.location.href);
             $api.get('/Circle/getMyCircle')
             .then(res=>{
                 res.forEach(circle => {

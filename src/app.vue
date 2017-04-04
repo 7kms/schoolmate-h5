@@ -16,6 +16,7 @@
 <script>
     import { mapGetters } from 'vuex';
     import AppNav from './pages/public/nav.vue';
+    import {register} from './util/wechat-api'
     export default {
         data(){
             return {
@@ -24,9 +25,10 @@
         },
         created: function() {
             this.$store.dispatch('user/GET_ACCOUNT');
+            register(window.location.href);
         },
         components:{
-           AppNav 
+           AppNav
         },
         computed:{
             ...mapGetters({

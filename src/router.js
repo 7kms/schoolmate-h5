@@ -2,10 +2,11 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import util from './util/index'
 import { MessageBox } from 'mint-ui';
+import {register} from './util/wechat-api';
 
 Vue.use(VueRouter);
 const ROUTER_SETTING = {
-	mode: 'history', // default value 'hash'
+	  mode: 'history', // default value 'hash'
     base: '/',
 	  routes: [
         {
@@ -289,10 +290,18 @@ const ROUTER_SETTING = {
         },
         component: resolve => require(['./pages/feedback/index.vue'], resolve)
       },
-        {
-            path: '*',
-            redirect: '/'
+      {
+        path: '/share-back',
+        name: 'share-back',
+        beforeEnter(to, from, next){
+          let oldPath = localStorage.getItem('share-back') || '/';
+          next(oldPath);
         }
+      },
+      {
+        path: '*',
+        redirect: '/'
+      }
     ],
     scrollBehavior (to, from, savedPosition) {
         if (savedPosition) {
@@ -305,6 +314,7 @@ const ROUTER_SETTING = {
 const router = new VueRouter(ROUTER_SETTING);
 const title = '校友云';
 router.beforeEach((to, from, next) => {
+    record(to);
     let needAuthor = false;
     for (let i = to.matched.length - 1; i >= 0; i--) {
       if(to.matched[i].meta.needAuthor){
@@ -324,6 +334,11 @@ router.beforeEach((to, from, next) => {
       next();
     }
 });
+function record(to) {
+  if(to.name != 'share-back'){
+    localStorage.setItem('share-back',to.fullPath);
+  }
+}
 function changeTitle(to) {
   let titleStr = '';
   // 倒序遍历数组获取匹配到的路由节点，拼接各部分title
@@ -333,20 +348,9 @@ function changeTitle(to) {
   if (!titleStr) {
     titleStr += title;
   }
-
   if(util.isIOS()){
     document.title = title;
-    let iframe = document.createElement('iframe');
-    iframe.src= require('./assets/images/favicon.ico');
-    iframe.style.display = 'none';
-    document.getElementsByTagName('body')[0].appendChild(iframe);
-    let refreshFn = function () {
-      setTimeout(function() {
-        iframe.removeEventListener('load',refreshFn,false);
-        iframe.parentNode.removeChild(iframe);
-      }, 0);
-    };
-    iframe.addEventListener('load',refreshFn, false);
+    util.refresh();
   }else{
     document.title = titleStr;
   }

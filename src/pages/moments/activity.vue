@@ -58,9 +58,23 @@
           this.$toast({message: err});
         });
       },
+      needRefresh(item){
+        if(item.finished == '1' || item.attended){
+          return false;
+        }
+        if(item.fee && parseFloat(item.fee) > 0){
+          return true;
+        }else{
+          return false;
+        }
+      },
       goDetail(item) {
           if(this.$parent.basicInfo.is_member){
-              this.$router.push(`/activity/column-detail?id=${item.aid}`);
+            if(this.needRefresh(item)){
+              window.location.href = `/activity/column-detail?id=${item.aid}`;
+            }else{
+              this.$router.push({path:'/activity/column-detail',query:{id:item.aid}});
+            }
           }else{
                this.$dialog.confirm('请到【简介】中点击【申请加入】')
                .then(()=>{

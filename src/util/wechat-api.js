@@ -1,42 +1,19 @@
 import $api from 'api';
 let wx = window.wx;
-function RandomString(length) {
-    var str = '';
-    for ( ; str.length < length; str += Math.random().toString(36).substr(2) );
-    return str.substr(0, length);
-}
-function onBridgeReady(option){
-    let data = option.data;
-    WeixinJSBridge.invoke(
-        'getBrandWCPayRequest', {
-            "appId":data.appid,     //公众号名称，由商户传入
-            "timeStamp": String(Date.now()).slice(0,-3),         //时间戳，自1970年以来的秒数
-            "nonceStr": RandomString(32), //随机串
-            "package":`prepay_id=${data.prepay_id}`,
-            "signType":"MD5",         //微信签名方式：
-            "paySign":data.sign //微信签名
-        },
-        function(res){
-            // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
-            if(res.err_msg == "get_brand_wcpay_request:ok" ) {
-                option.callback &&  option.callback();
-            }
-        }
-    );
-}
+
 let config = (config)=>{
     wx.config({
-        debug: true,
+        debug: false,
         appId: config.appid,
         timestamp: parseInt(config.timestamp),
         nonceStr: config.noncestr,
         signature: config.signature,
-        jsApiList: ['uploadImage','downloadImage','getLocalImgData','chooseWXPay','getBrandWCPayRequest']
+        jsApiList: ['onMenuShareTimeline','onMenuShareAppMessage','chooseImage','previewImage','downloadImage','uploadImage','getLocalImgData','chooseWXPay']
     });
 };
+
 let register = (url)=>{
-    console.log(url)
-    console.log(encodeURIComponent(url))
+    // let url = `${location.host}${location.pathname}`;
     $api.get('/Pay/getJssdkpara',{url})
         .then(data=>{
             config(data);
@@ -44,30 +21,78 @@ let register = (url)=>{
             console.log('error');
         })
 };
-let wechatPay = (option)=>{
-    if (typeof WeixinJSBridge == "undefined"){
-        if( document.addEventListener ){
-            document.addEventListener('WeixinJSBridgeReady', function(){
-                onBridgeReady(option);
-            }, false);
-        }else if (document.attachEvent){
-            document.attachEvent('WeixinJSBridgeReady', function(){
-                onBridgeReady(option);
-            });
-            document.attachEvent('onWeixinJSBridgeReady', function(){
-                onBridgeReady(option);
-            });
+
+let chooseImage = (opt)=>{
+    return new Promise((resolve,reject)=>{
+      wx.chooseImage({
+        count: opt.count || 1, // 默认9
+        sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+        // sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
+        sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+        success: function (res) {
+          resolve(res.localIds);
+          // var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+        },
+        cancel: function () {
+          reject();
+        },
+        fail: function () {
+          reject();
         }
-    }else{
-        onBridgeReady(option);
-    }
+      });
+    })
 };
 
+let previewImage = (opt)=>{
+  wx.previewImage({
+    current: '', // 当前显示图片的http链接
+    urls: [] // 需要预览的图片http链接列表
+  });
+};
+
+let uploadImage = (localId)=>{
+  return new Promise((resolve,reject)=>{
+    wx.uploadImage({
+      localId: localId, // 需要上传的图片的本地ID，由chooseImage接口获得
+      isShowProgressTips: 0, // 默认为1，显示进度提示
+      success: function (res) {
+        // var serverId = res.serverId; // 返回图片的服务器端ID
+        resolve(res.serverId)
+      },
+      fail: function () {
+        reject();
+      }
+    });
+  });
+};
+
+let wechatPay = (obj)=>{
+      let option = obj.data;
+      wx.chooseWXPay({
+        timestamp: option.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+        nonceStr: option.nonceStr, // 支付签名随机串，不长于 32 位
+        package: option.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+        signType: option.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+        paySign: option.paySign, // 支付签名
+        success: function (res) {
+          if(res.errMsg == "chooseWXPay:ok" ) {
+            //支付成功
+            obj.success && obj.success();
+          }else{
+            obj.error && obj.error();
+          }
+        }
+      });
+};
 
 wx.error(function(res){
     console.log(res);
 });
+
 export {
     register,
+    chooseImage,
+    previewImage,
+    uploadImage,
     wechatPay
 }

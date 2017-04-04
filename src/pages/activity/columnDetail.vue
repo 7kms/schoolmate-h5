@@ -30,7 +30,7 @@
             margin-top: 6px;
             .text{
                 line-height: 1.5rem;
-                display: flex;
+                /*display: flex;*/
             }
         }
         .showBtn{
@@ -76,7 +76,7 @@
                     </div>
                     <div :class="$style.item">
                         <div :class="$style.text">
-                            <span>活动说明：</span><span v-transform="dataInfo.info.description"></span>
+                            <div>活动说明：</div><div v-transform="dataInfo.info.description"></div>
                         </div>
                     </div>
                     <div class="text-right">
@@ -112,12 +112,13 @@
     import attendedItem from './attendedItem.vue'
     import commentItem from './commentItem.vue'
     import Pay from '../../components/payDialog'
+//    import Util from '../../util'
     import {register,wechatPay} from '../../util/wechat-api'
     export default {
         created(){
-//            console.log(this.$route)
-            register(window.location.href);
+//            register(window.location.href);
             this.getData(this.$route.query);
+//            this.getData(this.$route.params);
         },
         components:{
           attendedItem,
@@ -157,22 +158,25 @@
         },
         methods: {
             payApply(){
+//              {amount:this.dataInfo.info.fee * 100,product:this.dataInfo.info.theme}
                 $api.get('/Pay/newOrder',{amount:this.dataInfo.info.fee * 100,product:this.dataInfo.info.theme})
                         .then(data=>{
                             wechatPay({
                                 data,
-                                callback:()=>{
-                                    this.$toast('支付成功');
+                                success:()=>{
                                     $api.post('/Activity/join',{aid:this.dataInfo.info.aid})
-                                            .then(res=>{
-                                                this.$toast(res.msg);
-                                                if(res.result){
-                                                    this.dataInfo.attended = true;
-                                                    this.dataInfo.attendedCrowd.push(this.self);
-                                                }
-                                            },err=>{
-                                                this.$toast('服务器异常');
-                                            })
+                                    .then(res=>{
+                                        this.$toast(res.msg);
+                                        if(res.result){
+                                            this.dataInfo.attended = true;
+                                            this.dataInfo.attendedCrowd.push(this.self);
+                                        }
+                                    },err=>{
+                                        this.$toast('服务器异常');
+                                    });
+                                },
+                                error:()=>{
+                                    this.$toast('支付失败');
                                 }
                             });
                         },error=>{
@@ -188,6 +192,14 @@
           operateBarClick(type){
             if(type == 'left'){
               if(!this.dataInfo.attended) {
+                 if(this.dataInfo.finished == '1'){
+                      this.$toast('活动已经结束了');
+                      return false;
+                  }
+                  if(this.isCreater){
+                    this.$toast('不能报名自己的活动');
+                    return false;
+                  }
                   if(this.dataInfo.info.fee != '0.00'){
                           Pay.showApply({
                               money: this.dataInfo.info.fee,

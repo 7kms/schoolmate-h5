@@ -28,13 +28,8 @@ get: (url, dataObj, opt = {}) => {
 	                res.body.data ? resolve(res.body.data) : resolve(res.body);
                 } else {
                     if (res.body.code == -401) {
-                        //  MessageBox.alert('请在微信中打开此网页')
-                        //  .then(() => {
-                        //      window.location.href = 'http://www.chenfangli.com/Response/entrance';
-                        //  });
-                        // window.location.href = 'http://www.chenfangli.com/Response/entrance';
+                        window.location.href = `${config.server}/Response/exentrance`;
                     } else {
-                      console.log(res);
                         reject(res.body);
                     }
                 }

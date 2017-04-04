@@ -2,6 +2,7 @@ import $api from 'api';
 import store from '../store';
 import { MessageBox } from 'mint-ui';
 import router from '../router'
+import {chooseImage, uploadImage} from './wechat-api';
 export default {
     isEmail (str) {
         const reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
@@ -176,7 +177,23 @@ export default {
         }
       });
     },
+    refresh() {
 
+      return new Promise((resolve,reject)=>{
+        let iframe = document.createElement('iframe');
+        iframe.src= require('../assets/images/favicon.ico');
+        iframe.style.display = 'none';
+        document.getElementsByTagName('body')[0].appendChild(iframe);
+        let refreshFn = function () {
+          setTimeout(function() {
+            iframe.removeEventListener('load',refreshFn,false);
+            iframe.parentNode.removeChild(iframe);
+            resolve();
+          }, 0);
+        };
+        iframe.addEventListener('load',refreshFn, false);
+      });
+    },
     transformTextToHtml(str){
         str = str || '';
         str = str.replace(/(\<)|(\>)|(\n)/ig,function($0){
@@ -189,5 +206,36 @@ export default {
             }
         });
         return str;
-    }
+    },
+    getPathByIds(ids){
+      return $api.get('/Picture/getPathByID',{ids:ids.join(',')})
+    },
+    wxUpload({count,onSelectEnd}){
+      let localIds = [];
+      let serverIdArr = [];
+      return new Promise((resolve,reject)=>{
+        let upload = ()=>{
+          let localId = localIds.pop();
+          uploadImage(localId)
+            .then(serverId=>{
+              serverIdArr.push(serverId);
+              if(localIds.length > 0){
+                 upload();
+              }else{
+                 resolve(serverIdArr);
+              }
+            },err=>{
+              reject(err);
+            })
+        };
+        chooseImage({count})
+          .then(idArr=>{
+            localIds = idArr;
+            onSelectEnd && onSelectEnd();
+            upload();
+          },err=>{
+            reject(err);
+          });
+      });
+  }
 }
