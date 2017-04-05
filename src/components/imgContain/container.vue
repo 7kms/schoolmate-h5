@@ -12,7 +12,7 @@
     </div>
 </template>
 <script>
-  import {serverUrl} from '../../config'
+  import {server} from '../../config'
     export default {
         props:{
           imgUrl:String,
@@ -21,7 +21,7 @@
         methods:{
           postUrl(url){
             if(url && url.indexOf('http') != 0){
-              url = `${serverUrl+'/..'}/${url}`;
+              url = `${server}/${url}`;
             }
             return url;
           },
@@ -30,7 +30,7 @@
             if(url && url.indexOf('http')==0){
               styleObj.backgroundImage = `url(${url})`;
             }else if(url){
-              styleObj.backgroundImage = `url(${serverUrl+'/..'}/${url})`;
+              styleObj.backgroundImage = `url(${server}/${url})`;
             }
             return styleObj;
           }

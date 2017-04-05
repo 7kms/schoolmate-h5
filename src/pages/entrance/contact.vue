@@ -107,7 +107,7 @@
         data(){
             return {
                 waiting: false,
-                count: 6,
+                count: 60,
                 verifyCode:'',
                 friendsArr:[],
                 nameErrorTimes:0,

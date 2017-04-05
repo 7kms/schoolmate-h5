@@ -1,3 +1,4 @@
+import Util from './index';
 import $api from 'api';
 let wx = window.wx;
 
@@ -8,7 +9,7 @@ let config = (config)=>{
         timestamp: parseInt(config.timestamp),
         nonceStr: config.noncestr,
         signature: config.signature,
-        jsApiList: ['onMenuShareTimeline','onMenuShareAppMessage','chooseImage','previewImage','downloadImage','uploadImage','getLocalImgData','chooseWXPay']
+        jsApiList: ['onMenuShareTimeline','onMenuShareAppMessage','onMenuShareQQ','chooseImage','previewImage','downloadImage','uploadImage','getLocalImgData','chooseWXPay']
     });
 };
 
@@ -85,6 +86,46 @@ let wechatPay = (obj)=>{
       });
 };
 
+
+let wechatShare = ({title, link = window.location.href, imgUrl, desc})=>{
+    imgUrl = Util.postUrl(imgUrl);
+    wx.onMenuShareTimeline({
+        title, // 分享标题
+        link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+        imgUrl, // 分享图标
+        success: function () {
+            // 用户确认分享后执行的回调函数
+        },
+        cancel: function () {
+            // 用户取消分享后执行的回调函数
+        }
+    });
+    wx.onMenuShareAppMessage({
+        title, // 分享标题
+        desc, // 分享描述
+        link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+        imgUrl, // 分享图标
+        success: function () {
+            // 用户确认分享后执行的回调函数
+        },
+        cancel: function () {
+            // 用户取消分享后执行的回调函数
+        }
+    });
+    wx.onMenuShareQQ({
+        title, // 分享标题
+        desc, // 分享描述
+        link, // 分享链接
+        imgUrl, // 分享图标
+        success: function () {
+            // 用户确认分享后执行的回调函数
+        },
+        cancel: function () {
+            // 用户取消分享后执行的回调函数
+        }
+    });
+};
+
 wx.error(function(res){
     console.log(res);
 });
@@ -94,5 +135,6 @@ export {
     chooseImage,
     previewImage,
     uploadImage,
-    wechatPay
+    wechatPay,
+    wechatShare
 }

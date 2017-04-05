@@ -224,7 +224,18 @@
           }
         },
         changeChannel(channel){
-          let role = channel == 'graduate' ? 'student' : channel;
+          let role;
+          switch (channel){
+            case 'graduate':
+                role='毕业校友';
+                break;
+            case 'student':
+                role='在校学生';
+                break;
+            case 'teacher':
+                role='学校老师';
+                break;
+          }
           this.$store.dispatch('entrance/CHANGE_CHANNEL',channel);
           this.$store.dispatch('entrance/CHANGE_USERINFO',{role});
           if(channel == 'teacher'){

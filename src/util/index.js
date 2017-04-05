@@ -3,6 +3,7 @@ import store from '../store';
 import { MessageBox } from 'mint-ui';
 import router from '../router'
 import {chooseImage, uploadImage} from './wechat-api';
+import {server} from '../config'
 export default {
     isEmail (str) {
         const reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
@@ -237,5 +238,11 @@ export default {
             reject(err);
           });
       });
-  }
+  },
+    postUrl(url){
+        if(url && url.indexOf('http') != 0){
+            url = `${server}/${url}`;
+        }
+        return url;
+    }
 }

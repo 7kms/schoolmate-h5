@@ -116,7 +116,7 @@
     import commentItem from './commentItem.vue'
     import Pay from '../../components/payDialog'
     import Util from '../../util'
-    import {register,wechatPay} from '../../util/wechat-api'
+    import {register,wechatShare,wechatPay} from '../../util/wechat-api'
     export default {
         created(){
             register(window.location.href);
@@ -158,6 +158,10 @@
             }
             return obj;
           }
+        },
+        beforeRouteLeave(to,from,next){
+            wechatShare({});
+            next();
         },
         methods: {
             payApply(){
@@ -266,10 +270,20 @@
               .then(res=>{
                 this.dataInfo = res;
                 this.loading = false;
+                this.initialShare();
               },err=>{
                 this.$toast({message: err});
                 this.loading = false;
               })
+          },
+          initialShare(){
+              let info = this.dataInfo;
+              wechatShare({
+                  title:info.theme,
+                  link: window.location.href,
+                  imgUrl: info.cover_file,
+                  desc: info.description
+              });
           },
           removeComment(item){
             $api.post('/Picture/deleteComment',{cid:item.cid})
