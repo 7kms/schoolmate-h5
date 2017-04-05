@@ -89,6 +89,9 @@ let wechatPay = (obj)=>{
 
 let wechatShare = ({title, link = window.location.href, imgUrl, desc})=>{
     imgUrl = Util.postUrl(imgUrl);
+    alert(title)
+    alert(link)
+    alert(imgUrl)
     wx.onMenuShareTimeline({
         title, // 分享标题
         link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
