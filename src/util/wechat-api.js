@@ -5,7 +5,7 @@ let isRegisterd = false;
 let config = (config)=>{
     return new Promise((resolve,reject)=>{
         wx.config({
-            debug: true,
+            debug: false,
             appId: config.appid,
             timestamp: parseInt(config.timestamp),
             nonceStr: config.noncestr,
@@ -26,9 +26,7 @@ let config = (config)=>{
 
 let register = (url = window.location.href)=>{
     // let url = `${location.host}${location.pathname}`;
-    alert('111')
     if(isRegisterd && Util.isIOS()){
-        alert('222')
         return Promise.resolve();
     }
     return $api.get('/Pay/getJssdkpara',{url})
