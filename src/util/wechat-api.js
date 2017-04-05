@@ -1,10 +1,11 @@
 import Util from './index';
 import $api from 'api';
 let wx = window.wx;
+let isRegisterd = false;
 let config = (config)=>{
     return new Promise((resolve,reject)=>{
         wx.config({
-            debug: false,
+            debug: true,
             appId: config.appid,
             timestamp: parseInt(config.timestamp),
             nonceStr: config.noncestr,
@@ -12,9 +13,11 @@ let config = (config)=>{
             jsApiList: ['onMenuShareTimeline','onMenuShareAppMessage','onMenuShareQQ','chooseImage','previewImage','downloadImage','uploadImage','getLocalImgData','chooseWXPay']
         });
         wx.ready(()=>{
+            isRegisterd = true;
             resolve();
         });
         wx.error(function(err){
+            isRegisterd = false;
             reject(err);
         });
     })
@@ -23,6 +26,9 @@ let config = (config)=>{
 
 let register = (url = window.location.href)=>{
     // let url = `${location.host}${location.pathname}`;
+    if(isRegisterd && Util.isIOS()){
+        return Promise.resolve();
+    }
     return $api.get('/Pay/getJssdkpara',{url})
         .then(data=>{
             return config(data);
