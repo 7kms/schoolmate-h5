@@ -119,7 +119,6 @@
     import {register,wechatShare,wechatPay} from '../../util/wechat-api'
     export default {
         created(){
-            register(window.location.href);
             this.getData(this.$route.query);
 //            this.getData(this.$route.params);
         },
@@ -270,20 +269,23 @@
               .then(res=>{
                 this.dataInfo = res;
                 this.loading = false;
-                this.initialShare();
+                this.wechatInit();
               },err=>{
                 this.$toast({message: err});
                 this.loading = false;
               })
           },
-          initialShare(){
-              let info = this.dataInfo.info;
-              wechatShare({
-                  title:info.theme,
-                  link: window.location.href,
-                  imgUrl: info.cover_file,
-                  desc: info.description
-              });
+            wechatInit(){
+              register().then(()=>{
+                  let info = this.dataInfo.info;
+                  wechatShare({
+                      title:info.theme,
+                      link: window.location.href,
+                      imgUrl: info.cover_file,
+                      desc: info.description
+                  });
+              })
+
           },
           removeComment(item){
             $api.post('/Picture/deleteComment',{cid:item.cid})

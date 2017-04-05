@@ -1,7 +1,6 @@
 import Util from './index';
 import $api from 'api';
 let wx = window.wx;
-
 let config = (config)=>{
     wx.config({
         debug: true,
@@ -15,7 +14,7 @@ let config = (config)=>{
 
 let register = (url = window.location.href)=>{
     // let url = `${location.host}${location.pathname}`;
-    $api.get('/Pay/getJssdkpara',{url})
+    return $api.get('/Pay/getJssdkpara',{url})
         .then(data=>{
             config(data);
         },err=>{
