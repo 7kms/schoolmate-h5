@@ -376,16 +376,6 @@
                 this.info.pictures.splice(index,1);
               }
             },
-            getPathByIds(ids){
-              util.getPathByIds(ids)
-                .then(res=>{
-                 res.path.forEach( (path) =>{
-                   this.info.cover_file = path;
-                 });
-                },error=>{
-                  console.log(error);
-                });
-            },
             coverUpload(){
                  util.wxUpload({count:1,onSelectEnd:()=>this.loading = true})
                    .then(wxIds=>{
@@ -503,7 +493,7 @@
             }
         },
         created(){
-          register(window.location.href);
+            register(window.location.href);
             $api.get('/Circle/getMyCircle')
             .then(res=>{
                 res.forEach(circle => {

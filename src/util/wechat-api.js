@@ -12,7 +12,7 @@ let config = (config)=>{
     });
 };
 
-let register = (url)=>{
+let register = (url = window.location.href)=>{
     // let url = `${location.host}${location.pathname}`;
     $api.get('/Pay/getJssdkpara',{url})
         .then(data=>{

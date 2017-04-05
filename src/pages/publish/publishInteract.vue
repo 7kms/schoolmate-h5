@@ -52,19 +52,11 @@
             <ImgContain :class="[$style.imgItem]" v-for="(url,index) in uploadImageArr" :imgUrl="url">
                 <i :class="$style.deleteImg" @click="deleteImage(url)" v-if="url"></i>
                 <template v-if="index == uploadImageArr.length-1 && !url">
-                    <div :class="[$style.imgAdd,'text-center']" v-show="!uploading">
-                        <file-upload class="file-upload"
-                                     :drop="false"
-                                     :post-action="action"
-                                     :multiple="true"
-                                     accept="image/*"
-                                     :events="events"
-                                     name="file0"
-                        ></file-upload>
+                    <div :class="[$style.imgAdd,'text-center']" v-show="!picUploading" @click="picUpload">
                         <i :class="$style.btnAdd"></i>
                         <span>点击上传</span>
                     </div>
-                    <Loading text="上传中..." :class="$style.loading" v-show="uploading"></Loading>
+                    <Loading text="上传中..." :class="$style.loading" v-show="picUploading"></Loading>
                 </template>
 
             </ImgContain>
@@ -127,6 +119,7 @@
   import {serverUrl} from '../../config'
   import util from  '../../util';
   import $api from 'api';
+  import {register} from '../../util/wechat-api';
   export default {
     components:{
       FileUpload,
@@ -135,7 +128,7 @@
     data(){
       return {
           uploadCount:0,
-          uploading: false,
+          picUploading: false,
         loading: false,
         needsArr:[{name:'拥有资源',value:2},{name:'寻求合作',value:1}],
         showNeeds: false,
@@ -189,36 +182,6 @@
         });
         str = arr.join(',');
         return str;
-      },
-      events(){
-        let _this = this;
-        return {
-          add(file, component) {
-              _this.uploadCount ++;
-              _this.uploading = true;
-            file.data.count = 1;
-            component.active = true;
-          },
-          progress(file, component) {
-            console.log('progress ' + file.progress);
-          },
-          after(file, component) {
-            let res = util.parseJSON(file.response);
-            let url = res[0];
-              _this.uploadCount --;
-              if(url){
-                  _this.info.pictures.push(url);
-              }else{
-                 _this.$toast(res.msg);
-              }
-              if(!_this.uploadCount){
-                  _this.uploading = false;
-              }
-          },
-          before(file, component) {
-            console.log('before');
-          }
-        }
       }
     },
     methods:{
@@ -228,6 +191,25 @@
         }else{
           this.showRange = true;
         }
+      },
+      picUpload(){
+        let count = 4 - this.info.pictures.length ;
+        count = count > 4 ? 4 : count;
+        util.wxUpload({count,onSelectEnd:()=>this.picUploading = true})
+                .then(wxIds=>{
+                    return util.getPathByIds(wxIds);
+                }).then(res=>{
+                        if(!res)return;
+                        this.picUploading = false;
+                        if(res.path[0]){
+                            this.info.pictures = [...this.info.pictures,...res.path];
+                        }else{
+                            this.$toast('上传图片失败');
+                        }
+                    },err=>{
+                    this.picUploading = false;
+                    console.log(err);
+                })
       },
       deleteImage(img){
         let index = this.info.pictures.indexOf(img);
@@ -283,6 +265,7 @@
       }
     },
     created(){
+        register(window.location.href);
       $api.get('/Circle/getMyCircle')
         .then(res=>{
           res.forEach(circle => {

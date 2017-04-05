@@ -40,7 +40,9 @@
             background-image: url("../../assets/images/bg-add.png");
         }
     }
-
+    .loading{
+        color: #fff;
+    }
 </style>
 <template>
     <div class="content">
@@ -48,19 +50,11 @@
             <ImgContain :class="[$style.imgItem,{[$style.margin]:index>2}]" v-for="(url,index) in imgArr" :imgUrl="url">
                 <i :class="$style.deleteImg" @click="deleteImage(index)" v-if="url"></i>
                 <template v-if="index == imgArr.length-1 && !url">
-                    <div :class="[$style.imgAdd,'text-center']" v-show="!uploading">
-                        <file-upload class="file-upload"
-                                     :drop="false"
-                                     :post-action="action"
-                                     :multiple="true"
-                                     accept="image/*"
-                                     :events="events"
-                                     name="file0"
-                        ></file-upload>
+                    <div :class="[$style.imgAdd,'text-center']" v-show="!picUploading" @click="picUpload">
                         <i :class="$style.btnAdd"></i>
                         <span>点击上传</span>
                     </div>
-                    <Loading text="上传中..." :class="$style.loading" v-show="uploading"></Loading>
+                    <Loading text="上传中..." :class="$style.loading" v-show="picUploading"></Loading>
                 </template>
             </ImgContain>
         </div>
@@ -103,9 +97,9 @@
 <script>
   import FileUpload from 'vue-upload-component'
   import { singlePicker } from '../../components/popPicker';
-  import {serverUrl} from '../../config'
   import util from  '../../util';
   import $api from 'api';
+  import {register} from '../../util/wechat-api';
     export default {
       components:{
         FileUpload,
@@ -114,12 +108,12 @@
       data(){
         return {
           uploadCount:0,
-          uploading: false,
+          picUploading: false,
           showRange:false,
-            loadingInfo: true,
-            loadingCircle: true,
-            rangeOptions: [{name:'所有人可见',value:'0'}],
-            edit:false,
+          loadingInfo: true,
+          loadingCircle: true,
+          rangeOptions: [{name:'所有人可见',value:'0'}],
+          edit:false,
           info:{
             theme:'',
             description: '',
@@ -137,39 +131,6 @@
           });
           return str;
         },
-        action(){
-          return serverUrl + '/Response/multiPicUpload';
-        },
-        events(){
-          let _this = this;
-          return {
-            add(file, component) {
-              _this.uploadCount ++;
-              _this.uploading = true;
-              file.data.count = 1;
-              component.active = true;
-            },
-            progress(file, component) {
-              console.log('progress ' + file.progress);
-            },
-            after(file, component) {
-              let res = util.parseJSON(file.response);
-              let url = res[0];
-                if(url){
-                    _this.info.pictures.push(url);
-                }else{
-                    _this.$toast(res.msg);
-                }
-              _this.uploadCount --;
-              if(!_this.uploadCount){
-                _this.uploading = false;
-              }
-            },
-            before(file, component) {
-              console.log('before');
-            }
-          }
-        },
         imgArr(){
           let arr = [...this.info.pictures];
           arr.length = 9;
@@ -177,6 +138,25 @@
         }
       },
       methods:{
+          picUpload(){
+              let count = 9 - this.info.pictures.length ;
+              count = count > 9 ? 9 : count;
+              util.wxUpload({count,onSelectEnd:()=>this.picUploading = true})
+              .then(wxIds=>{
+                  if(!res)return;
+                  util.getPathByIds(wxIds)
+                          .then(res=>{
+                      this.picUploading = false;
+                      if(res.path[0]){
+                          this.info.pictures = [...this.info.pictures,...res.path];
+                      }else{
+                          this.$toast('上传图片失败');
+                      }
+                  },err=>{
+                      console.log(err);
+                  })
+              });
+          },
           hidePicker(){
               this.showRange = false;
           },
@@ -220,6 +200,7 @@
         }
       },
       created(){
+        register();
         this.loadingInfo = false;
         this.info.aid = this.$route.params.id;
       }

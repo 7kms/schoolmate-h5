@@ -21,23 +21,21 @@
         background-image: url("../../assets/images/btn-add.png");
     }
     }
+    .loading{
+        margin: 0 auto;
+    }
 </style>
 <template>
     <div>
         <div class="content">
             <ImgContain :class="$style.picWrap" :imgUrl="info.c_cover_file">
-                <div :class="[$style.imgAdd,'text-center']">
-                    <file-upload class="file-upload"
-                         :drop="false"
-                         :post-action="action"
-                         :multiple="false"
-                         accept="image/*"
-                         :events="events"
-                         name="file0"
-                    ></file-upload>
-                    <i :class="$style.btnAdd"></i>
-                    <span>添加圈子头像</span>
-                </div>
+                <template>
+                    <div :class="[$style.imgAdd,'text-center']" v-show="!picUploading" @click="picUpload">
+                        <i :class="$style.btnAdd"></i>
+                        <span>添加圈子头像</span>
+                    </div>
+                    <Loading text="上传中..." :class="$style.loading" v-show="picUploading"></Loading>
+                </template>
             </ImgContain>
             <div class="pub-info-content">
                 <div class="pub-item">
@@ -104,10 +102,10 @@
 <script>
   import { singlePicker } from '../../components/popPicker';
   import FileUpload from 'vue-upload-component'
-  import {serverUrl} from '../../config'
   import util from  '../../util';
   import $api from 'api';
   import {mapState} from 'vuex';
+  import {register} from '../../util/wechat-api';
   export default {
     components:{
       FileUpload,
@@ -127,6 +125,7 @@
           qq:'',
           c_wechat:''
         },
+        picUploading: false,
         edit: false,
         loadingInfo: true,
         showSettingPicker: false,
@@ -141,9 +140,6 @@
       ...mapState({
         profile: (state) => state.user.profile
       }),
-      action(){
-        return serverUrl + '/Response/multiPicUpload';
-      },
       settingText(){
         let str;
         this.settingArr.forEach(obj=>{
@@ -152,34 +148,27 @@
           }
         });
         return str;
-      },
-      events(){
-        let _this = this;
-        return {
-          add(file, component) {
-            file.data.count = 1;
-            component.active = true;
-            _this.loading = true;
-          },
-          progress(file, component) {
-            console.log('progress ' + file.progress);
-          },
-          after(file, component) {
-            let res = util.parseJSON(file.response);
-            let url = res[0];
-              if(url){
-                  _this.info.c_cover_file = url;
-              }else{
-                  this.$toast(res.msg);
-              }
-          },
-          before(file, component) {
-            console.log('before');
-          }
-        }
       }
     },
     methods:{
+        picUpload(){
+            let count = 1;
+            util.wxUpload({count,onSelectEnd:()=>this.picUploading = true})
+                    .then(wxIds=>{
+                        return util.getPathByIds(wxIds);
+                    }).then(res=>{
+                        if(!res)return;
+                        this.picUploading = false;
+                        if(res.path[0]){
+                            this.info.c_cover_file = res.path[0];
+                        }else{
+                            this.$toast('上传图片失败');
+                        }
+                },err=>{
+                    this.picUploading = false;
+                    console.log(err);
+                })
+        },
       hidePicker(){
         this.showSettingPicker = false;
       },
@@ -191,9 +180,30 @@
         this.info.setting = String(obj.value);
       },
       valid(){
-
+          if(!this.info.c_cover_file){
+              this.$toast('请上传圈子头像');
+              return false;
+          }
+          if(!this.info.c_name){
+              this.$toast('圈子名称不能为空');
+              return false;
+          }
+          if(!this.info.c_description){
+              this.$toast('圈子简介不能为空');
+              return false;
+          }
+          if(!this.info.labels){
+              this.$toast('圈子标签不能为空');
+              return false;
+          }
+          if(!this.info.master){
+              this.$toast('圈子负责人不能为空');
+              return false;
+          }
+          return true;
       },
       publish(){
+          if(!this.valid()) return false;
         var param = this.info;
         $api.post('/Circle/upCircle',param)
           .then(res=>{
@@ -207,6 +217,7 @@
       }
     },
     created(){
+        register();
         let {cid} =  this.$route.query;
         if(cid){
             this.edit = true;
