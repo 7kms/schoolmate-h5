@@ -25,7 +25,7 @@
         },
         created: function() {
             this.$store.dispatch('user/GET_ACCOUNT');
-//            register(window.location.href);
+            register();
         },
         components:{
            AppNav
