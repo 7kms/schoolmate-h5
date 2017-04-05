@@ -4,7 +4,7 @@ let wx = window.wx;
 
 let config = (config)=>{
     wx.config({
-        debug: false,
+        debug: true,
         appId: config.appid,
         timestamp: parseInt(config.timestamp),
         nonceStr: config.noncestr,
