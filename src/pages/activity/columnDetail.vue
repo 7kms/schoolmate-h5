@@ -277,7 +277,7 @@
               })
           },
           initialShare(){
-              let info = this.dataInfo;
+              let info = this.dataInfo.info;
               wechatShare({
                   title:info.theme,
                   link: window.location.href,
