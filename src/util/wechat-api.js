@@ -2,23 +2,32 @@ import Util from './index';
 import $api from 'api';
 let wx = window.wx;
 let config = (config)=>{
-    wx.config({
-        debug: true,
-        appId: config.appid,
-        timestamp: parseInt(config.timestamp),
-        nonceStr: config.noncestr,
-        signature: config.signature,
-        jsApiList: ['onMenuShareTimeline','onMenuShareAppMessage','onMenuShareQQ','chooseImage','previewImage','downloadImage','uploadImage','getLocalImgData','chooseWXPay']
-    });
+    return new Promise((resolve,reject)=>{
+        wx.config({
+            debug: true,
+            appId: config.appid,
+            timestamp: parseInt(config.timestamp),
+            nonceStr: config.noncestr,
+            signature: config.signature,
+            jsApiList: ['onMenuShareTimeline','onMenuShareAppMessage','onMenuShareQQ','chooseImage','previewImage','downloadImage','uploadImage','getLocalImgData','chooseWXPay']
+        });
+        wx.ready(()=>{
+            resolve();
+        });
+        wx.error(function(err){
+            reject(err);
+        });
+    })
+
 };
 
 let register = (url = window.location.href)=>{
     // let url = `${location.host}${location.pathname}`;
     return $api.get('/Pay/getJssdkpara',{url})
         .then(data=>{
-            config(data);
+            return config(data);
         },err=>{
-            console.log('error');
+            return Promise.reject(err);
         })
 };
 
@@ -127,10 +136,6 @@ let wechatShare = ({title, link = window.location.href, imgUrl, desc})=>{
         }
     });
 };
-
-wx.error(function(res){
-    console.log(res);
-});
 
 export {
     register,
