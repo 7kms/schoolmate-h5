@@ -47,9 +47,9 @@
             </div>
             <div :class="$style.detail" v-if="!loading">
                 <Basic :dataInfo="basicInfo" v-if="item=='basic'"></Basic>
-                <Activity  v-if="item=='activity'" :showPublish="basicInfo.created_by_me"></Activity>
-                <Photo  v-if="item=='photo'" :showPublish="basicInfo.created_by_me"></Photo>
-                <Interact v-if="item=='interact'" :showPublish="basicInfo.created_by_me"></Interact>
+                <Activity  v-if="item=='activity'" :showPublish="basicInfo.is_member"></Activity>
+                <Photo  v-if="item=='photo'" :showPublish="basicInfo.is_member"></Photo>
+                <Interact v-if="item=='interact'" :showPublish="basicInfo.is_member"></Interact>
             </div>
         </div>
     </div>
@@ -57,7 +57,6 @@
 <script>
   import $api from 'api';
   import { mapGetters } from 'vuex'
-  import {serverUrl} from '../../config'
   import Basic from './basic.vue'
   import Activity from './activity.vue'
   import Photo from './photo.vue'

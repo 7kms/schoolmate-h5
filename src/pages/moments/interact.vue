@@ -10,7 +10,7 @@
             infinite-scroll-immediate-check="false"
             infinite-scroll-disabled="noScroll"
             infinite-scroll-distance="80">
-            <Item v-for="(item,index) in interact.list" :class="$style.item" :key="index" :dataInfo="item" @showSwiper="showSwiper"></Item>
+            <Item v-for="(item,index) in interact.list" :class="$style.item" :key="index" :dataInfo="item"  @remove="remove" @showSwiper="showSwiper"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
         <div v-if="!loading && interact.noMore && interact.list.length == 0" class="empty-data-item">
@@ -61,7 +61,18 @@
       },
       showSwiper(info){
          this.$parent.swiperInstance = swiper(info);
-      }
+      },
+        remove(item){
+            $api.post('/Help/revoke',{ rid:item.rid})
+            .then(res=>{
+                this.$toast(res.msg);
+                if(res.result){
+                    this.$store.dispatch('interact/REMOVE_INTERACT',item);
+                }
+            },err=>{
+                this.$toast('服务器异常');
+            });
+        }
     },
     created(){
       if(!this.interact.list.length){
