@@ -108,7 +108,6 @@ const mutations = {
   [types.APPEND_INDUSTRY_LIST] (state, dataList) {
     dataList.forEach(item=>{
       if(!item.pictures)item.pictures=[];
-      item.pictures.length = 3;
       state.industry.list.push(item);
     });
   },

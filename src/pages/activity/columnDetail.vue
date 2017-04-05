@@ -6,6 +6,9 @@
     .cover{
         width:100%;
     }
+    .coverFile{
+        height: 170px;
+    }
     .info{
         margin-bottom: 6px;
         background-color: #fff;
@@ -49,7 +52,7 @@
     <div>
         <div :class="$style.content" v-if="!loading">
             <div :class="$style.info">
-                <ImgContain :class="$style.cover" :imgUrl="dataInfo.info.cover_file"></ImgContain>
+                <ImgContain :class="[$style.cover,$style.coverFile]" :imgUrl="dataInfo.info.cover_file"></ImgContain>
                 <div :class="$style.desc">
                     <span :class="[$style.ing,'size-topic']" v-if="dataInfo.info.ongoing">活动进行中</span>
                     <h3 class="topic">{{dataInfo.info.theme}}</h3>
@@ -112,11 +115,11 @@
     import attendedItem from './attendedItem.vue'
     import commentItem from './commentItem.vue'
     import Pay from '../../components/payDialog'
-//    import Util from '../../util'
+    import Util from '../../util'
     import {register,wechatPay} from '../../util/wechat-api'
     export default {
         created(){
-//            register(window.location.href);
+            register(window.location.href);
             this.getData(this.$route.query);
 //            this.getData(this.$route.params);
         },
@@ -190,64 +193,68 @@
             return this.self.uid == this.dataInfo.creator.uid || this.self.uid == comment.uid;
           },
           operateBarClick(type){
-            if(type == 'left'){
-              if(!this.dataInfo.attended) {
-                 if(this.dataInfo.finished == '1'){
-                      this.$toast('活动已经结束了');
-                      return false;
-                  }
-                  if(this.isCreater){
-                    this.$toast('不能报名自己的活动');
-                    return false;
-                  }
-                  if(this.dataInfo.info.fee != '0.00'){
+              Util.isAuthored('你还没有完善个人信息,马上去完善?')
+                      .then(()=>{
+                  if(type == 'left'){
+                  if(!this.dataInfo.attended) {
+                      if(this.dataInfo.finished == '1'){
+                          this.$toast('活动已经结束了');
+                          return false;
+                      }
+                      if(this.isCreater){
+                          this.$toast('不能报名自己的活动');
+                          return false;
+                      }
+                      if(this.dataInfo.info.fee != '0.00'){
                           Pay.showApply({
-                              money: this.dataInfo.info.fee,
-                              ok:()=>{
-                                  this.payApply();
-                              },
-                              cancel:()=>{
-                                  console.log('cancel')
-                              }
-                          })
+                                      money: this.dataInfo.info.fee,
+                                      ok:()=>{
+                                      this.payApply();
+                      },
+                          cancel:()=>{
+                              console.log('cancel')
+                          }
+                      })
                       }else{
-                        $api.post('/Activity/join',{aid:this.dataInfo.info.aid})
-                              .then(res=>{
-                                  this.$toast(res.msg);
-                                  if(res.result){
-                                      this.dataInfo.attended = true;
-                                      this.dataInfo.attendedCrowd.push(this.self);
-                                  }
-                              },err=>{
-                                  this.$toast('服务器异常');
-                              })
-                  }
-              }else{
-                  Pay.showCancel({
-                      money: this.dataInfo.info.fee,
-                      ok:()=>{
-                        $api.post('/Activity/cancelAttend',{aid:this.dataInfo.info.aid})
-                          .then(res=>{
+                          $api.post('/Activity/join',{aid:this.dataInfo.info.aid})
+                                  .then(res=>{
                               this.$toast(res.msg);
-                              if(res.result){
-                                  this.dataInfo.attended = false;
-                                  this.dataInfo.attendedCrowd = this.dataInfo.attendedCrowd.filter(user => user.uid != this.self.uid);
-                              }
-                          },err=>{
+                          if(res.result){
+                              this.dataInfo.attended = true;
+                              this.dataInfo.attendedCrowd.push(this.self);
+                          }
+                      },err=>{
                               this.$toast('服务器异常');
                           })
-                      },
-                      cancel:()=>{
-                          console.log('cancel')
                       }
-                  })
+                  }else{
+                      Pay.showCancel({
+                                  money: this.dataInfo.info.fee,
+                                  ok:()=>{
+                                        $api.post('/Activity/cancelAttend',{aid:this.dataInfo.info.aid})
+                                        .then(res=>{
+                                              this.$toast(res.msg);
+                                              if(res.result){
+                                                  this.dataInfo.attended = false;
+                                                  this.dataInfo.attendedCrowd = this.dataInfo.attendedCrowd.filter(user => user.uid != this.self.uid);
+                                              }
+                                        },err=>{
+                                          this.$toast('服务器异常');
+                                        })
+                                  },
+                                  cancel:()=>{
+                                      console.log('cancel')
+                                  }
+                      })
+                  }
+              }else{
+                  this.$router.push({
+                      path: '/comment/activity',
+                      query:{aid: this.dataInfo.info.aid}
+                  });
               }
-            }else{
-                this.$router.push({
-                  path: '/comment/activity',
-                  query:{aid: this.dataInfo.info.aid}
-                });
-            }
+              },null);
+
           },
           showPhotos(){
               const {id} = this.$route.query;

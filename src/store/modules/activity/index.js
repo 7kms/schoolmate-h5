@@ -140,7 +140,7 @@ const mutations = {
           if(!item.pictures){
               item.pictures = [];
           }
-        item.pictures.length = 3;
+        item.pictures.length = 4;
         state.photo.list.push(item);
       });
     },

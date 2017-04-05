@@ -21,10 +21,11 @@
         }
     }
     .pic{
-        height: 125px;
+        padding: 0 12px;
         .item{
-            height: 100%;
-            width: 33.3%;
+            width: 80px;
+            height: 80px;
+            margin-right: ~"calc(25% - 80px)";
             background-size: cover;
         }
     }
@@ -114,12 +115,6 @@
       methods:{
         click(){
           this.$emit('click',this.dataInfo);
-        },
-        imageUrl(str){
-          if(str.indexOf('/')== 0){
-            return str;
-          }
-          return `${serverUrl}/${str}`;
         },
         like(){
             if(this.dataInfo.is_liked){

@@ -16,11 +16,13 @@
         display: flex;
         margin-top: 6px;
         justify-content: space-between;
+        padding: 0 12px;
     }
     .imgItem{
-        width: 33%;
-        height: 125px;
-        flex: 1;
+        width: 80px;
+        height: 80px;
+        margin-right: ~"calc(25% - 80px)";
+        background-size: cover;
     }
 </style>
 <template>
@@ -33,7 +35,7 @@
                 <span class="topic">{{ dataInfo.c_name }}</span><span>（<span class="color-hint">{{ dataInfo.count }}</span>人）</span>
             </div>
         </div>
-        <div :class="$style.imgContent">
+        <div :class="$style.imgContent" v-if="imgArr.length > 0">
             <ImgContain :imgUrl="img" :class="$style.imgItem" v-for="img in imgArr"></ImgContain>
         </div>
     </div>
@@ -48,8 +50,11 @@
     },
     computed:{
       imgArr(){
-        var arr = this.dataInfo.pictures || [];
-        arr.length = 3;
+          let arr = this.dataInfo.pictures;
+          if(arr.length > 0){
+              arr.length = 4;
+          }
+          console.log(arr.length);
         return arr;
       }
     },
