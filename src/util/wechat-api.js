@@ -26,7 +26,9 @@ let config = (config)=>{
 
 let register = (url = window.location.href)=>{
     // let url = `${location.host}${location.pathname}`;
+    alert('111')
     if(isRegisterd && Util.isIOS()){
+        alert('222')
         return Promise.resolve();
     }
     return $api.get('/Pay/getJssdkpara',{url})
