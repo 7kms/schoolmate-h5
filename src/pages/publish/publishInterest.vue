@@ -155,19 +155,19 @@
             let count = 1;
             util.wxUpload({count,onSelectEnd:()=>this.picUploading = true})
                     .then(wxIds=>{
-                        return util.getPathByIds(wxIds);
-                    }).then(res=>{
-                        if(!res)return;
-                        this.picUploading = false;
-                        if(res.path[0]){
-                            this.info.c_cover_file = res.path[0];
-                        }else{
-                            this.$toast('上传图片失败');
-                        }
-                },err=>{
-                    this.picUploading = false;
-                    console.log(err);
-                })
+                        util.getPathByIds(wxIds)
+                                .then(res=>{
+                                    this.picUploading = false;
+                                    if(res.path[0]){
+                                        this.info.c_cover_file = res.path[0];
+                                    }else{
+                                        this.$toast('上传图片失败');
+                                    }
+                                },err=>{
+                                    this.picUploading = false;
+                                    console.log(err);
+                                })
+                    });
         },
       hidePicker(){
         this.showSettingPicker = false;

@@ -140,7 +140,6 @@
               count = count > 9 ? 9 : count;
               util.wxUpload({count,onSelectEnd:()=>this.picUploading = true})
               .then(wxIds=>{
-                    if(!res)return;
                       util.getPathByIds(wxIds)
                               .then(res=>{
                           this.picUploading = false;
@@ -150,6 +149,7 @@
                               this.$toast('上传图片失败');
                           }
                       },err=>{
+                            this.picUploading = false;
                           console.log(err);
                       })
                   });

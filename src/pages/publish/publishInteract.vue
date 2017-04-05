@@ -197,18 +197,18 @@
         count = count > 4 ? 4 : count;
         util.wxUpload({count,onSelectEnd:()=>this.picUploading = true})
                 .then(wxIds=>{
-                    return util.getPathByIds(wxIds);
-                }).then(res=>{
-                        if(!res)return;
-                        this.picUploading = false;
-                        if(res.path[0]){
-                            this.info.pictures = [...this.info.pictures,...res.path];
-                        }else{
-                            this.$toast('上传图片失败');
-                        }
-                    },err=>{
-                    this.picUploading = false;
-                    console.log(err);
+                    util.getPathByIds(wxIds)
+                            .then(res=>{
+                                this.picUploading = false;
+                                if(res.path[0]){
+                                    this.info.pictures = [...this.info.pictures,...res.path];
+                                }else{
+                                    this.$toast('上传图片失败');
+                                }
+                            },err=>{
+                                this.picUploading = false;
+                                console.log(err);
+                            })
                 })
       },
       deleteImage(img){
