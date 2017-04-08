@@ -39,7 +39,7 @@
             </div>
         </div>
         <div :class="$style.desc">
-            <div  v-if="dataInfo.role=='student'">
+            <div  v-if="dataInfo.role=='student' || dataInfo.role=='在校学生'">
                 <span class="color-topic">{{dataInfo.name || '姓名未填写'}}</span>
                 <span>{{dataInfo.company || '河北地质大学'}}</span>
                 <span> | </span>

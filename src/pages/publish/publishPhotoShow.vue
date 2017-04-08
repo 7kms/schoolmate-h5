@@ -45,54 +45,40 @@
     }
 </style>
 <template>
-    <div class="content">
-        <div :class="$style.picWrap">
-            <ImgContain :class="[$style.imgItem,{[$style.margin]:index>2}]" v-for="(url,index) in imgArr" :imgUrl="url">
-                <i :class="$style.deleteImg" @click="deleteImage(index)" v-if="url"></i>
-                <template v-if="index == imgArr.length-1 && !url">
-                    <div :class="[$style.imgAdd,'text-center']" v-show="!picUploading" @click="picUpload">
-                        <i :class="$style.btnAdd"></i>
-                        <span>点击上传</span>
-                    </div>
-                    <Loading text="上传中..." :class="$style.loading" v-show="picUploading"></Loading>
-                </template>
-            </ImgContain>
-        </div>
-        <div class="pub-info-content">
-            <div class="pub-item">
-                <h3 class="pub-title">照片主题</h3>
-                <div class="pub-text">
-                    <input type="text" class="pub-input" placeholder="填写28字以内照片主题" maxlength="28" v-model="info.theme">
-                </div>
+    <div>
+        <div class="content" v-if="!loading">
+            <div :class="$style.picWrap">
+                <ImgContain :class="[$style.imgItem,{[$style.margin]:index>2}]" v-for="(url,index) in imgArr" :imgUrl="url">
+                    <i :class="$style.deleteImg" @click="deleteImage(index)" v-if="url"></i>
+                    <template v-if="index == imgArr.length-1 && !url">
+                        <div :class="[$style.imgAdd,'text-center']" v-show="!picUploading" @click="picUpload">
+                            <i :class="$style.btnAdd"></i>
+                            <span>点击上传</span>
+                        </div>
+                        <Loading text="上传中..." :class="$style.loading" v-show="picUploading"></Loading>
+                    </template>
+                </ImgContain>
             </div>
-           <!-- <div class="pub-item">
-                <h3 class="pub-title">可见范围</h3>
-                <div class="pub-text">
-                    <div class="pub-select" @click="showPicker('range')">
-                        <span>{{ rangeStr || '所有人可见' }}</span>
+            <div class="pub-info-content">
+                <div class="pub-item">
+                    <h3 class="pub-title">照片主题</h3>
+                    <div class="pub-text">
+                        <input type="text" class="pub-input" placeholder="填写28字以内照片主题" maxlength="28" v-model="info.theme">
                     </div>
                 </div>
-            </div>-->
-            <div class="pub-item">
-                <h3 class="pub-title">照片描述</h3>
-                <div class="pub-text">
-                    <textarea class="pub-area" placeholder="填写照片详细信息等" v-model="info.description"></textarea>
+                <div class="pub-item">
+                    <h3 class="pub-title">照片描述</h3>
+                    <div class="pub-text">
+                        <textarea class="pub-area" placeholder="填写照片详细信息等" v-model="info.description"></textarea>
+                    </div>
                 </div>
             </div>
+            <div class="pubBar" @click="publish"><span v-if="edit">重新发布</span><span v-else>发布</span></div>
         </div>
-        <div class="pubBar" @click="publish"><span v-if="edit">重新发布</span><span v-else>发布</span></div>
-       <!--
-           <singlePicker
-                    v-if="!loadingCircle && !loadingInfo"
-                    :dataArr="rangeOptions"
-                    valueKey="name"
-                    :initValue="info.cid"
-                    :showPicker="showRange"
-                    @selectEnd="selectRange"
-                    @hide="hidePicker"
-            ></singlePicker>
-        -->
+        <Loading v-else></Loading>
     </div>
+
+
 </template>
 <script>
   import FileUpload from 'vue-upload-component'
@@ -110,8 +96,7 @@
           uploadCount:0,
           picUploading: false,
           showRange:false,
-          loadingInfo: true,
-          loadingCircle: true,
+          loading: true,
           rangeOptions: [{name:'所有人可见',value:'0'}],
           edit:false,
           info:{
@@ -141,21 +126,25 @@
           picUpload(){
               let count = 9 - this.info.pictures.length ;
               count = count > 9 ? 9 : count;
-              util.wxUpload({count,onSelectEnd:()=>this.picUploading = true})
+            util.wxUpload({count,onSelectEnd:()=>this.picUploading = true})
               .then(wxIds=>{
-                  util.getPathByIds(wxIds)
-                          .then(res=>{
-                      this.picUploading = false;
-                      if(res.path[0]){
-                          this.info.pictures = [...this.info.pictures,...res.path];
-                      }else{
-                          this.$toast('上传图片失败');
-                      }
+                util.getPathByIds(wxIds)
+                  .then(res=>{
+                    this.picUploading = false;
+                    if(res.path[0]){
+                      this.info.pictures = [...this.info.pictures,...res.path];
+                    }else{
+                      this.$toast('上传图片失败');
+                    }
                   },err=>{
                     this.picUploading = false;
-                      console.log(err);
+                    console.log(err);
+                    for (let i in err){
+                      this.$toast(i + '= ' + err[i]);
+                    }
                   })
               });
+
           },
           hidePicker(){
               this.showRange = false;
@@ -200,9 +189,11 @@
         }
       },
       created(){
-        register();
-        this.loadingInfo = false;
-        this.info.aid = this.$route.params.id;
+        register(window.location.href)
+          .then(()=>{
+            this.loading = false;
+            this.info.aid = this.$route.params.id;
+          });
       }
     }
 </script>
