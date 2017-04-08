@@ -1,3 +1,5 @@
+import { Toast} from 'mint-ui';
+
 import Util from './index';
 import $api from 'api';
 let wx = window.wx;
@@ -48,11 +50,11 @@ let chooseImage = (opt)=>{
           resolve(res.localIds);
           // var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
         },
-        cancel: function () {
-          reject();
+        cancel: function (err) {
+          reject(err);
         },
-        fail: function () {
-          reject();
+        fail: function (err) {
+          reject(err);
         }
       });
     })
