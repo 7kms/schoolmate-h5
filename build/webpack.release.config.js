@@ -7,13 +7,15 @@ var config = require('./config').release
 var baseWebpackConfig = require('./webpack.base.config')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
+var WebpackMd5Hash = require('webpack-md5-hash');
+const HashedModuleIdsPlugin = require('./HashedModuleIdsPlugin')
 
 module.exports = merge(baseWebpackConfig, {
     devtool: config.sourceMap ?  '#source-map' : false, 
     output: {
         path: config.assetsRoot, //必须是一个绝对路径,打包后的文件在硬盘上的路径
-        filename: utils.assetsPath('js/[name].[chunkhash].js'), //一个入口文件将对应一个出口文件
-        chunkFilename: utils.assetsPath('js/[id].[chunkhash].js'), //异步加载的时候,创建的chunk文件
+        filename: utils.assetsPath('js/[name].[chunkhash:6].js'), //一个入口文件将对应一个出口文件
+        chunkFilename: utils.assetsPath('js/[id].[chunkhash:6].js'), //异步加载的时候,创建的chunk文件
         publicPath: config.assetsPublicPath
     },
     module: {
@@ -33,7 +35,7 @@ module.exports = merge(baseWebpackConfig, {
          // optimize module ids by occurence count
          new webpack.optimize.OccurenceOrderPlugin(),
          //https://github.com/webpack/extract-text-webpack-plugin/blob/webpack-1/README.md
-         new ExtractTextPlugin(utils.assetsPath('css/[name].[contenthash].css')),
+         new ExtractTextPlugin(utils.assetsPath('css/[name].[contenthash:6].css')),
 
         // generate dist index.html with correct asset hash for caching.
         // you can customize output by editing /index.html
@@ -67,6 +69,8 @@ module.exports = merge(baseWebpackConfig, {
         new webpack.optimize.CommonsChunkPlugin({
             name: 'manifest',
             chunks: ['vendor']
-        })
+        }),
+        new HashedModuleIdsPlugin(),
+        new WebpackMd5Hash()
     ]
 })

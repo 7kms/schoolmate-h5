@@ -28,8 +28,15 @@ module.exports = {
     },
     test:{
         env:{
-            NODE_ENV:'"production"'
+            NODE_ENV:'"test"'
         },
-        assetsDir: path.resolve(__dirname,'../__dist__')
+        htmlOptions: {
+            filename: 'index.html',
+            title: '校友云'
+        },
+        sourceMap: false,
+        assetsRoot: path.resolve(__dirname,'../__dist__'),
+        assetsPublicPath: '/',
+        assetsSubDir: 'static'
     }
 }

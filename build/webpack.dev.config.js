@@ -22,8 +22,8 @@ module.exports = merge(baseWebpackConfig, {
     },
     output: {
         path: config.assetsRoot, //必须是一个绝对路径,打包后的文件在硬盘上的路径
-        filename: utils.assetsPath('js/[name].[chunkhash].js'), //一个入口文件将对应一个出口文件
-        chunkFilename: utils.assetsPath('js/[id].[chunkhash].js'), //异步加载的时候,创建的chunk文件
+        filename: utils.assetsPath('js/[name].[chunkhash:6].js'), //一个入口文件将对应一个出口文件
+        chunkFilename: utils.assetsPath('js/[id].[chunkhash:6].js'), //异步加载的时候,创建的chunk文件
         publicPath: config.assetsPublicPath//供Webpack Dev Server使用,提供给浏览器中的静态资源(<script> or <link>)引用,可以用于配置到其他服务器或者cdn
     },
     module: {
@@ -38,7 +38,7 @@ module.exports = merge(baseWebpackConfig, {
         
          new webpack.HotModuleReplacementPlugin(),
           //https://github.com/webpack/extract-text-webpack-plugin/blob/webpack-1/README.md
-         new ExtractTextPlugin(utils.assetsPath('css/[name].[contenthash].css')),
+         new ExtractTextPlugin(utils.assetsPath('css/[name].[contenthash:6].css')),
          new webpack.NoErrorsPlugin(),
          // https://github.com/ampedandwired/html-webpack-plugin
          new HtmlWebpackPlugin(Object.assign({

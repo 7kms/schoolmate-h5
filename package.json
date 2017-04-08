@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon build/build-dev.js",
-    "release": "node build/build-release.js ",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "release": "node build/build-release.js",
+    "test": "node build/build-test.js"
   },
   "author": "",
   "license": "ISC",
@@ -56,6 +56,7 @@
     "webpack-dev-middleware": "^1.8.4",
     "webpack-dev-server": "^1.16.2",
     "webpack-hot-middleware": "^2.13.2",
+    "webpack-md5-hash": "0.0.5",
     "webpack-merge": "^1.1.1"
   },
   "dependencies": {
