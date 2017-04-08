@@ -15,7 +15,7 @@ module.exports = {
     },
     release:{
         env:{
-            NODE_ENV:'"production"'
+            NODE_ENV:'"test"'
         },
         htmlOptions: {
             filename: 'index.html',
