@@ -30,12 +30,18 @@ n stable
 ```
 3.打包部署
 这里需要分开发环境和生产(测试)
+
 3.1 开发
 ```JavaScript
     npm run dev
 
 ```
-3.1 生产(测试)
+3.2 测试
+```JavaScript
+    npm run test
+```
+
+3.3 生产
 ```JavaScript
     npm run release
 ```
