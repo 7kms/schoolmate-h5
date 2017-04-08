@@ -55,6 +55,7 @@
   import operateBar from  '../public/operateBar.vue'
   import commentItem from './commentItem.vue'
   import createrItem from './createrItem.vue'
+  import {register,wechatShare} from '../../util/wechat-api'
   export default {
     created(){
       this.getData(this.$route.params);
@@ -119,10 +120,22 @@
           .then(res=>{
             this.dataInfo = res;
             this.loading = false;
+            this.wechatInit();
           },err=>{
             this.$toast({message: err});
             this.loading = false;
           })
+      },
+      wechatInit(){
+        register().then(()=>{
+            let info = this.dataInfo;
+            wechatShare({
+                title:info.theme,
+                link: window.location.href,
+                imgUrl: info.pictures ? info.pictures[0] : '',
+                desc: info.description
+            });
+        })
       },
       removeComment(item){
         $api.post('/Picture/deleteComment',{cid:item.cid})
@@ -140,9 +153,6 @@
           this.$toast('服务器异常')
         })
       }
-    },
-    mounted(){
-
     }
   }
 </script>

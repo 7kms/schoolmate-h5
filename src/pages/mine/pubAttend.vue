@@ -52,7 +52,7 @@
         });
       },
       goDetail(item) {
-        this.$router.push(`/activity/column-detail/${item.aid}`);
+          this.$router.push({path:'/activity/column-detail',query:{id:item.aid}});
       }
     },
     created(){

@@ -285,7 +285,6 @@
                       desc: info.description
                   });
               })
-
           },
           removeComment(item){
             $api.post('/Picture/deleteComment',{cid:item.cid})

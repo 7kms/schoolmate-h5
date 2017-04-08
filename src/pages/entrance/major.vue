@@ -54,19 +54,19 @@
                 <span></span><span @click="setDefaultMajor">确定</span>
             </mt-picker>
         </mt-popup>
-
-
         <timePicker
+                ref="MajorStartPicker"
                 :showPicker="showMajorStartPicker"
                 :initDate="roleStartDate"
-                :endDate="userInfo.graduate_time"
+                :endDate="userInfo.enrol_time"
                 pickerRef="majorStartDatePicker"
                 @selectEnd="selectMajorStart"
         ></timePicker>
         <timePicker
+                ref="MajorEndPicker"
                 :showPicker="showMajorEndPicker"
                 :initDate="roleEndDate"
-                :startDate="userInfo.enrol_time"
+                :startDate="userInfo.graduate_time"
                 pickerRef="majorEndDatePicker"
                 @selectEnd="selectMajorEnd"
         ></timePicker>
@@ -83,8 +83,8 @@
         showMajorPicker:false,
           showMajorStartPicker: false,
           showMajorEndPicker: false,
-          roleStartDate:'1953/01/01',
-          roleEndDate:'1953/01/01',
+          roleStartDate:'1953/09/01',
+          roleEndDate:'1953/07/01',
           info:{
               enrol_time: '',
               graduate_time: ''
@@ -112,9 +112,11 @@
             break;
             case 'roleStart':
                 this.showMajorStartPicker = true;
+                this.$refs['MajorStartPicker'].open();
                 break;
             case 'graduate':
                 this.showMajorEndPicker = true;
+                this.$refs['MajorEndPicker'].open();
                 break;
         }
       },
@@ -134,7 +136,11 @@
       },
         selectMajorStart(value){
             this.hidePicker();
-            this.$store.dispatch('entrance/CHANGE_USERINFO',{enrol_time:value})
+            this.$store.dispatch('entrance/CHANGE_USERINFO',{enrol_time:value});
+            if(!this.userInfo.graduate_time){
+                let graduate = (value.split('/')[0] * 1 + 4 ) + '/07/01';
+                this.$store.dispatch('entrance/CHANGE_USERINFO',{graduate_time:graduate})
+            }
         },
         selectMajorEnd(value){
             this.hidePicker();

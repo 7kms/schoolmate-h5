@@ -53,12 +53,12 @@
                 }else{
                     return  new Date(Date.now() + 86400000 * 365 * 10);
                 }
-
             }
         },
         watch:{
             showPicker(val){
                 if(val){
+                    this.$refs[this.pickerRef].close();
                     this.$refs[this.pickerRef].open();
                 }else{
                     this.$refs[this.pickerRef].close();
@@ -74,6 +74,9 @@
                     result = val;
                 }
                 this.$emit('selectEnd', result);
+            },
+            open(){
+                this.$refs[this.pickerRef].open();
             }
         }
     }

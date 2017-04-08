@@ -244,6 +244,7 @@
                     @selectEnd="selectBirthday"
             ></timePicker>
             <timePicker
+                    ref="MajorStartPicker"
                     :showPicker="showMajorStartPicker"
                     :initDate="profile.enrol_time"
                     :endDate="info.graduate_time"
@@ -251,6 +252,7 @@
                     @selectEnd="selectMajorStart"
             ></timePicker>
             <timePicker
+                    ref="MajorEndPicker"
                     :showPicker="showMajorEndPicker"
                     :initDate="profile.graduate_time"
                     :startDate="info.enrol_time"
@@ -337,8 +339,10 @@
                 this.showBirthdayPicker = true;
             }else if(name == 'majorStart'){
                 this.showMajorStartPicker = true;
+                this.$refs['MajorStartPicker'].open();
             }else if(name == 'majorEnd'){
                 this.showMajorEndPicker = true;
+                this.$refs['MajorEndPicker'].open();
             }
           },
           selectPlace(placeObj){

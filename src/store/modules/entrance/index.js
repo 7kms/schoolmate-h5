@@ -53,7 +53,7 @@ var state = {
   userInfo:{
     password:'',
     name:'',
-    gender:'',
+    gender:'男',
     birthday:'',
     bprovince:'',
     bcity:'',

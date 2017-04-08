@@ -113,6 +113,15 @@
                 </li>
                 <li :class="$style.dfn">
                     <div :class="$style.label">
+                        <span class="color-topic">所在城市</span>
+                    </div>
+                    <div :class="[$style.dInput,$style.dSelect,{[$style.empty]:!condition.province}]" @click="showPicker('location')">
+                        <span  v-if="condition.province">{{ condition.province + '-' + condition.city }}</span>
+                        <span class="color-theme" v-else>点击选择</span>
+                    </div>
+                </li>
+                <li :class="$style.dfn">
+                    <div :class="$style.label">
                         <span class="color-topic">工作单位</span>
                     </div>
                     <div :class="$style.dInput">
@@ -208,15 +217,22 @@
                     <span></span><span @click="setDefaultMajor">确定</span>
                 </mt-picker>
             </mt-popup>
-            <mt-popup
-                    v-model="showPlacePicker"
-                    position="bottom"
-                    popup-transition="popup-fade">
-                <mt-picker :slots="placeSlots" :showToolbar="true" :rotateEffect="true" @change="selectPlace">
-                    <span></span><span @click="setDefaultPlace">确定</span>
-                </mt-picker>
-            </mt-popup>
+            <placePicker
+                    :showPicker="showPlacePicker"
+                    :province="info.bprovince"
+                    :city="info.bcity"
+                    @selectEnd="selectPlace"
+                    @hide="hidePicker"
+            ></placePicker>
+            <placePicker
+                  :showPicker="showLocationPicker"
+                  :province="info.province"
+                  :city="info.city"
+                  @selectEnd="selectLocation"
+                  @hide="hidePicker"
+            ></placePicker>
             <timePicker
+                    ref="MajorStartPicker"
                     :showPicker="showMajorStartPicker"
                     :initDate="roleStartDate"
                     :endDate="condition.graduate_time"
@@ -224,6 +240,7 @@
                     @selectEnd="selectMajorStart"
             ></timePicker>
             <timePicker
+                    ref="MajorEndPicker"
                     :showPicker="showMajorEndPicker"
                     :initDate="roleEndDate"
                     :startDate="condition.enrol_time"
@@ -263,10 +280,11 @@
               showMajorStartPicker: false,
               showMajorEndPicker: false,
               showPlacePicker: false,
+              showLocationPicker: false,
               showIndustryPicker: false,
               showIndustryDetailPicker: false,
-              roleStartDate:'',
-              roleEndDate:'',
+              roleStartDate:'1953/09/01',
+              roleEndDate:'1953/07/01',
               info:{
                   enrol_time: '',
                   graduate_time: ''
@@ -308,7 +326,8 @@
           }
        },
         components:{
-            timePicker
+            timePicker,
+            placePicker
         },
       computed:{
         ...mapState({
@@ -326,11 +345,16 @@
                 case 'place':
                     this.showPlacePicker = true;
                     break;
+                case 'location':
+                    this.showLocationPicker = true;
+                    break;
                 case 'roleStart':
                     this.showMajorStartPicker = true;
+                    this.$refs['MajorStartPicker'].open();
                     break;
                 case 'graduate':
                     this.showMajorEndPicker = true;
+                    this.$refs['MajorEndPicker'].open();
                     break;
                 case 'industry':
                     this.showIndustryPicker = true;
@@ -355,33 +379,11 @@
               this.showIndustryPicker = false;
               this.showIndustryDetailPicker = false;
               this.showPlacePicker =  false;
+              this.showLocationPicker =  false;
               this.showDepartmentPicker =  false;
               this.showMajorStartPicker = false;
               this.showMajorEndPicker = false;
           },
-        selectPlace(picker,values){
-          let bprovince,bcity;
-          if(values){
-              if(!values[0]){
-                  values[0] = Object.keys(placeObj)[0];
-              }
-              bprovince = values[0];
-              bcity = values[1];
-              picker.setSlotValues(1, placeObj[values[0]]);
-              this.$store.dispatch('interact/CHANGE_MATES_CONDITION',{
-                  birth_from:`${bprovince}-${bcity}`
-              });
-          }else{
-              this.showPlacePicker = false;
-              if(!this.condition.bprovince){
-                  bprovince = this.placeSlots[0].values[0];
-                  bcity = this.placeSlots[2].values[0];
-                  this.$store.dispatch('interact/CHANGE_MATES_CONDITION',{
-                      birth_from:`${bprovince}-${bcity}`
-                  });
-              }
-          }
-        },
         selectMajor(picker, values) {
        		this.$store.dispatch('interact/CHANGE_MATES_CONDITION', {major:values[0]})
         },
@@ -391,17 +393,14 @@
                this.$store.dispatch('interact/CHANGE_MATES_CONDITION',{major:this.majorSlots[0].values[0]})
             }
 	    },
-         setDefaultPlace(){
-             let bprovince,bcity;
-             this.showPlacePicker = false;
-             if(!this.condition.birth_from){
-                 bprovince = this.placeSlots[0].values[0];
-                 bcity = this.placeSlots[2].values[0];
-                 this.$store.dispatch('interact/CHANGE_MATES_CONDITION',{
-                   birth_from:`${bprovince}-${bcity}`
-                 });
-             }
-         },
+          selectPlace(placeObj){
+              this.hidePicker();
+              this.$store.dispatch('interact/CHANGE_MATES_CONDITION',{birth_from:`${placeObj.province}-${placeObj.city}`});
+          },
+          selectLocation(placeObj){
+              this.hidePicker();
+              this.$store.dispatch('interact/CHANGE_MATES_CONDITION',{province:placeObj.province, city:placeObj.city});
+          },
           selectIndustryDetail(picker, values){
               this.$store.dispatch('interact/CHANGE_MATES_CONDITION', {
                   job: values[0]

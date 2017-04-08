@@ -61,6 +61,7 @@
   import Activity from './activity.vue'
   import Photo from './photo.vue'
   import Interact from './interact.vue'
+  import {register,wechatShare} from '../../util/wechat-api'
   export default {
     components:{
       Basic,
@@ -92,10 +93,22 @@
           .then(data=>{
                 this.basicInfo = {...data};
                 this.loading = false;
+                this.wechatInit();
             },()=>{
                 this.loading = false;
             });
       },
+        wechatInit(){
+            register().then(()=>{
+                let info = this.basicInfo;
+                wechatShare({
+                    title:info.c_name,
+                    link: window.location.href,
+                    imgUrl: info.c_cover_file ? info.c_cover_file : '',
+                    desc: info.c_description
+                });
+            })
+        },
       switchItem(item){
         var id = this.$route.params.id;
         this.$router.replace({path:`/moments/interest/${id}`,query:{item}})

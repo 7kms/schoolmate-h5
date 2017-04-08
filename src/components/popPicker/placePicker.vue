@@ -15,11 +15,11 @@
         props:{
             province:{
                 type: String,
-                default: '天津市'
+                default: ''
             },
             city:{
                 type: String,
-                default: '河西'
+                default: ''
             },
             showPicker:{
                 type: Boolean,
