@@ -305,7 +305,13 @@
 			this.$store.dispatch('user/GET_ACCOUNT')
 				.then( dataInfo => {
                     this.loading = false;
-				    console.log(dataInfo)
+//				    console.log(dataInfo)
+                  if(dataInfo.enrol_time && dataInfo.enrol_time.split(/\D+/).length == 1){
+                    dataInfo.enrol_time = dataInfo.enrol_time.split(/\D+/)[0] + '/09/01';
+                  }
+                  if(dataInfo.graduate_time && dataInfo.graduate_time.split(/\D+/).length == 1){
+                    dataInfo.graduate_time = dataInfo.graduate_time.split(/\D+/)[0] + '/07/01';
+                  }
                     this.profile = {...dataInfo};
                     this.info = {...dataInfo};
 				})

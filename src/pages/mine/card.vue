@@ -100,10 +100,10 @@
                             <!--<span>民 族：</span><span>美国</span>-->
                         <!--</li>-->
                         <li :class="$style.item">
-                            <span>专 业：</span><span>{{profile.job}}</span>
+                            <span>专 业：</span><span>{{profile.major}}</span>
                         </li>
                         <li :class="$style.item">
-                            <span>毕业日期：</span><span>{{profile.graduate_time}}</span>
+                            <span>毕业日期：</span><span>{{graduateTime}}</span>
                         </li>
                     </ul>
                     <div :class="$style.schoolLogo">
@@ -145,12 +145,16 @@
       }
     },
     computed: {
+      graduateTime(){
+        let str = this.profile.graduate_time ? this.profile.graduate_time.slice(0,4) : '';
+        if(str){
+          str += '.07.01';
+        }
+        return str;
+      },
       ...mapState({
         profile: (state) => state.user.profile
       })
-    },
-    created: function() {
-
     }
   }
 </script>
