@@ -43,7 +43,9 @@
             <div :class="$style.desc">
                 <div :class="$style.title">
                     <div>
-                        <span class="topic">{{dataInfo.c_name}}</span><span>（<span class="color-hint">{{ dataInfo.count }}</span>人）</span>
+                        <span class="topic">{{dataInfo.c_name}}</span><span>
+                        <!--（<span class="color-hint">{{ dataInfo.count }}</span>人）-->
+                    </span>
                     </div>
                     <div :class="$style.verify" v-if="isSelf && dataInfo.unverified > 0" @click.prevent.stop="goVerify">
                         <span class="color-hint">待审核{{dataInfo.unverified}}人</span>

@@ -10,7 +10,7 @@
             infinite-scroll-disabled="noScroll"
             infinite-scroll-immediate-check="false"
             infinite-scroll-distance="80">
-            <Item v-for="(item,index) in photo.list" :class="$style.item" :key="index" :dataInfo="item" @click="goEdit(item)"></Item>
+            <Item v-for="(item,index) in photo.list" :class="$style.item" :key="index" :dataInfo="item" @click="goEdit(item)" @remove="remove"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
         <div v-if="!loading && photo.list.length == 0" class="empty-data-item">
@@ -56,6 +56,17 @@
       },
       goEdit(item) {
         this.$router.push(`/publish/photo?pid=${item.pid}`);
+      },
+      remove(item){
+        $api.post('/picture/delPicture',{ pid:item.pid})
+          .then(res=>{
+          this.$toast(res.msg);
+          if(res.result){
+            this.$store.dispatch('activity/REMOVE_PHOTO',item);
+          }
+        },err=>{
+          this.$toast('服务器异常');
+        });
       }
     },
     created(){

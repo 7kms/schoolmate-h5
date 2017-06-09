@@ -10,7 +10,13 @@
             infinite-scroll-immediate-check="false"
             infinite-scroll-disabled="noScroll"
             infinite-scroll-distance="80">
-            <Item v-for="(item,index) in column.list" :class="$style.item" :key="index" :dataInfo="item" @click="goDetail(item)"></Item>
+            <Item v-for="(item,index) in column.list"
+                  :class="$style.item"
+                  :key="index"
+                  :dataInfo="item"
+                  @click="goDetail(item)"
+                  @remove="remove"
+            ></Item>
          </ul>
         <Loading v-if="loading"></Loading>
         <publishBtn text="发活动" @click="onPublish"></publishBtn>
@@ -80,13 +86,21 @@
                   }else{
                     this.$router.push({path:'/activity/column-detail',query:{id:item.aid}});
                   }
-
-//                  this.$router.push({path:'/activity/column-detail',query:{id:item.aid}});
-//                  this.$router.push(`/activity/column-detail/${item.aid}`);
                 }else{
                     this.$toast('你没有权限查看详情');
                 }
-            }
+            },
+          remove(item){
+            $api.post('/activity/delActivity',{ aid:item.aid})
+              .then(res=>{
+                  this.$toast(res.msg);
+                  if(res.result){
+                    this.$store.dispatch('activity/REMOVE_COLUMN',item);
+                  }
+            },err=>{
+                this.$toast('服务器异常');
+            });
+          }
         },
         created(){
           this.$store.dispatch('activity/RESET_COLUMN_LIST');

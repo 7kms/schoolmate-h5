@@ -10,7 +10,7 @@
             infinite-scroll-disabled="noScroll"
             infinite-scroll-immediate-check="false"
             infinite-scroll-distance="80">
-            <Item v-for="(item,index) in photo.list" :class="$style.item" :key="index" :dataInfo="item" @click.native.stop="goDetail(item)"></Item>
+            <Item v-for="(item,index) in photo.list" :class="$style.item" :key="index" :dataInfo="item" @click.native.stop="goDetail(item)" @remove="remove"></Item>
          </ul>
          <Loading v-if="loading"></Loading>
         <publishBtn text="发照片" @click="onPublish"></publishBtn>
@@ -69,6 +69,17 @@
             }else{
               this.$toast('你没有权限查看详情');
             }
+          },
+          remove(item){
+            $api.post('/picture/delPicture',{ pid:item.pid})
+              .then(res=>{
+                this.$toast(res.msg);
+                if(res.result){
+                  this.$store.dispatch('activity/REMOVE_PHOTO',item);
+                }
+          },err=>{
+              this.$toast('服务器异常');
+            });
           }
         },
         created(){

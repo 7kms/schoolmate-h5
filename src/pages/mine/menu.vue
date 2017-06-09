@@ -54,6 +54,9 @@
         &.iconMom{
              background-image: url('../../assets/images/icon-my-moments.png');
          }
+        &.iconCard{
+             background-image: url('../../assets/images/icon-my-card.png');
+         }
     }
     .dot{
         display: inline-block;
@@ -100,6 +103,13 @@
                 <i :class="[$style.icon,$style.iconMom]"></i>
                 <div :class="$style.text">
                     <span :class="$style.label">我的圈子</span>
+                    <i :class="[$style.icon,$style.iconArrow]"></i>
+                </div>
+            </router-link>
+            <router-link :class="$style.item" :to="{path:'/mine/card'}" tag="li">
+                <i :class="[$style.icon,$style.iconCard]"></i>
+                <div :class="$style.text">
+                    <span :class="$style.label">校友卡</span>
                     <i :class="[$style.icon,$style.iconArrow]"></i>
                 </div>
             </router-link>

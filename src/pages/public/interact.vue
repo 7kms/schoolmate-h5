@@ -186,7 +186,11 @@
           },()=>{});
       },
       remove(){
-        this.$emit('remove',this.dataInfo);
+        this.$dialog.confirm('您是否确认撤销该发布内容?').then(()=>{
+          this.$emit('remove',this.dataInfo);
+        },data=>{
+          return false;
+        })
       },
       goContacts(){
         this.$router.push({path:'/interact/contacts',query:{rid:this.dataInfo.rid}})

@@ -10,7 +10,7 @@
             infinite-scroll-immediate-check="false"
             infinite-scroll-disabled="noScroll"
             infinite-scroll-distance="80">
-            <Item v-for="(item,index) in column.list" :class="$style.item" :key="index" :dataInfo="item" @click="goDetail(item)"></Item>
+            <Item v-for="(item,index) in column.list" :class="$style.item" :key="index" :dataInfo="item" @click="goDetail(item)" @remove="remove"></Item>
         </ul>
         <Loading v-if="loading"></Loading>
         <div v-if="!loading && column.noMore && column.list.length == 0" class="empty-data-item">
@@ -81,6 +81,17 @@
                     this.$parent.switchItem('basic');
                },()=>{});
           }
+      },
+      remove(item){
+        $api.post('/activity/delActivity',{ aid:item.aid})
+          .then(res=>{
+          this.$toast(res.msg);
+          if(res.result){
+            this.$store.dispatch('activity/REMOVE_COLUMN',item);
+          }
+        },err=>{
+          this.$toast('服务器异常');
+        });
       }
     },
     created(){

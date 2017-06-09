@@ -32,8 +32,8 @@
     .desc{
         padding-top: 6px;
         padding-bottom: 6px;
-        flex-direction: column;
-        align-items: stretch;
+        justify-content: space-between;
+        align-items: center;
     }
     .descItem{
         display: flex;
@@ -42,24 +42,30 @@
         & > div{
             margin-right: 44px;
             }
-        .icon{
-            width: 12px;
-            height: 12px;
-            margin-right: 6px;
-            background-size: contain;
-            background-repeat:no-repeat;
-            &.iconLike{
-               margin-top: -3px;
-               background-image: url('../../assets/images/photo-like.png');
-            }
-            &.iconComment{
-                 background-image: url('../../assets/images/photo-comment.png');
-            }
-            &.iconView{
-                vertical-align: bottom;
-                 background-image: url('../../assets/images/photo-view.png');
-            }
-        }
+    }
+    .icon{
+        width: 12px;
+        height: 12px;
+        margin-right: 6px;
+        background-size: contain;
+        background-repeat:no-repeat;
+        &.iconLike{
+             margin-top: -3px;
+             background-image: url('../../assets/images/photo-like.png');
+         }
+        &.iconComment{
+             background-image: url('../../assets/images/photo-comment.png');
+         }
+        &.iconView{
+             vertical-align: bottom;
+             background-image: url('../../assets/images/photo-view.png');
+         }
+        &.iconRemove{
+             background-image: url('../../assets/images/icon-remove.png');
+         }
+    }
+    .remove{
+        padding: 10px 0;
     }
     .split{
         margin: 0 4px;
@@ -94,14 +100,20 @@
                     <span class="inline-block">{{dataInfo.comments}}</span>
                   </div>
             </div>
+            <div class="text-right weak" v-if="isSelf">
+                <span :class="[$style.remove,'inline-block']" @click.stop.prevent="remove">
+                    <i :class="['inline-block',$style.icon,$style.iconRemove]"></i>
+                    <span class="inline-block">撤销发布</span>
+                </span>
+            </div>
         </div>
     </div>
 </template>
 <script>
-  import {serverUrl} from '../../config'
   import $api from 'api';
   import Util from '../../util'
   import UserCard from './userCard.vue'
+  import {mapState} from 'vuex'
     export default {
       props: {
         dataInfo: {
@@ -111,6 +123,15 @@
       },
       components:{
          UserCard
+      },
+      computed:{
+        ...mapState({
+          profile:(state)=>state.user.profile
+        }),
+
+        isSelf(){
+          return this.profile.uid == this.dataInfo.uid
+        }
       },
       methods:{
         click(){
@@ -142,7 +163,13 @@
               query:{pid: this.dataInfo.pid}
             });
           },()=>{});
-
+        },
+        remove(){
+          this.$dialog.confirm('您是否确认撤销该发布内容?').then(()=>{
+            this.$emit('remove',this.dataInfo);
+          },data=>{
+            return false;
+          })
         }
       }
     }

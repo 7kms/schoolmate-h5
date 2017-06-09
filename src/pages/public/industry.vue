@@ -32,7 +32,9 @@
                 <imgContain :imgUrl="dataInfo.c_cover_file" :onlyImage="true" style="width:40px ;height:40px"></imgContain>
             </div>
             <div>
-                <span class="topic">{{ dataInfo.c_name }}</span><span>（<span class="color-hint">{{ dataInfo.count }}</span>人）</span>
+                <span class="topic">{{ dataInfo.c_name }}</span><span>
+                <!--（<span class="color-hint">{{ dataInfo.count }}</span>人）-->
+            </span>
             </div>
         </div>
         <div :class="$style.imgContent" v-if="imgArr.length > 0">

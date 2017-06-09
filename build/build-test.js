@@ -1,12 +1,12 @@
 // https://github.com/shelljs/shelljs
 require('shelljs/global')
+env.NODE_ENV = 'test'
 const path = require('path')
 // require('../MP_verify_SV9CeydnGwoViOYq.txt')
 const webpack = require('webpack')
 const webpackConfig = require('./webpack.release.config')
 var config = require('./config').release
 
-env.NODE_ENV = 'test'
 
 
 var assetsPath = path.join(config.assetsRoot, config.assetsSubDir)

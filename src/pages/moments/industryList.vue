@@ -70,11 +70,12 @@
         <div :class="[$style.bar,'size-topic','color-theme']" v-if="list.length">
             <span>其他行业圈子</span>
         </div>
-        <ul
-            v-infinite-scroll="loadMore"
-            infinite-scroll-immediate-check="false"
-            infinite-scroll-disabled="noScroll"
-            infinite-scroll-distance="80">
+
+        <!--v-infinite-scroll="loadMore"-->
+        <!--infinite-scroll-immediate-check="false"-->
+        <!--infinite-scroll-disabled="noScroll"-->
+        <!--infinite-scroll-distance="80-->
+        <ul>
             <Item v-for="(item,index) in list" :class="$style.item" :key="index" :dataInfo="item" @click.native="goDetail(item)"></Item>
         </ul>
         <Loading v-if="loading"></Loading>

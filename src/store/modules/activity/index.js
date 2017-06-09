@@ -59,6 +59,9 @@ const actions = {
     [types.CHANGE_COLUMN_STATUS] ({commit}, status) {
       commit(types.CHANGE_COLUMN_STATUS,status);
     },
+    [types.REMOVE_COLUMN] ({ commit }, item) {
+      commit(types.REMOVE_COLUMN,item);
+    },
 
 
     [types.LOAD_PHOTO_LIST] ({ commit, dispatch },payload) {
@@ -89,33 +92,35 @@ const actions = {
     [types.CHANGE_PHOTO_STATUS] ({commit}, status) {
       commit(types.CHANGE_PHOTO_STATUS,status);
     },
+    [types.REMOVE_PHOTO] ({ commit }, item) {
+      commit(types.REMOVE_PHOTO,item);
+    },
 
 
-
-  [types.LOAD_ATTEND_LIST] ({ commit, dispatch },payload) {
-    let params = getParams('attend');
-    if(payload){
-      payload.cid && (params.cid = payload.cid);
-      payload.uid && (params.uid = payload.uid);
+    [types.LOAD_ATTEND_LIST] ({ commit, dispatch },payload) {
+      let params = getParams('attend');
+      if(payload){
+        payload.cid && (params.cid = payload.cid);
+        payload.uid && (params.uid = payload.uid);
+      }
+      return new Promise((resolve,reject) => {
+        $api.get('/Activity/getAttendList',params)
+          .then(data =>{
+            dispatch(types.APPEND_ATTEND_LIST, data.result);
+            var noMore = (state.attend.list.length >= data.total);
+            commit(types.CHANGE_ATTEND_STATUS, { noMore, start: state.attend.start + state.attend.pageSize });
+            resolve();
+          },data =>{
+            reject(data);
+          });
+      });
+    },
+    [types.APPEND_ATTEND_LIST] ({ commit }, dataList) {
+      commit(types.APPEND_ATTEND_LIST, dataList);
+    },
+    [types.RESET_ATTEND_LIST] ({ commit }) {
+      commit(types.RESET_ATTEND_LIST);
     }
-    return new Promise((resolve,reject) => {
-      $api.get('/Activity/getAttendList',params)
-        .then(data =>{
-          dispatch(types.APPEND_ATTEND_LIST, data.result);
-          var noMore = (state.attend.list.length >= data.total);
-          commit(types.CHANGE_ATTEND_STATUS, { noMore, start: state.attend.start + state.attend.pageSize });
-          resolve();
-        },data =>{
-          reject(data);
-        });
-    });
-  },
-  [types.APPEND_ATTEND_LIST] ({ commit }, dataList) {
-    commit(types.APPEND_ATTEND_LIST, dataList);
-  },
-  [types.RESET_ATTEND_LIST] ({ commit }) {
-    commit(types.RESET_ATTEND_LIST);
-  }
 };
 
 const mutations = {
@@ -134,6 +139,14 @@ const mutations = {
     [types.CHANGE_COLUMN_STATUS] (state, status) {
         state.column = Object.assign(state.column, status);
     },
+    [types.REMOVE_COLUMN] (state, item) {
+      let index = state.column.list.indexOf(item);
+      if(~index){
+        state.column.list = state.column.list.filter(obj=>obj.aid != item.aid);
+      }
+    },
+
+
 
     [types.APPEND_PHOTO_LIST] (state, dataList) {
       dataList.forEach(item=>{
@@ -156,8 +169,12 @@ const mutations = {
     [types.CHANGE_PHOTO_STATUS] (state, status) {
         state.photo = Object.assign(state.photo, status);
     },
-
-
+    [types.REMOVE_PHOTO] (state, item) {
+      let index = state.photo.list.indexOf(item);
+      if(~index){
+        state.photo.list = state.photo.list.filter(obj=>obj.pid != item.pid);
+      }
+    },
 
     [types.APPEND_ATTEND_LIST] (state, dataList) {
       state.attend.list = [...state.attend.list, ...dataList];

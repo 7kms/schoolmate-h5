@@ -181,6 +181,13 @@ const ROUTER_SETTING = {
                     component: resolve => require(['./pages/mine/info.vue'], resolve)
                   },
                   {
+                    path:'card',
+                    meta: {
+                      title:'校友卡'
+                    },
+                    component: resolve => require(['./pages/mine/card.vue'], resolve)
+                  },
+                  {
                     path:'contacts',
                     meta: {
                       title:'通讯录'
